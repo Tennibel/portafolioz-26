@@ -36,11 +36,11 @@ export function checkPassword(password: string): boolean {
 export function createSessionCookie(): string {
   const token = `admin:${Date.now()}`;
   const signed = sign(token);
-  return `${COOKIE_NAME}=${signed}; Path=/admin; HttpOnly; SameSite=Strict; Max-Age=${MAX_AGE}`;
+  return `${COOKIE_NAME}=${signed}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${MAX_AGE}`;
 }
 
 export function clearSessionCookie(): string {
-  return `${COOKIE_NAME}=; Path=/admin; HttpOnly; SameSite=Strict; Max-Age=0`;
+  return `${COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0`;
 }
 
 export function isAuthenticated(request: Request): boolean {

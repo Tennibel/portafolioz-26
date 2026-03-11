@@ -1,5 +1,5 @@
 /**
- * db.ts - Conexion SQLite + esquema + helpers para el cotizador
+ * db.ts - Conexion SQLite + esquema + helpers para cotizador y proyectos
  */
 import Database from 'better-sqlite3';
 import { fileURLToPath } from 'url';
@@ -46,6 +46,21 @@ function initSchema(db: Database.Database) {
       categoria TEXT NOT NULL,
       nombre TEXT NOT NULL,
       precio INTEGER NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS projects (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre TEXT NOT NULL,
+      slug TEXT NOT NULL UNIQUE,
+      url TEXT,
+      categoria TEXT NOT NULL DEFAULT 'sitio-web',
+      descripcion TEXT,
+      imagen TEXT,
+      featured INTEGER DEFAULT 0,
+      visible INTEGER DEFAULT 1,
+      orden INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now'))
     );
   `);
 }
@@ -169,4 +184,124 @@ export function getQuoteStats(): { total: number; nueva: number; contactada: num
   const cerrada = (db.prepare("SELECT COUNT(*) as c FROM quotes WHERE status = 'cerrada'").get() as { c: number }).c;
   const descartada = (db.prepare("SELECT COUNT(*) as c FROM quotes WHERE status = 'descartada'").get() as { c: number }).c;
   return { total, nueva, contactada, cerrada, descartada };
+}
+
+/* ============================================
+   PROJECTS
+   ============================================ */
+
+export type Project = {
+  id: number;
+  nombre: string;
+  slug: string;
+  url: string | null;
+  categoria: string;
+  descripcion: string | null;
+  imagen: string | null;
+  featured: number;
+  visible: number;
+  orden: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export function getProjects(opts?: { categoria?: string; page?: number; perPage?: number }): { projects: Project[]; total: number } {
+  const db = getDb();
+  const page = opts?.page || 1;
+  const perPage = opts?.perPage || 20;
+  const offset = (page - 1) * perPage;
+
+  if (opts?.categoria && opts.categoria !== 'todas') {
+    const projects = db.prepare('SELECT * FROM projects WHERE categoria = ? ORDER BY orden ASC, created_at DESC LIMIT ? OFFSET ?').all(opts.categoria, perPage, offset) as Project[];
+    const total = (db.prepare('SELECT COUNT(*) as c FROM projects WHERE categoria = ?').get(opts.categoria) as { c: number }).c;
+    return { projects, total };
+  }
+
+  const projects = db.prepare('SELECT * FROM projects ORDER BY orden ASC, created_at DESC LIMIT ? OFFSET ?').all(perPage, offset) as Project[];
+  const total = (db.prepare('SELECT COUNT(*) as c FROM projects').get() as { c: number }).c;
+  return { projects, total };
+}
+
+export function getVisibleProjects(opts?: { categoria?: string; page?: number; perPage?: number }): { projects: Project[]; total: number; hasMore: boolean } {
+  const db = getDb();
+  const page = opts?.page || 1;
+  const perPage = opts?.perPage || 12;
+  const offset = (page - 1) * perPage;
+
+  let where = 'WHERE visible = 1';
+  const params: unknown[] = [];
+  if (opts?.categoria && opts.categoria !== 'todas') {
+    where += ' AND categoria = ?';
+    params.push(opts.categoria);
+  }
+
+  const total = (db.prepare(`SELECT COUNT(*) as c FROM projects ${where}`).get(...params) as { c: number }).c;
+  const projects = db.prepare(`SELECT * FROM projects ${where} ORDER BY featured DESC, orden ASC, created_at DESC LIMIT ? OFFSET ?`).all(...params, perPage, offset) as Project[];
+  return { projects, total, hasMore: offset + projects.length < total };
+}
+
+export function getProjectById(id: number): Project | undefined {
+  const db = getDb();
+  return db.prepare('SELECT * FROM projects WHERE id = ?').get(id) as Project | undefined;
+}
+
+export function insertProject(data: {
+  nombre: string;
+  slug: string;
+  url?: string;
+  categoria: string;
+  descripcion?: string;
+  imagen?: string;
+  featured?: number;
+  visible?: number;
+  orden?: number;
+}): number {
+  const db = getDb();
+  const result = db.prepare(`
+    INSERT INTO projects (nombre, slug, url, categoria, descripcion, imagen, featured, visible, orden)
+    VALUES (@nombre, @slug, @url, @categoria, @descripcion, @imagen, @featured, @visible, @orden)
+  `).run({
+    nombre: data.nombre,
+    slug: data.slug,
+    url: data.url || null,
+    categoria: data.categoria,
+    descripcion: data.descripcion || null,
+    imagen: data.imagen || null,
+    featured: data.featured || 0,
+    visible: data.visible ?? 1,
+    orden: data.orden || 0,
+  });
+  return result.lastInsertRowid as number;
+}
+
+export function updateProject(id: number, data: Partial<Omit<Project, 'id' | 'created_at' | 'updated_at'>>): boolean {
+  const db = getDb();
+  const fields: string[] = [];
+  const params: Record<string, unknown> = { id };
+
+  for (const [key, val] of Object.entries(data)) {
+    if (val !== undefined) {
+      fields.push(`${key} = @${key}`);
+      params[key] = val;
+    }
+  }
+  if (fields.length === 0) return false;
+  fields.push("updated_at = datetime('now')");
+
+  const result = db.prepare(`UPDATE projects SET ${fields.join(', ')} WHERE id = @id`).run(params);
+  return result.changes > 0;
+}
+
+export function deleteProject(id: number): boolean {
+  const db = getDb();
+  const result = db.prepare('DELETE FROM projects WHERE id = ?').run(id);
+  return result.changes > 0;
+}
+
+export function getProjectStats(): { total: number; visibles: number; destacados: number } {
+  const db = getDb();
+  const total = (db.prepare('SELECT COUNT(*) as c FROM projects').get() as { c: number }).c;
+  const visibles = (db.prepare('SELECT COUNT(*) as c FROM projects WHERE visible = 1').get() as { c: number }).c;
+  const destacados = (db.prepare('SELECT COUNT(*) as c FROM projects WHERE featured = 1').get() as { c: number }).c;
+  return { total, visibles, destacados };
 }

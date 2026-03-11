@@ -1,0 +1,195 @@
+---
+/**
+ * /admin/proyectos - Lista de proyectos
+ */
+export const prerender = false;
+
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { isAuthenticated } from '../../../lib/auth';
+import { getProjects, getProjectStats } from '../../../lib/db';
+
+if (!isAuthenticated(Astro.request)) {
+  return Astro.redirect('/admin/');
+}
+
+const categoria = Astro.url.searchParams.get('categoria') || 'todas';
+const page = parseInt(Astro.url.searchParams.get('page') || '1');
+const { projects, total } = getProjects({ categoria, page });
+const stats = getProjectStats();
+const totalPages = Math.ceil(total / 20);
+
+const categoriaLabels: Record<string, string> = {
+  'landing': 'Landing Page',
+  'sitio-web': 'Sitio Web',
+  'ecommerce': 'E-commerce',
+  'corporativo': 'Corporativo',
+  'bienes-raices': 'Bienes Raices',
+  'profesional': 'Profesional',
+  'restaurante': 'Restaurante',
+  'otro': 'Otro',
+};
+
+function formatDate(d: string): string {
+  return new Date(d + 'Z').toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+---
+
+<AdminLayout title="Proyectos">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-2xl font-bold text-white">Proyectos</h1>
+    <a href="/admin/proyectos/nuevo" class="gradient-bg text-white font-semibold px-5 py-2 rounded-lg text-sm hover:opacity-90 transition-opacity">
+      + Nuevo Proyecto
+    </a>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-3 gap-4 mb-8">
+    {[
+      { label: 'Total', value: stats.total, color: 'bg-white/5' },
+      { label: 'Visibles', value: stats.visibles, color: 'bg-green-500/10 border-green-500/20' },
+      { label: 'Destacados', value: stats.destacados, color: 'bg-amber-500/10 border-amber-500/20' },
+    ].map(s => (
+      <div class={`${s.color} border border-white/10 rounded-xl p-4 text-center`}>
+        <div class="text-2xl font-bold text-white">{s.value}</div>
+        <div class="text-xs text-white/50">{s.label}</div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+    <a href="/admin/proyectos"
+      class={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${categoria === 'todas' ? 'gradient-bg text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}>
+      Todas
+    </a>
+    {Object.entries(categoriaLabels).map(([key, label]) => (
+      <a href={`/admin/proyectos?categoria=${key}`}
+        class={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${categoria === key ? 'gradient-bg text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}>
+        {label}
+      </a>
+    ))}
+  </div>
+
+  <!-- Table -->
+  {projects.length === 0 ? (
+    <div class="bg-white/5 border border-white/10 rounded-xl p-12 text-center">
+      <p class="text-white/40">No hay proyectos {categoria !== 'todas' ? `en "${categoriaLabels[categoria] || categoria}"` : ''}</p>
+      <a href="/admin/proyectos/nuevo" class="text-cyan-400 hover:text-cyan-300 text-sm mt-2 inline-block">Crear el primero &rarr;</a>
+    </div>
+  ) : (
+    <div class="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-white/10">
+              <th class="text-left text-xs font-medium text-white/50 px-4 py-3">Imagen</th>
+              <th class="text-left text-xs font-medium text-white/50 px-4 py-3">Nombre</th>
+              <th class="text-left text-xs font-medium text-white/50 px-4 py-3">Categoria</th>
+              <th class="text-center text-xs font-medium text-white/50 px-4 py-3">Visible</th>
+              <th class="text-center text-xs font-medium text-white/50 px-4 py-3">Destacado</th>
+              <th class="text-left text-xs font-medium text-white/50 px-4 py-3">Fecha</th>
+              <th class="px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {projects.map(p => (
+              <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                <td class="px-4 py-3">
+                  {p.imagen ? (
+                    <img src={p.imagen} alt={p.nombre} class="w-16 h-10 object-cover object-top rounded" />
+                  ) : (
+                    <div class="w-16 h-10 bg-white/10 rounded flex items-center justify-center text-white/30 text-xs">Sin img</div>
+                  )}
+                </td>
+                <td class="px-4 py-3">
+                  <div class="text-sm text-white font-medium">{p.nombre}</div>
+                  {p.url && <div class="text-xs text-white/40 truncate max-w-[200px]">{p.url}</div>}
+                </td>
+                <td class="px-4 py-3">
+                  <span class="inline-block px-2 py-1 rounded-md text-xs font-medium bg-purple-500/20 text-purple-300">
+                    {categoriaLabels[p.categoria] || p.categoria}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-center">
+                  <button data-toggle-visible={p.id} class="text-lg cursor-pointer" title={p.visible ? 'Visible' : 'Oculto'}>
+                    {p.visible ? '👁️' : '🙈'}
+                  </button>
+                </td>
+                <td class="px-4 py-3 text-center">
+                  <button data-toggle-featured={p.id} class="text-lg cursor-pointer" title={p.featured ? 'Destacado' : 'No destacado'}>
+                    {p.featured ? '⭐' : '☆'}
+                  </button>
+                </td>
+                <td class="px-4 py-3 text-sm text-white/60">{formatDate(p.created_at)}</td>
+                <td class="px-4 py-3 flex gap-3">
+                  <a href={`/admin/proyectos/${p.id}`} class="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors">
+                    Editar
+                  </a>
+                  <button data-delete-project={p.id} class="text-red-400 hover:text-red-300 text-sm font-medium transition-colors cursor-pointer">
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )}
+
+  <!-- Pagination -->
+  {totalPages > 1 && (
+    <div class="flex justify-center gap-2 mt-6">
+      {page > 1 && (
+        <a href={`/admin/proyectos?categoria=${categoria}&page=${page - 1}`}
+          class="px-4 py-2 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 text-sm">&larr; Anterior</a>
+      )}
+      <span class="px-4 py-2 text-white/40 text-sm">Pagina {page} de {totalPages}</span>
+      {page < totalPages && (
+        <a href={`/admin/proyectos?categoria=${categoria}&page=${page + 1}`}
+          class="px-4 py-2 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 text-sm">Siguiente &rarr;</a>
+      )}
+    </div>
+  )}
+</AdminLayout>
+
+<script>
+function initAdminProyectos() {
+  // Toggle visible
+  document.querySelectorAll<HTMLButtonElement>('[data-toggle-visible]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.toggleVisible;
+      const isVisible = btn.textContent?.trim() === '👁️';
+      const form = new FormData();
+      form.set('visible', isVisible ? '0' : '1');
+      const res = await fetch(`/api/admin/projects/${id}`, { method: 'PATCH', body: form });
+      if (res.ok) window.location.reload();
+    });
+  });
+
+  // Toggle featured
+  document.querySelectorAll<HTMLButtonElement>('[data-toggle-featured]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.toggleFeatured;
+      const isFeatured = btn.textContent?.trim() === '⭐';
+      const form = new FormData();
+      form.set('featured', isFeatured ? '0' : '1');
+      const res = await fetch(`/api/admin/projects/${id}`, { method: 'PATCH', body: form });
+      if (res.ok) window.location.reload();
+    });
+  });
+
+  // Delete
+  document.querySelectorAll<HTMLButtonElement>('[data-delete-project]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('¿Seguro que quieres eliminar este proyecto?')) return;
+      const id = btn.dataset.deleteProject;
+      const res = await fetch(`/api/admin/projects/${id}`, { method: 'DELETE' });
+      if (res.ok) window.location.reload();
+    });
+  });
+}
+initAdminProyectos();
+document.addEventListener('astro:page-load', initAdminProyectos);
+</script>

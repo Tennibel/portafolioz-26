@@ -4,11 +4,10 @@ import type { APIRoute } from 'astro';
 import { clearSessionCookie } from '../../../lib/auth';
 
 export const POST: APIRoute = async () => {
-  return new Response(JSON.stringify({ ok: true }), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-      'Set-Cookie': clearSessionCookie(),
-    },
-  });
+  const headers = new Headers();
+  headers.set('Content-Type', 'application/json');
+  // Clear cookie on both paths (old `/admin` and new `/`)
+  headers.append('Set-Cookie', clearSessionCookie());
+  headers.append('Set-Cookie', 'pz_admin_session=; Path=/admin; HttpOnly; SameSite=Strict; Max-Age=0');
+  return new Response(JSON.stringify({ ok: true }), { status: 200, headers });
 };

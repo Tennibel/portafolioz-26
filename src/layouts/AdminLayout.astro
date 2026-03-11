@@ -38,6 +38,17 @@ const { title } = Astro.props;
           <button id="btn-logout" class="text-sm text-red-400 hover:text-red-300 transition-colors cursor-pointer">Cerrar sesion</button>
         </div>
       </div>
+      <!-- Nav tabs -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex gap-1">
+        <a href="/admin/cotizaciones"
+          class={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${Astro.url.pathname.startsWith('/admin/cotizaciones') ? 'border-cyan-400 text-cyan-400' : 'border-transparent text-white/50 hover:text-white/80'}`}>
+          Cotizaciones
+        </a>
+        <a href="/admin/proyectos"
+          class={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${Astro.url.pathname.startsWith('/admin/proyectos') ? 'border-cyan-400 text-cyan-400' : 'border-transparent text-white/50 hover:text-white/80'}`}>
+          Proyectos
+        </a>
+      </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
