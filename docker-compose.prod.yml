@@ -1,0 +1,20 @@
+services:
+  portafolioz:
+    image: portafolioz:latest
+    container_name: portafolioz
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - /home/deploy/docker/portafolioz/data:/app/data
+      - /home/deploy/docker/portafolioz/uploads:/app/uploads
+    environment:
+      - HOST=0.0.0.0
+      - PORT=4000
+      - DB_PATH=/app/data/cotizador.db
+      - UPLOAD_DIR=/app/uploads/projects
+    networks:
+      - proxy-net
+
+networks:
+  proxy-net:
+    external: true

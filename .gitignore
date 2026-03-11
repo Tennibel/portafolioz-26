@@ -25,3 +25,9 @@ data/
 
 # jetbrains setting folder
 .idea/
+
+# Docker deploy artifacts
+*.tar.gz
+
+# Uploaded files (root level only, not src/pages/uploads/)
+/uploads/
