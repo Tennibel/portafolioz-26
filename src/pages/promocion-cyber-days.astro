@@ -1,0 +1,269 @@
+---
+/**
+ * promocion-cyber-days.astro - Landing campaña Cyber Days 2026
+ *
+ * Colores campaña: Azul eléctrico + Violeta + Cian (estética cyber/tech)
+ * Descuento: 10% en todos los paquetes + 3 MSI
+ * Fecha: 1-5 de diciembre 2026
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+const features = [
+  { icon: '🌐', title: 'Hosting y Dominio Web', desc: 'Registro de dominio y hosting incluido por un ano. Asistencia tecnica garantizada.' },
+  { icon: '🎨', title: 'Desarrollo Web a la Medida', desc: 'Diseno personalizado que captura la esencia de tu marca. 100% adaptado a tu proyecto.' },
+  { icon: '🖼️', title: 'Banco de Imagenes', desc: 'Recursos de los principales bancos de imagenes mundiales incluidos sin costo adicional.' },
+  { icon: '🔒', title: 'Navegacion Segura', desc: 'Certificado SSL, seguridad contra ataques y backups semanales incluidos.' },
+  { icon: '🔍', title: 'Posicionamiento en Google', desc: 'SEO basico incluido en todos los planes. Posicionate en los primeros lugares.' },
+  { icon: '🛟', title: 'Soporte y Capacitacion', desc: 'Soporte tecnico y capacitaciones para gestionar tu sitio web o tienda online.' },
+];
+
+const planes = [
+  {
+    name: 'Emprendedor',
+    originalPrice: '$6,900',
+    promoPrice: '$6,210',
+    savings: '$690',
+    desc: 'Para convertir tu idea en realidad.',
+    features: ['Dominio y hospedaje anual', 'Landing informativa', 'Formulario de contacto', '3 cuentas de correo', '5 GB de espacio'],
+    popular: false,
+  },
+  {
+    name: 'Negocio Local',
+    originalPrice: '$7,800',
+    promoPrice: '$7,020',
+    savings: '$780',
+    desc: 'Digitaliza tu negocio y crece.',
+    features: ['Dominio y hospedaje anual', '4 secciones web', 'Formulario de contacto', '6 cuentas de correo', '10 GB de espacio'],
+    popular: false,
+  },
+  {
+    name: 'PYME',
+    originalPrice: '$8,900',
+    promoPrice: '$8,010',
+    savings: '$890',
+    desc: 'Revoluciona tu negocio y vende mas.',
+    features: ['Dominio y hospedaje anual', '6 secciones web', 'Formulario de contacto', 'Correos ilimitados', '32 GB de espacio'],
+    popular: true,
+  },
+];
+
+const faqs = [
+  { q: 'Hasta cuando es valida la promocion?', a: 'La promocion Cyber Days 2026 es valida del 1 al 5 de diciembre de 2026. Los precios con descuento y meses sin intereses aplican solo para proyectos contratados dentro de estas fechas.' },
+  { q: 'Como funcionan los 3 meses sin intereses?', a: 'Al pagar con tarjeta de credito participante, el monto total se divide en 3 pagos iguales sin generar intereses. Aplica con tarjetas Visa, Mastercard y American Express de bancos participantes.' },
+  { q: 'Cuando tengo que pagar de nuevo?', a: 'La renovacion es anual. Emprendedor: $1,840 + IVA. Negocio Local: $2,450 + IVA. PYME: $3,140 + IVA.' },
+  { q: 'Como se paga el diseno web?', a: '50% al iniciar el proyecto y 50% al entregar. Aceptamos transferencia, deposito y tarjeta de credito/debito. Los 3 MSI aplican sobre el monto total.' },
+  { q: 'Cuanto tiempo tarda el desarrollo?', a: '8-10 dias habiles. A los 3 dias recibiras un avance. Proyectos urgentes se pueden agilizar.' },
+  { q: 'Puedo agregar funcionalidades adicionales?', a: 'Si, todos los paquetes son escalables. Podemos agregar tienda online, blog, sistema de citas y mas a tu plan.' },
+];
+---
+
+<Layout title="Cyber Days 2026 | Portafolio Z - 10% Off + 3 MSI" description="Cyber Days 2026: obten tu sitio web profesional con 10% de descuento + 3 meses sin intereses. Paquetes desde $6,210 + IVA. Solo del 1 al 5 de diciembre.">
+  <Navbar />
+
+  <!-- HERO - Cyber Days: Azul eléctrico + Violeta + Cian -->
+  <section class="relative pt-32 pb-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-950 via-indigo-950 to-gray-950"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.2),transparent_60%)]"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-violet-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+    <!-- Decorative dots -->
+    <div class="absolute top-32 right-20 w-2 h-2 rounded-full bg-cyan-400/60"></div>
+    <div class="absolute top-40 right-32 w-1.5 h-1.5 rounded-full bg-violet-400/60"></div>
+    <div class="absolute bottom-32 left-20 w-2 h-2 rounded-full bg-cyan-400/40"></div>
+    <!-- Grid lines decoration -->
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 60px 60px;"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <!-- Campaign badge -->
+      <div class="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-500/30 rounded-full px-5 py-2 mb-8" data-animate>
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span class="text-sm font-semibold text-indigo-300 tracking-wider uppercase">Cyber Days 2026 &bull; 1-5 Diciembre</span>
+      </div>
+
+      <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-6" data-animate>
+        <span class="text-cyan-400">10% Off</span> + <span class="text-violet-400">3 MSI</span>
+        <br><span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-violet-400 bg-clip-text text-transparent">en tu Sitio Web</span>
+      </h1>
+      <p class="text-xl text-white/70 max-w-3xl mx-auto mb-10" data-animate>
+        Obten tu pagina web profesional con <strong class="text-cyan-300">10% de descuento</strong> y pagalo a <strong class="text-violet-300">3 meses sin intereses</strong>. Diseno profesional, hosting incluido y entrega rapida.
+      </p>
+
+      <!-- Double benefit banner -->
+      <div class="inline-flex flex-wrap items-center justify-center gap-4 mb-10" data-animate>
+        <div class="flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 rounded-2xl px-5 py-3">
+          <span class="text-cyan-400 text-lg">💰</span>
+          <span class="text-cyan-200 font-medium">10% de descuento directo</span>
+        </div>
+        <div class="flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-2xl px-5 py-3">
+          <span class="text-violet-400 text-lg">💳</span>
+          <span class="text-violet-200 font-medium">3 meses sin intereses</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center" data-animate>
+        <button data-open-cotizador class="bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-bold px-8 py-4 rounded-full text-lg hover:from-indigo-600 hover:to-cyan-600 transition-all hover:scale-105 shadow-xl shadow-indigo-500/20 cursor-pointer">
+          Aprovecha la Promo
+        </button>
+        <a href="https://wa.me/525561959724?text=Hola%2C%20me%20interesa%20la%20promo%20Cyber%20Days%202026" target="_blank" rel="noopener" class="border-2 border-white/20 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value prop -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">Creamos increibles <span class="bg-gradient-to-r from-indigo-500 to-cyan-500 bg-clip-text text-transparent">Sitios Web</span></h2>
+        <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Te ofrecemos la oportunidad perfecta para llevar tu negocio al siguiente nivel con sitios web innovadores, rapidos y adaptados a tus necesidades.</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        {['Diseno web personalizado y profesional', 'Optimizacion SEO para Google', 'Adaptacion a dispositivos moviles', 'Soporte continuo y mantenimiento'].map((f) => (
+          <div class="flex items-center gap-3 p-4 rounded-xl bg-gray-50" data-animate>
+            <svg class="w-6 h-6 text-indigo-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+            <span class="text-gray-700 font-medium">{f}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-950 via-indigo-950 to-gray-950"></div>
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 60px 60px;"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">Todos los disenos <span class="text-cyan-400">incluyen</span></h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {features.map((f) => (
+          <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all" data-animate>
+            <div class="text-3xl mb-4">{f.icon}</div>
+            <h3 class="text-lg font-bold text-white mb-2">{f.title}</h3>
+            <p class="text-white/60 text-sm leading-relaxed">{f.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING - Cyber Days con descuento + 3MSI -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <div class="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-200 rounded-full px-4 py-1.5 mb-4">
+          <span class="text-indigo-600 font-bold text-sm">⚡ CYBER DAYS 2026</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">Paquetes con <span class="bg-gradient-to-r from-indigo-500 to-cyan-500 bg-clip-text text-transparent">10% Off + 3 MSI</span></h2>
+        <p class="text-gray-500 mt-3">Descuento directo + meses sin intereses con tarjeta de credito participante</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        {planes.map((plan) => (
+          <div class={`relative rounded-2xl p-8 ${plan.popular ? 'bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-700 text-white shadow-2xl shadow-indigo-500/25 scale-105' : 'bg-gray-50 border border-gray-200'} transition-all hover:shadow-xl`} data-animate>
+            {plan.popular && (
+              <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-cyan-400 text-gray-900 text-xs font-bold uppercase tracking-wider">
+                Mas Vendido
+              </div>
+            )}
+            <h3 class={`text-xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>{plan.name}</h3>
+            <p class={`text-sm mb-4 ${plan.popular ? 'text-white/70' : 'text-gray-500'}`}>{plan.desc}</p>
+            <div class="mb-2">
+              <span class={`text-sm line-through ${plan.popular ? 'text-white/40' : 'text-gray-400'}`}>{plan.originalPrice}</span>
+            </div>
+            <div class="mb-1">
+              <span class={`text-4xl font-bold ${plan.popular ? 'text-cyan-300' : 'bg-gradient-to-r from-indigo-500 to-cyan-500 bg-clip-text text-transparent'}`}>{plan.promoPrice}</span>
+              <span class={`text-sm ${plan.popular ? 'text-white/60' : 'text-gray-400'}`}> + IVA</span>
+            </div>
+            <div class="flex flex-wrap gap-2 mb-6">
+              <span class={`inline-block px-3 py-1 rounded-full text-xs font-bold ${plan.popular ? 'bg-cyan-400/20 text-cyan-300' : 'bg-indigo-50 text-indigo-600'}`}>
+                Ahorras {plan.savings}
+              </span>
+              <span class={`inline-block px-3 py-1 rounded-full text-xs font-bold ${plan.popular ? 'bg-violet-400/20 text-violet-300' : 'bg-violet-50 text-violet-600'}`}>
+                3 MSI
+              </span>
+            </div>
+            <ul class="space-y-3 mb-8">
+              {plan.features.map((f) => (
+                <li class={`flex items-start gap-2 text-sm ${plan.popular ? 'text-white/90' : 'text-gray-600'}`}>
+                  <svg class={`w-5 h-5 flex-shrink-0 mt-0.5 ${plan.popular ? 'text-cyan-300' : 'text-indigo-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <button data-open-cotizador class={`w-full py-3 rounded-xl font-semibold transition-all cursor-pointer ${plan.popular ? 'bg-cyan-400 text-gray-900 hover:bg-cyan-300' : 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white hover:opacity-90'}`}>
+              Aprovecha ahora
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">Preguntas <span class="bg-gradient-to-r from-indigo-500 to-cyan-500 bg-clip-text text-transparent">Frecuentes</span></h2>
+      </div>
+      <div class="space-y-4">
+        {faqs.map((faq, i) => (
+          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden" data-animate>
+            <button class="faq-toggle w-full px-6 py-5 text-left flex justify-between items-center gap-4 cursor-pointer" data-faq={i}>
+              <span class="font-semibold text-gray-900">{faq.q}</span>
+              <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div class="faq-content hidden px-6 pb-5">
+              <p class="text-gray-600 leading-relaxed">{faq.a}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-600"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">No dejes pasar esta oportunidad</h2>
+      <p class="text-white/80 text-lg mb-8">Cyber Days 2026 termina el 5 de diciembre. Aprovecha el 10% de descuento + 3 meses sin intereses en tu sitio web profesional.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button data-open-cotizador class="bg-white text-indigo-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl cursor-pointer">
+          Cotiza con Descuento
+        </button>
+        <a href="https://wa.me/525561959724?text=Hola%2C%20quiero%20aprovechar%20la%20promo%20Cyber%20Days%202026" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>
+
+<script>
+function initFaqCD() {
+  document.querySelectorAll('.faq-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const content = btn.nextElementSibling;
+      const icon = btn.querySelector('svg');
+      const isOpen = !content.classList.contains('hidden');
+      document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+      document.querySelectorAll('.faq-toggle svg').forEach(s => s.style.transform = '');
+      if (!isOpen) {
+        content.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+      }
+    });
+  });
+}
+initFaqCD();
+document.addEventListener('astro:page-load', initFaqCD);
+</script>
