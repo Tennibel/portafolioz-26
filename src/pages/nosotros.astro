@@ -288,22 +288,24 @@ const stats = [
 
   <!-- ================================================
        SECCION 7: Valores
-       Fondo blanco, grid de 6 valores
+       Fondo degradado pink -> coral con glass-cards
        ================================================ -->
-  <section class="bg-white py-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-pink-500 via-pink-600 to-coral-500"></div>
+    <div class="absolute top-10 left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16" data-animate>
-        <p class="text-accent-600 font-medium text-sm uppercase tracking-widest mb-3">Nuestros Valores</p>
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
-          Los pilares de <span class="gradient-text">nuestro trabajo</span>
+        <p class="text-white/70 font-medium text-sm uppercase tracking-widest mb-3">Nuestros Valores</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Los pilares de <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-white">nuestro trabajo</span>
         </h2>
       </div>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" data-animate>
         {values.map((v) => (
-          <div class="bg-gray-50 rounded-2xl p-8 hover:-translate-y-2 hover:shadow-lg transition-all duration-300 group">
+          <div class="glass-card p-8 hover:bg-white/15 transition-all duration-300 group">
             <span class="text-3xl mb-4 block group-hover:scale-110 transition-transform">{v.icon}</span>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">{v.title}</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">{v.desc}</p>
+            <h3 class="text-lg font-bold text-white mb-2">{v.title}</h3>
+            <p class="text-white/60 text-sm leading-relaxed">{v.desc}</p>
           </div>
         ))}
       </div>

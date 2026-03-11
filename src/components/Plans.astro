@@ -1,4 +1,10 @@
 ---
+/**
+ * Plans.astro - Planes de precios
+ *
+ * Seccion #5: Paquetes (fondo blanco)
+ * 4 planes con cards claras. El popular destaca con gradient.
+ */
 const plans = [
   { name: 'Landing Page', price: '$5,600', desc: '1-3 secciones', features: ['Diseño responsivo', '1-3 secciones', 'Formulario de contacto', 'SEO básico', 'Certificado SSL'], popular: false },
   { name: 'Sitio Básico', price: '$6,400', desc: '2-4 secciones', features: ['2-4 secciones', 'Diseño personalizado', 'SEO básico', 'Certificado SSL', 'Banco de imágenes'], popular: true },
@@ -29,7 +35,7 @@ const plans = [
               </li>
             ))}
           </ul>
-          <a href="#contacto" class={`block text-center font-semibold py-3 px-5 rounded-full transition-all text-sm ${plan.popular ? 'bg-white text-primary-600 hover:bg-white/90' : 'border-2 border-accent-500 text-accent-600 hover:bg-accent-500 hover:text-white'}`}>¡Quiero mi Web!</a>
+          <a href="/contacto" class={`block text-center font-semibold py-3 px-5 rounded-full transition-all text-sm ${plan.popular ? 'bg-white text-primary-600 hover:bg-white/90' : 'border-2 border-accent-500 text-accent-600 hover:bg-accent-500 hover:text-white'}`}>¡Quiero mi Web!</a>
         </div>
       ))}
     </div>

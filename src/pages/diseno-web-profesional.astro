@@ -1,0 +1,312 @@
+---
+/**
+ * diseno-web-profesional.astro - Pagina de Diseño Web Profesional
+ *
+ * Secciones:
+ * 1. Hero interno con breadcrumb
+ * 2. Que incluye el servicio (3 cards)
+ * 3. Planes de precios (3 tiers)
+ * 4. Servicios adicionales incluidos (4 items)
+ * 5. FAQ
+ * 6. CTA final
+ *
+ * Contenido real de portafolioz.com/diseno-web-profesional/
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+// Que incluye el servicio
+const serviceIncludes = [
+  {
+    title: 'Asesoramiento en Marketing Digital',
+    desc: 'Analizamos tu negocio y creamos una estrategia digital para que tu sitio web convierta visitantes en clientes reales.',
+    icon: '📊',
+    gradient: 'from-cyan-500 to-primary-500',
+  },
+  {
+    title: 'Soporte 365 Días',
+    desc: 'Soporte técnico todo el año para resolver cualquier problema con tu sitio web. Estamos contigo en cada paso.',
+    icon: '🛟',
+    gradient: 'from-primary-500 to-accent-500',
+  },
+  {
+    title: 'Optimización SEO',
+    desc: 'Optimizamos tu sitio para que aparezca en las primeras posiciones de Google y atraigas más tráfico orgánico.',
+    icon: '🔍',
+    gradient: 'from-accent-500 to-pink-500',
+  },
+];
+
+// Planes de precios
+const plans = [
+  {
+    name: 'Emprendedor',
+    price: '$6,900',
+    desc: 'Ideal para comenzar',
+    features: [
+      'Dominio .com incluido',
+      'Hosting anual incluido',
+      'Landing Page (1 sección)',
+      'Formulario de contacto',
+      '3 cuentas de correo',
+      '5GB de almacenamiento',
+      'Certificado SSL',
+    ],
+    popular: false,
+  },
+  {
+    name: 'Negocio Local',
+    price: '$7,900',
+    desc: 'Para negocios establecidos',
+    features: [
+      'Dominio .com incluido',
+      'Hosting anual incluido',
+      '4 secciones web',
+      'Formulario de contacto',
+      '6 cuentas de correo',
+      '10GB de almacenamiento',
+      'Certificado SSL',
+      'SEO básico',
+    ],
+    popular: false,
+  },
+  {
+    name: 'PYME',
+    price: '$8,900',
+    desc: 'Solución completa',
+    features: [
+      'Dominio .com incluido',
+      'Hosting anual incluido',
+      '6 secciones web',
+      'Formulario de contacto',
+      'Correos ilimitados',
+      '32GB de almacenamiento',
+      'Certificado SSL',
+      'SEO avanzado',
+      'Banco de imágenes',
+    ],
+    popular: true,
+  },
+];
+
+// Servicios adicionales incluidos
+const additionalServices = [
+  { title: 'Certificados SSL', desc: 'Seguridad HTTPS para proteger la información de tus visitantes y mejorar tu posicionamiento.', icon: '🔒' },
+  { title: 'Google Analytics', desc: 'Implementación completa para medir el tráfico, comportamiento y conversiones de tu sitio.', icon: '📈' },
+  { title: 'Redes Sociales', desc: 'Integración con tus perfiles de Facebook, Instagram, TikTok y demás redes sociales.', icon: '📱' },
+  { title: 'Diseño Responsivo', desc: 'Tu sitio se adapta perfectamente a celulares, tablets y computadoras de escritorio.', icon: '💻' },
+];
+
+// FAQ
+const faqs = [
+  {
+    q: '¿Qué necesito para tener mi sitio web?',
+    a: 'Necesitamos que nos compartas la información general para el contenido: secciones, textos, fotografías y gráficos. Nosotros nos encargamos del diseño, desarrollo y publicación.',
+  },
+  {
+    q: '¿Cómo se paga el diseño web?',
+    a: 'El pago se divide en dos partes: 50% al iniciar el proyecto y 50% al momento de la entrega. Aceptamos transferencia bancaria, depósito y pagos con tarjeta.',
+  },
+  {
+    q: '¿Cuánto tiempo tarda el desarrollo?',
+    a: 'Entre 15 y 20 días hábiles dependiendo del plan. Al día 8 recibirás un avance del progreso para que puedas revisar y dar retroalimentación.',
+  },
+  {
+    q: '¿Cuándo tengo que pagar de nuevo?',
+    a: 'La renovación anual incluye hosting y dominio. Los costos varían según tu plan y se pagan una vez al año para mantener tu sitio activo.',
+  },
+  {
+    q: '¿Si quiero cambiar el contenido?',
+    a: 'Puedes solicitar cambios de contenido en cualquier momento. Los costos varían según el tipo de cambio y la frecuencia. También ofrecemos planes de mantenimiento mensual.',
+  },
+  {
+    q: '¿Cómo me pueden ayudar con contenido?',
+    a: 'Te damos orientación en la estructura de tu sitio. Además contamos con redactores, diseñadores y fotógrafos profesionales que pueden crear el contenido por ti.',
+  },
+];
+---
+
+<Layout title="Diseño Web Profesional" description="Diseño web profesional para emprendedores y negocios en México. Más tráfico, mejor posicionamiento, nuevos clientes y ventas.">
+  <Navbar />
+
+  <!-- ================================================
+       SECCION 1: Hero interno
+       ================================================ -->
+  <section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-cyan-500 via-primary-600 to-accent-600"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-10 left-20 w-80 h-80 bg-pink-400/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-10 w-64 h-64 bg-cyan-400/20 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <nav class="flex justify-center gap-2 text-sm text-white/60 mb-6" data-animate>
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span class="text-white">Diseño Web Profesional</span>
+      </nav>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4" data-animate>
+        Diseño Web Profesional para <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-amber-300">emprendedores y negocios</span>
+      </h1>
+      <p class="text-lg text-white/70 max-w-2xl mx-auto mb-8" data-animate>
+        Más tráfico, mejor posicionamiento, nuevos clientes y ventas. Tu éxito comercial comienza con un sitio web profesional.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center" data-animate>
+        <a href="/contacto" class="gradient-bg text-white font-semibold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105">
+          Solicitar Cotización
+        </a>
+        <a href="https://wa.me/5215561959724" target="_blank" rel="noopener" class="border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Hablar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 2: Que incluye el servicio
+       ================================================ -->
+  <section class="bg-dark-900 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-cyan-400 font-medium text-sm uppercase tracking-widest mb-3">Servicio Integral</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          ¿Qué incluye nuestro servicio de <span class="gradient-text">diseño web profesional?</span>
+        </h2>
+        <p class="text-white/50 mt-4 max-w-2xl mx-auto">Somos una agencia de diseño web que te brinda las herramientas necesarias para tener éxito en línea.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8" data-animate>
+        {serviceIncludes.map((s) => (
+          <div class="group relative glass-card p-8 hover:scale-[1.03] hover:-translate-y-2 transition-all duration-500 cursor-pointer overflow-hidden">
+            <div class={`absolute inset-0 bg-gradient-to-br ${s.gradient} opacity-0 group-hover:opacity-15 transition-opacity duration-500 rounded-2xl`}></div>
+            <div class="relative z-10">
+              <span class="text-4xl mb-4 block group-hover:scale-110 transition-transform">{s.icon}</span>
+              <h3 class="text-xl font-bold text-white mb-3">{s.title}</h3>
+              <p class="text-white/50 text-sm leading-relaxed">{s.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 3: Planes de precios
+       ================================================ -->
+  <section class="bg-white py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-accent-600 font-medium text-sm uppercase tracking-widest mb-3">Planes y Precios</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+          Elige el plan ideal para tu <span class="gradient-text">negocio</span>
+        </h2>
+        <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Todos los precios son pago único + IVA. Incluyen dominio, hosting y certificado SSL.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto" data-animate>
+        {plans.map((plan) => (
+          <div class={`relative rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 ${plan.popular ? 'bg-gradient-to-br from-primary-600 via-accent-600 to-pink-600 text-white ring-2 ring-accent-400 shadow-2xl scale-105' : 'bg-gray-50 text-gray-900 border border-gray-200'}`}>
+            {plan.popular && (<div class="absolute -top-4 left-1/2 -translate-x-1/2"><span class="bg-cyan-400 text-dark-900 text-xs font-bold px-4 py-1.5 rounded-full">Más Popular</span></div>)}
+            <h3 class="text-xl font-bold mb-1">{plan.name}</h3>
+            <p class={`text-sm mb-5 ${plan.popular ? 'text-white/60' : 'text-gray-500'}`}>{plan.desc}</p>
+            <div class="mb-6">
+              <span class="text-4xl font-extrabold">{plan.price}</span>
+              <span class={`text-sm ml-1 ${plan.popular ? 'text-white/50' : 'text-gray-400'}`}>MXN + IVA</span>
+            </div>
+            <ul class="space-y-3 mb-8">
+              {plan.features.map((f) => (
+                <li class="flex items-center gap-2.5 text-sm">
+                  <svg class={`w-4 h-4 flex-shrink-0 ${plan.popular ? 'text-cyan-300' : 'text-accent-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <span class={plan.popular ? 'text-white/80' : 'text-gray-600'}>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <a href="https://wa.me/5215561959724" target="_blank" rel="noopener" class={`block text-center font-semibold py-3.5 px-5 rounded-full transition-all text-sm ${plan.popular ? 'bg-white text-primary-600 hover:bg-white/90' : 'border-2 border-accent-500 text-accent-600 hover:bg-accent-500 hover:text-white'}`}>Comienza hoy</a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 4: Servicios adicionales incluidos
+       ================================================ -->
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-600 via-accent-600 to-pink-600"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-400/15 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-20 w-80 h-80 bg-pink-400/15 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-cyan-200 font-medium text-sm uppercase tracking-widest mb-3">Incluido en todos los planes</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Todo lo que necesitas para <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-white">vender en línea</span>
+        </h2>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" data-animate>
+        {additionalServices.map((s) => (
+          <div class="glass-card p-8 text-center hover:bg-white/15 hover:-translate-y-2 transition-all duration-300 group">
+            <span class="text-4xl mb-4 block group-hover:scale-110 transition-transform">{s.icon}</span>
+            <h3 class="text-base font-bold text-white mb-2">{s.title}</h3>
+            <p class="text-white/50 text-sm leading-relaxed">{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 5: FAQ
+       ================================================ -->
+  <section class="bg-white py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-accent-600 font-medium text-sm uppercase tracking-widest mb-3">Preguntas Frecuentes</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+          Resolvemos tus <span class="gradient-text">dudas</span>
+        </h2>
+      </div>
+      <div class="space-y-4" data-animate>
+        {faqs.map((faq) => (
+          <details class="group bg-gray-50 rounded-2xl overflow-hidden">
+            <summary class="flex items-center justify-between p-6 cursor-pointer hover:bg-gray-100 transition-colors">
+              <h3 class="text-base font-semibold text-gray-900 pr-4">{faq.q}</h3>
+              <svg class="w-5 h-5 text-accent-500 flex-shrink-0 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="px-6 pb-6">
+              <p class="text-gray-500 text-sm leading-relaxed">{faq.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 6: CTA final
+       ================================================ -->
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-coral-500 via-coral-600 to-amber-500"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-animate>
+      <div class="glass-card-light p-12 md:p-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-dark-900 mb-4">
+          ¿Listo para tener tu <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-600">sitio web profesional?</span>
+        </h2>
+        <p class="text-dark-700/70 text-lg mb-10 max-w-2xl mx-auto">
+          Tu próximo cliente te está buscando en Google. Asegúrate de que te encuentre con un sitio web que genera confianza y convierte.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/contacto" class="gradient-bg text-white font-semibold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105">
+            Solicitar Cotización
+          </a>
+          <a href="https://wa.me/5215561959724" target="_blank" rel="noopener" class="bg-dark-900 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-dark-800 transition-all">
+            Hablar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>

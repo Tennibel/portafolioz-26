@@ -1,0 +1,423 @@
+---
+/**
+ * paquetes-para-emprendedores.astro - Paquetes Digitales para Emprendedores
+ *
+ * Secciones:
+ * 1. Hero interno con breadcrumb
+ * 2. Introduccion + servicios incluidos (4 cards)
+ * 3. Planes de precios (3 packs)
+ * 4. Formulario de contacto
+ * 5. FAQ
+ * 6. Testimonios
+ * 7. CTA final
+ *
+ * Contenido real de portafolioz.com/paquetes-para-emprendedores/
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+// Servicios incluidos en todos los paquetes
+const includedServices = [
+  {
+    title: 'Asesoramiento en Marketing',
+    desc: 'Estrategia digital y posicionamiento de marca para que tu negocio destaque en el mercado online.',
+    icon: '📊',
+    gradient: 'from-cyan-500 to-primary-500',
+  },
+  {
+    title: 'Soporte y Mantenimiento',
+    desc: 'Soporte técnico 365 días al año para que tu sitio web siempre esté funcionando sin problemas.',
+    icon: '🛟',
+    gradient: 'from-primary-500 to-accent-500',
+  },
+  {
+    title: 'Consultoría en Ventas',
+    desc: 'Te ayudamos a crear un plan de ventas digital para que tu sitio web genere clientes reales.',
+    icon: '💰',
+    gradient: 'from-accent-500 to-pink-500',
+  },
+  {
+    title: 'Diseño Gráfico',
+    desc: 'Equipo de diseño dedicado para crear la identidad visual perfecta para tu marca y sitio web.',
+    icon: '🎨',
+    gradient: 'from-pink-500 to-coral-500',
+  },
+];
+
+// Paquetes de precios
+const packs = [
+  {
+    name: 'Pack Básico',
+    price: '$7,400',
+    desc: 'Para arrancar tu presencia digital',
+    features: [
+      '1 Landing Page',
+      'Formulario de contacto',
+      'Dominio .com incluido',
+      'Hosting anual incluido',
+      '2 cuentas de correo',
+      '5GB de almacenamiento',
+      'Firmas electrónicas',
+      'Certificado SSL',
+    ],
+    renewal: '$1,640',
+    popular: false,
+  },
+  {
+    name: 'Pack Especial',
+    price: '$8,600',
+    desc: 'La opción más completa',
+    features: [
+      'Sitio web de 4 secciones',
+      'Dominio .com incluido',
+      'Hosting anual incluido',
+      '5 cuentas de correo',
+      '10GB de almacenamiento',
+      'Firmas electrónicas',
+      'Plantillas Word corporativas',
+      'Diseño de tarjetas de presentación',
+      'Certificado SSL',
+    ],
+    renewal: '$1,950',
+    popular: true,
+  },
+  {
+    name: 'Pack Avanzado',
+    price: '$9,600',
+    desc: 'Imagen profesional completa',
+    features: [
+      'Sitio web de 4 secciones',
+      'Dominio .com incluido',
+      'Hosting anual incluido',
+      '5 cuentas de correo',
+      '10GB de almacenamiento',
+      'Diseño de logotipo',
+      'Plantillas de documentos',
+      'Diseño de tarjetas de presentación',
+      'Certificado SSL',
+    ],
+    renewal: '$2,460',
+    popular: false,
+  },
+];
+
+// FAQ
+const faqs = [
+  {
+    q: '¿Qué necesito para tener mi sitio web?',
+    a: 'Necesitamos que nos compartas toda la información general y final para el contenido: secciones, textos, fotografías y gráficos. Nosotros nos encargamos del resto.',
+  },
+  {
+    q: '¿Cómo se paga el diseño web?',
+    a: 'El pago se divide en dos partes: 50% al iniciar el proyecto y 50% al momento de la entrega final. Aceptamos transferencia bancaria, depósito y pagos con tarjeta.',
+  },
+  {
+    q: '¿Cuánto tiempo tarda el desarrollo?',
+    a: 'Entre 15 y 20 días hábiles. Al día 8 recibirás un avance del progreso para que puedas revisar y dar retroalimentación antes de la entrega final.',
+  },
+  {
+    q: '¿Cuándo tengo que pagar de nuevo?',
+    a: 'La renovación anual incluye hosting y dominio. Pack Básico: $1,640 + IVA, Pack Especial: $1,950 + IVA, Pack Avanzado: $2,460 + IVA.',
+  },
+  {
+    q: '¿Si quiero cambiar el contenido?',
+    a: 'Los costos varían según el tipo de contenido y la frecuencia de cambios. Ofrecemos planes de mantenimiento mensual personalizados.',
+  },
+  {
+    q: '¿Cómo me pueden ayudar con contenido?',
+    a: 'Te damos orientación en la estructura de tu sitio. Además contamos con redactores profesionales, diseñadores y fotógrafos que pueden crear contenido por ti.',
+  },
+];
+
+// Testimonios reales
+const testimonials = [
+  {
+    name: 'Claudia Morán',
+    role: 'Seguridad Civil',
+    quote: 'Muy responsable en la prestación de servicios, entregando en tiempo y forma. Totalmente recomendable.',
+    avatar: 'CM',
+    color: 'from-cyan-500 to-primary-500',
+  },
+  {
+    name: 'Iván Damián',
+    role: 'DIG Promocionales',
+    quote: 'Excelente servicio, muy profesional y con resultados sobresalientes. Superaron nuestras expectativas.',
+    avatar: 'ID',
+    color: 'from-accent-500 to-pink-500',
+  },
+  {
+    name: 'Alejandra Cisneros',
+    role: 'Termoventanas',
+    quote: 'Excelente servicio, muy atentos, formales y con solución inmediata a cualquier problema. Los recomiendo ampliamente.',
+    avatar: 'AC',
+    color: 'from-pink-500 to-coral-500',
+  },
+];
+---
+
+<Layout title="Paquetes para Emprendedores" description="Paquetes digitales para emprendedores. Soluciones integrales para llevar tu negocio al próximo nivel con sitio web, correo y diseño.">
+  <Navbar />
+
+  <!-- ================================================
+       SECCION 1: Hero interno
+       ================================================ -->
+  <section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-accent-600 via-pink-600 to-coral-500"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-10 right-20 w-80 h-80 bg-cyan-400/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-10 w-64 h-64 bg-amber-400/20 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <nav class="flex justify-center gap-2 text-sm text-white/60 mb-6" data-animate>
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span class="text-white">Paquetes para Emprendedores</span>
+      </nav>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4" data-animate>
+        Paquetes Digitales para <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-amber-300">Emprendedores</span>
+      </h1>
+      <p class="text-lg text-white/70 max-w-2xl mx-auto mb-4" data-animate>
+        Soluciones integrales para llevar tu negocio al próximo nivel. Tu éxito comercial está a un solo clic de distancia.
+      </p>
+      <p class="text-white/50 max-w-xl mx-auto mb-8" data-animate>
+        Nuestros paquetes están diseñados para que los emprendedores alcancen sus objetivos y conecten con su audiencia.
+      </p>
+      <a href="#paquetes" class="inline-block gradient-bg text-white font-semibold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105" data-animate>
+        Ver Paquetes
+      </a>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 2: Servicios incluidos en todos los packs
+       ================================================ -->
+  <section class="bg-dark-900 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-cyan-400 font-medium text-sm uppercase tracking-widest mb-3">Incluido en todos los paquetes</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Con nuestros paquetes digitales, <span class="gradient-text">tu éxito es nuestra misión</span>
+        </h2>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" data-animate>
+        {includedServices.map((s) => (
+          <div class="group relative glass-card p-8 hover:scale-[1.03] hover:-translate-y-2 transition-all duration-500 cursor-pointer overflow-hidden">
+            <div class={`absolute inset-0 bg-gradient-to-br ${s.gradient} opacity-0 group-hover:opacity-15 transition-opacity duration-500 rounded-2xl`}></div>
+            <div class="relative z-10">
+              <span class="text-4xl mb-4 block group-hover:scale-110 transition-transform">{s.icon}</span>
+              <h3 class="text-lg font-bold text-white mb-3">{s.title}</h3>
+              <p class="text-white/50 text-sm leading-relaxed">{s.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 3: Paquetes de precios
+       ================================================ -->
+  <section id="paquetes" class="bg-white py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-accent-600 font-medium text-sm uppercase tracking-widest mb-3">Nuestros Paquetes</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+          ¿Listo para destacar en el <span class="gradient-text">mercado digital?</span>
+        </h2>
+        <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Todos los precios son pago único + IVA. Incluyen dominio, hosting y certificado SSL.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto" data-animate>
+        {packs.map((pack) => (
+          <div class={`relative rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 ${pack.popular ? 'bg-gradient-to-br from-primary-600 via-accent-600 to-pink-600 text-white ring-2 ring-accent-400 shadow-2xl scale-105' : 'bg-gray-50 text-gray-900 border border-gray-200'}`}>
+            {pack.popular && (<div class="absolute -top-4 left-1/2 -translate-x-1/2"><span class="bg-cyan-400 text-dark-900 text-xs font-bold px-4 py-1.5 rounded-full">Más Popular</span></div>)}
+            <h3 class="text-xl font-bold mb-1">{pack.name}</h3>
+            <p class={`text-sm mb-5 ${pack.popular ? 'text-white/60' : 'text-gray-500'}`}>{pack.desc}</p>
+            <div class="mb-6">
+              <span class="text-4xl font-extrabold">{pack.price}</span>
+              <span class={`text-sm ml-1 ${pack.popular ? 'text-white/50' : 'text-gray-400'}`}>MXN + IVA</span>
+            </div>
+            <ul class="space-y-3 mb-6">
+              {pack.features.map((f) => (
+                <li class="flex items-center gap-2.5 text-sm">
+                  <svg class={`w-4 h-4 flex-shrink-0 ${pack.popular ? 'text-cyan-300' : 'text-accent-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <span class={pack.popular ? 'text-white/80' : 'text-gray-600'}>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <p class={`text-xs mb-6 ${pack.popular ? 'text-white/40' : 'text-gray-400'}`}>Renovación anual: {pack.renewal} + IVA</p>
+            <a href="https://wa.me/5215561959724" target="_blank" rel="noopener" class={`block text-center font-semibold py-3.5 px-5 rounded-full transition-all text-sm ${pack.popular ? 'bg-white text-primary-600 hover:bg-white/90' : 'border-2 border-accent-500 text-accent-600 hover:bg-accent-500 hover:text-white'}`}>Quiero Comenzar</a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 4: Formulario de contacto
+       ================================================ -->
+  <section class="bg-dark-900 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <!-- Columna izquierda: Info -->
+        <div data-animate>
+          <p class="text-cyan-400 font-medium text-sm uppercase tracking-widest mb-3">Comienza Hoy</p>
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+            Comienza a vender hoy con la <span class="gradient-text">carta de presentación</span> de tu negocio
+          </h2>
+          <p class="text-white/60 text-lg leading-relaxed mb-8">
+            Cuéntanos sobre tu proyecto y te contactaremos en menos de 24 horas con una propuesta personalizada.
+          </p>
+          <div class="glass-card p-6">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+              </div>
+              <div>
+                <p class="text-white font-semibold">¿Prefieres llamarnos?</p>
+                <a href="tel:+525561959724" class="text-cyan-400 hover:text-cyan-300 transition-colors">55 6195 9724</a>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-400" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              </div>
+              <div>
+                <p class="text-white font-semibold">WhatsApp directo</p>
+                <a href="https://wa.me/5215564721547" target="_blank" rel="noopener" class="text-green-400 hover:text-green-300 transition-colors">56 4721 5472</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna derecha: Formulario -->
+        <div data-animate>
+          <form class="glass-card p-8 space-y-5">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-white/60 text-sm mb-2">Nombre</label>
+                <input type="text" placeholder="Tu nombre" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors" />
+              </div>
+              <div>
+                <label class="block text-white/60 text-sm mb-2">Email</label>
+                <input type="email" placeholder="tu@email.com" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-white/60 text-sm mb-2">Teléfono</label>
+              <input type="tel" placeholder="55 1234 5678" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors" />
+            </div>
+            <div>
+              <label class="block text-white/60 text-sm mb-2">¿Qué paquete te interesa?</label>
+              <select class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/70 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors">
+                <option value="" class="bg-dark-900">Selecciona un paquete</option>
+                <option value="basico" class="bg-dark-900">Pack Básico ($7,400 + IVA)</option>
+                <option value="especial" class="bg-dark-900">Pack Especial ($8,600 + IVA)</option>
+                <option value="avanzado" class="bg-dark-900">Pack Avanzado ($9,600 + IVA)</option>
+                <option value="otro" class="bg-dark-900">No estoy seguro</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full gradient-bg text-white font-semibold py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-[1.02]">
+              Quiero Comenzar
+            </button>
+            <p class="text-white/30 text-xs text-center">Al enviar aceptas nuestro aviso de privacidad.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 5: FAQ
+       ================================================ -->
+  <section class="bg-white py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-accent-600 font-medium text-sm uppercase tracking-widest mb-3">Preguntas Frecuentes</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+          Todo lo que necesitas <span class="gradient-text">saber</span>
+        </h2>
+      </div>
+      <div class="space-y-4" data-animate>
+        {faqs.map((faq) => (
+          <details class="group bg-gray-50 rounded-2xl overflow-hidden">
+            <summary class="flex items-center justify-between p-6 cursor-pointer hover:bg-gray-100 transition-colors">
+              <h3 class="text-base font-semibold text-gray-900 pr-4">{faq.q}</h3>
+              <svg class="w-5 h-5 text-accent-500 flex-shrink-0 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="px-6 pb-6">
+              <p class="text-gray-500 text-sm leading-relaxed">{faq.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 6: Testimonios
+       ================================================ -->
+  <section class="bg-dark-900 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-cyan-400 font-medium text-sm uppercase tracking-widest mb-3">Clientes Felices</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Lo que dicen <span class="gradient-text">nuestros clientes</span>
+        </h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8" data-animate>
+        {testimonials.map((t) => (
+          <div class="glass-card p-8 hover:bg-white/15 transition-all duration-300 group">
+            <div class="flex gap-1 mb-4">
+              {[1,2,3,4,5].map(() => (
+                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+            <p class="text-white/70 text-sm leading-relaxed mb-6">"{t.quote}"</p>
+            <div class="flex items-center gap-3">
+              <div class={`w-10 h-10 rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                <span class="text-white text-sm font-bold">{t.avatar}</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-white">{t.name}</p>
+                <p class="text-xs text-white/50">{t.role}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 7: CTA final
+       ================================================ -->
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-coral-500 via-coral-600 to-amber-500"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-animate>
+      <div class="glass-card-light p-12 md:p-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-dark-900 mb-4">
+          Tu éxito comercial está a <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-600">un solo clic</span>
+        </h2>
+        <p class="text-dark-700/70 text-lg mb-10 max-w-2xl mx-auto">
+          No dejes pasar más tiempo. Empieza hoy y lleva tu negocio al siguiente nivel con una presencia digital profesional.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/contacto" class="gradient-bg text-white font-semibold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105">
+            Solicitar Cotización
+          </a>
+          <a href="https://wa.me/5215561959724" target="_blank" rel="noopener" class="bg-dark-900 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-dark-800 transition-all">
+            Hablar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>

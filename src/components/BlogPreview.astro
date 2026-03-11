@@ -1,4 +1,11 @@
 ---
+/**
+ * BlogPreview.astro - Preview de los ultimos 3 posts del blog
+ *
+ * Seccion #11: Blog (fondo blanco)
+ * Cards con header gradient y contenido glass-card-light.
+ * TODO: Reemplazar mock data con WP REST API
+ */
 // Mock posts - se reemplazará con WP REST API
 const posts = [
   {
@@ -36,10 +43,10 @@ const posts = [
 
     <div class="grid md:grid-cols-3 gap-8" data-animate>
       {posts.map((post) => (
-        <article class="group rounded-2xl overflow-hidden bg-gray-50 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 cursor-pointer">
+        <article class="group rounded-2xl overflow-hidden border border-gray-200/60 bg-white/80 backdrop-blur-sm hover:-translate-y-2 hover:shadow-xl hover:shadow-accent-500/10 transition-all duration-300 cursor-pointer">
           <div class={`h-48 bg-gradient-to-br ${post.color} relative`}>
             <div class="absolute top-4 left-4">
-              <span class="bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full">{post.category}</span>
+              <span class="bg-white/20 backdrop-blur-md text-white text-xs font-medium px-3 py-1 rounded-full border border-white/20">{post.category}</span>
             </div>
           </div>
           <div class="p-6">

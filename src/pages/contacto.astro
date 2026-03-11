@@ -101,14 +101,14 @@ const faqs = [
   </section>
 
   <!-- ================================================
-       SECCION 2: Medios de contacto (4 cards)
+       SECCION 2: Medios de contacto (4 cards glassmorphism)
        ================================================ -->
   <section class="bg-white py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 -mt-32 relative z-20" data-animate>
         {contactMethods.map((method) => (
-          <a href={method.href} target={method.href.startsWith('http') ? '_blank' : undefined} rel={method.href.startsWith('http') ? 'noopener' : undefined} class="bg-white rounded-2xl p-6 text-center shadow-xl hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group border border-gray-100">
-            <div class="w-14 h-14 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+          <a href={method.href} target={method.href.startsWith('http') ? '_blank' : undefined} rel={method.href.startsWith('http') ? 'noopener' : undefined} class="bg-white/80 backdrop-blur-xl rounded-2xl p-6 text-center shadow-xl hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group border border-white/60">
+            <div class="w-14 h-14 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-accent-500/20">
               {method.icon === 'email' && (
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
               )}
@@ -249,7 +249,7 @@ const faqs = [
         title="Ubicación de Portafolio Z en CDMX"
       ></iframe>
       <!-- Overlay con direccion -->
-      <div class="absolute bottom-6 left-6 bg-white rounded-xl shadow-xl p-4 max-w-xs">
+      <div class="absolute bottom-6 left-6 bg-white/80 backdrop-blur-xl rounded-xl shadow-xl p-4 max-w-xs border border-white/60">
         <p class="font-bold text-gray-900 text-sm">Portafolio Z</p>
         <p class="text-gray-500 text-xs mt-1">Dr. José María Vértiz 84BIS, Doctores, Cuauhtémoc, 06720 CDMX</p>
       </div>
