@@ -1,0 +1,69 @@
+---
+/**
+ * CotizadorModal.astro - Modal wrapper para el cotizador
+ * Se incluye en Layout.astro, se abre con data-open-cotizador
+ */
+import Cotizador from './Cotizador.astro';
+---
+
+<div id="cotizador-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-label="Cotizador">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-dark-900/80 backdrop-blur-md" id="modal-backdrop"></div>
+
+  <!-- Modal container -->
+  <div class="relative z-10 flex items-start justify-center min-h-full p-4 pt-16 sm:pt-20 pb-8 overflow-y-auto">
+    <div class="w-full max-w-4xl animate-fade-up" id="modal-content">
+      <!-- Close button -->
+      <div class="flex justify-end mb-4">
+        <button type="button" id="modal-close" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/70 hover:text-white transition-all" aria-label="Cerrar">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+
+      <div class="text-center mb-6">
+        <h2 class="text-2xl sm:text-3xl font-bold text-white">Cotiza tu sitio web</h2>
+        <p class="text-white/60 mt-2">Selecciona las opciones y obten un precio estimado al instante</p>
+      </div>
+
+      <Cotizador />
+    </div>
+  </div>
+</div>
+
+<script>
+function initCotizadorModal() {
+  const modal = document.getElementById('cotizador-modal');
+  if (!modal) return;
+
+  const backdrop = modal.querySelector('#modal-backdrop');
+  const closeBtn = modal.querySelector('#modal-close');
+
+  function openModal() {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  // Open triggers
+  document.querySelectorAll('[data-open-cotizador]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal();
+    });
+  });
+
+  // Close triggers
+  backdrop?.addEventListener('click', closeModal);
+  closeBtn?.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+  });
+}
+
+initCotizadorModal();
+document.addEventListener('astro:page-load', initCotizadorModal);
+</script>

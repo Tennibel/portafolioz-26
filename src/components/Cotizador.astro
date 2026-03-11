@@ -1,0 +1,495 @@
+---
+/**
+ * Cotizador.astro - Wizard de 4 pasos para cotizar sitio web
+ * Se usa tanto en la pagina dedicada /cotizador como en el modal
+ * Vanilla JS para calcular precios en tiempo real
+ */
+import { PRICING } from '../lib/pricing';
+---
+
+<div id="cotizador-app" class="w-full max-w-4xl mx-auto">
+  <!-- Steps indicator -->
+  <div class="flex items-center justify-center gap-2 mb-8" id="steps-indicator">
+    {[
+      { num: 1, label: 'Tu sitio' },
+      { num: 2, label: 'Funciones' },
+      { num: 3, label: 'Extras' },
+      { num: 4, label: 'Contacto' },
+    ].map((step) => (
+      <div class="flex items-center" data-step-indicator={step.num}>
+        <div class={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${step.num === 1 ? 'gradient-bg text-white shadow-lg shadow-primary-500/30' : 'bg-white/10 text-white/50'}`} data-step-circle>
+          {step.num}
+        </div>
+        <span class={`ml-2 text-sm font-medium hidden sm:inline transition-colors duration-300 ${step.num === 1 ? 'text-white' : 'text-white/40'}`} data-step-label>{step.label}</span>
+        {step.num < 4 && <div class="w-8 sm:w-16 h-px bg-white/20 mx-3"></div>}
+      </div>
+    ))}
+  </div>
+
+  <form id="cotizador-form" class="glass-card p-6 sm:p-8">
+    <!-- PASO 1: Tipo de sitio -->
+    <div class="step-panel" data-step="1">
+      <h3 class="text-xl font-bold text-white mb-6">Elige el tipo de sitio web</h3>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        {PRICING.tipoSitio.map((tipo, i) => (
+          <label class={`relative glass-card p-5 cursor-pointer hover:bg-white/15 transition-all duration-300 group ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="tipo_sitio">
+            <input type="radio" name="tipo_sitio" value={tipo.id} class="sr-only" checked={i === 0} />
+            <div class="flex justify-between items-start">
+              <div>
+                <div class="font-semibold text-white group-hover:text-cyan-300 transition-colors">{tipo.label}</div>
+                <div class="text-sm text-white/50 mt-1">{tipo.desc}</div>
+              </div>
+              <div class="text-lg font-bold gradient-text">${tipo.base.toLocaleString('es-MX')}</div>
+            </div>
+            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
+              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
+            </div>
+          </label>
+        ))}
+      </div>
+
+      <div class="mb-8">
+        <label class="block text-white font-medium mb-3">
+          Numero de paginas: <span class="gradient-text font-bold" id="paginas-display">3</span>
+        </label>
+        <input type="range" name="num_paginas" min="1" max="20" value="3"
+          class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+          id="paginas-slider" />
+        <div class="flex justify-between text-xs text-white/40 mt-1">
+          <span>1</span><span>5</span><span>10</span><span>15</span><span>20</span>
+        </div>
+      </div>
+
+      <h3 class="text-xl font-bold text-white mb-4">Tipo de diseno</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {PRICING.diseno.map((d, i) => (
+          <label class={`glass-card p-5 cursor-pointer hover:bg-white/15 transition-all duration-300 group ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="diseno">
+            <input type="radio" name="diseno" value={d.id} class="sr-only" checked={i === 0} />
+            <div class="flex justify-between items-center">
+              <span class="font-medium text-white">{d.label}</span>
+              <span class="font-bold gradient-text">{d.precio === 0 ? 'Incluido' : `+$${d.precio.toLocaleString('es-MX')}`}</span>
+            </div>
+            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
+              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
+            </div>
+          </label>
+        ))}
+      </div>
+    </div>
+
+    <!-- PASO 2: Funcionalidades + Hosting + Correo -->
+    <div class="step-panel hidden" data-step="2">
+      <h3 class="text-xl font-bold text-white mb-6">Funcionalidades</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+        {PRICING.funcionalidades.map((f) => (
+          <label class="glass-card p-4 cursor-pointer hover:bg-white/15 transition-all duration-300 group" data-check-card>
+            <input type="checkbox" name="funcionalidades" value={f.id} class="sr-only" checked={'included' in f && f.included} disabled={'included' in f && f.included} />
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-medium text-white">{f.label}</span>
+              <span class="text-sm font-bold text-cyan-300">{'included' in f && f.included ? 'Incluido' : f.precio === 0 ? 'Gratis' : `+$${f.precio.toLocaleString('es-MX')}`}</span>
+            </div>
+            <div class="absolute top-3 right-3 w-4 h-4 rounded border-2 border-white/30 flex items-center justify-center transition-all" data-check-box>
+              <svg class="w-3 h-3 text-cyan-400 scale-0 transition-transform" data-check-svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+            </div>
+          </label>
+        ))}
+      </div>
+
+      <h3 class="text-xl font-bold text-white mb-4">Hosting</h3>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+        {PRICING.hosting.map((h, i) => (
+          <label class={`glass-card p-4 cursor-pointer hover:bg-white/15 transition-all duration-300 text-center ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="hosting">
+            <input type="radio" name="hosting" value={h.id} class="sr-only" checked={i === 0} />
+            <div class="text-sm font-medium text-white">{h.label}</div>
+            <div class="text-sm font-bold gradient-text mt-1">{h.precio === 0 ? '$0' : `$${h.precio.toLocaleString('es-MX')}`}</div>
+          </label>
+        ))}
+      </div>
+
+      <h3 class="text-xl font-bold text-white mb-4">Cuentas de correo</h3>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {PRICING.correo.map((c, i) => (
+          <label class={`glass-card p-4 cursor-pointer hover:bg-white/15 transition-all duration-300 text-center ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="correo">
+            <input type="radio" name="correo" value={c.id} class="sr-only" checked={i === 0} />
+            <div class="text-sm font-medium text-white">{c.label}</div>
+            <div class="text-sm font-bold gradient-text mt-1">{c.precio === 0 ? '$0' : `$${c.precio.toLocaleString('es-MX')}`}</div>
+          </label>
+        ))}
+      </div>
+    </div>
+
+    <!-- PASO 3: Extras -->
+    <div class="step-panel hidden" data-step="3">
+      <h3 class="text-xl font-bold text-white mb-6">Extras y complementos</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {PRICING.extras.map((e) => (
+          <label class="glass-card p-4 cursor-pointer hover:bg-white/15 transition-all duration-300 group" data-check-card>
+            <input type="checkbox" name="extras" value={e.id} class="sr-only" checked={'included' in e && e.included} disabled={'included' in e && e.included} />
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-medium text-white">{e.label}</span>
+              <span class="text-sm font-bold text-cyan-300">{'included' in e && e.included ? 'Incluido' : e.precio === 0 ? 'Gratis' : `+$${e.precio.toLocaleString('es-MX')}`}</span>
+            </div>
+            <div class="absolute top-3 right-3 w-4 h-4 rounded border-2 border-white/30 flex items-center justify-center transition-all" data-check-box>
+              <svg class="w-3 h-3 text-cyan-400 scale-0 transition-transform" data-check-svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+            </div>
+          </label>
+        ))}
+      </div>
+    </div>
+
+    <!-- PASO 4: Resumen + Contacto -->
+    <div class="step-panel hidden" data-step="4">
+      <h3 class="text-xl font-bold text-white mb-6">Resumen de tu cotizacion</h3>
+
+      <div class="glass-card p-5 mb-6" id="resumen-items">
+        <!-- JS fills this -->
+      </div>
+
+      <h3 class="text-xl font-bold text-white mb-4">Tus datos de contacto</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm text-white/60 mb-1">Nombre *</label>
+          <input type="text" name="nombre" required
+            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors" placeholder="Tu nombre" />
+        </div>
+        <div>
+          <label class="block text-sm text-white/60 mb-1">Email *</label>
+          <input type="email" name="email" required
+            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors" placeholder="tu@email.com" />
+        </div>
+        <div>
+          <label class="block text-sm text-white/60 mb-1">Telefono</label>
+          <input type="tel" name="telefono"
+            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors" placeholder="55 1234 5678" />
+        </div>
+        <div>
+          <label class="block text-sm text-white/60 mb-1">Empresa</label>
+          <input type="text" name="empresa"
+            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors" placeholder="Nombre de tu empresa" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation + Total sticky -->
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/10">
+      <button type="button" id="btn-prev" class="hidden px-6 py-3 rounded-xl border border-white/20 text-white/70 hover:bg-white/10 transition-all font-medium">
+        &larr; Anterior
+      </button>
+
+      <div class="flex items-center gap-3 order-first sm:order-none">
+        <span class="text-white/60 text-sm">Total estimado:</span>
+        <span class="text-2xl sm:text-3xl font-bold gradient-text" id="total-display">$5,600</span>
+        <span class="text-white/40 text-sm">MXN</span>
+      </div>
+
+      <button type="button" id="btn-next" class="px-8 py-3 rounded-xl gradient-bg text-white font-semibold hover:opacity-90 transition-all shadow-lg shadow-primary-500/25">
+        Siguiente &rarr;
+      </button>
+      <button type="submit" id="btn-submit" class="hidden px-8 py-3 rounded-xl gradient-bg text-white font-semibold hover:opacity-90 transition-all shadow-lg shadow-primary-500/25">
+        Enviar cotizacion
+      </button>
+    </div>
+  </form>
+
+  <!-- Success state -->
+  <div id="cotizador-success" class="hidden glass-card p-8 sm:p-12 text-center">
+    <div class="w-20 h-20 rounded-full gradient-bg mx-auto flex items-center justify-center mb-6">
+      <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+    </div>
+    <h3 class="text-2xl font-bold text-white mb-3">Cotizacion enviada</h3>
+    <p class="text-white/60 mb-2">Tu cotizacion por <span class="font-bold gradient-text" id="success-total"></span> MXN ha sido recibida.</p>
+    <p class="text-white/60 mb-6">Revisamos tu solicitud y te contactaremos pronto.</p>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="https://wa.me/525512345678" target="_blank" rel="noopener"
+        class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-green-500 text-white font-semibold hover:bg-green-600 transition-colors">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.316 0-4.458-.764-6.182-2.054l-.432-.338-2.844.953.953-2.844-.338-.432A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Contactar por WhatsApp
+      </a>
+      <button type="button" id="btn-new-quote" class="px-6 py-3 rounded-xl border border-white/20 text-white/70 hover:bg-white/10 transition-all font-medium">
+        Nueva cotizacion
+      </button>
+    </div>
+  </div>
+
+  <!-- Error state -->
+  <div id="cotizador-error" class="hidden glass-card p-6 text-center">
+    <p class="text-red-400 font-medium mb-3" id="error-message"></p>
+    <button type="button" id="btn-retry" class="px-6 py-3 rounded-xl gradient-bg text-white font-semibold">Intentar de nuevo</button>
+  </div>
+</div>
+
+<!-- Pricing data for JS -->
+<script id="pricing-data" type="application/json" set:html={JSON.stringify(PRICING)}></script>
+
+<script>
+function initCotizador() {
+  const app = document.getElementById('cotizador-app');
+  if (!app) return;
+
+  const form = app.querySelector('#cotizador-form') as HTMLFormElement;
+  const successEl = app.querySelector('#cotizador-success') as HTMLElement;
+  const errorEl = app.querySelector('#cotizador-error') as HTMLElement;
+  if (!form) return;
+
+  const PRICING = JSON.parse(document.getElementById('pricing-data')?.textContent || '{}');
+  let currentStep = 1;
+
+  const panels = form.querySelectorAll('.step-panel') as NodeListOf<HTMLElement>;
+  const indicators = app.querySelectorAll('[data-step-indicator]') as NodeListOf<HTMLElement>;
+  const btnPrev = form.querySelector('#btn-prev') as HTMLButtonElement;
+  const btnNext = form.querySelector('#btn-next') as HTMLButtonElement;
+  const btnSubmit = form.querySelector('#btn-submit') as HTMLButtonElement;
+  const totalDisplay = form.querySelector('#total-display') as HTMLElement;
+  const paginasSlider = form.querySelector('#paginas-slider') as HTMLInputElement;
+  const paginasDisplay = form.querySelector('#paginas-display') as HTMLElement;
+
+  function goToStep(step: number) {
+    currentStep = step;
+    panels.forEach(p => p.classList.toggle('hidden', parseInt(p.dataset.step || '0') !== step));
+
+    indicators.forEach(ind => {
+      const num = parseInt(ind.dataset.stepIndicator || '0');
+      const circle = ind.querySelector('[data-step-circle]') as HTMLElement;
+      const label = ind.querySelector('[data-step-label]') as HTMLElement;
+      if (num <= step) {
+        circle.className = 'w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 gradient-bg text-white shadow-lg shadow-primary-500/30';
+        if (label) label.className = 'ml-2 text-sm font-medium hidden sm:inline transition-colors duration-300 text-white';
+      } else {
+        circle.className = 'w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 bg-white/10 text-white/50';
+        if (label) label.className = 'ml-2 text-sm font-medium hidden sm:inline transition-colors duration-300 text-white/40';
+      }
+    });
+
+    btnPrev.classList.toggle('hidden', step === 1);
+    btnNext.classList.toggle('hidden', step === 4);
+    btnSubmit.classList.toggle('hidden', step !== 4);
+
+    if (step === 4) buildResumen();
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Radio card selection
+  form.querySelectorAll('[data-radio-card]').forEach(card => {
+    card.addEventListener('click', () => {
+      const radio = card.querySelector('input[type="radio"]') as HTMLInputElement;
+      if (!radio) return;
+      const name = radio.name;
+      form.querySelectorAll(`[data-radio-card="${name}"]`).forEach(c => {
+        c.classList.remove('ring-2', 'ring-cyan-400');
+        const dot = c.querySelector('[data-check-dot]') as HTMLElement;
+        if (dot) dot.style.transform = 'scale(0)';
+      });
+      card.classList.add('ring-2', 'ring-cyan-400');
+      radio.checked = true;
+      const dot = card.querySelector('[data-check-dot]') as HTMLElement;
+      if (dot) dot.style.transform = 'scale(1)';
+      recalc();
+    });
+  });
+
+  // Checkbox card selection
+  form.querySelectorAll('[data-check-card]').forEach(card => {
+    card.addEventListener('click', () => {
+      const cb = card.querySelector('input[type="checkbox"]') as HTMLInputElement;
+      if (!cb || cb.disabled) return;
+      cb.checked = !cb.checked;
+      card.classList.toggle('ring-2', cb.checked);
+      card.classList.toggle('ring-cyan-400', cb.checked);
+      const svg = card.querySelector('[data-check-svg]') as HTMLElement;
+      if (svg) svg.style.transform = cb.checked ? 'scale(1)' : 'scale(0)';
+      recalc();
+    });
+  });
+
+  // Init checked states
+  form.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+    const card = (cb as HTMLElement).closest('[data-check-card]');
+    if (card) {
+      card.classList.add('ring-2', 'ring-cyan-400');
+      const svg = card.querySelector('[data-check-svg]') as HTMLElement;
+      if (svg) svg.style.transform = 'scale(1)';
+    }
+  });
+  form.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+    const card = (radio as HTMLElement).closest('[data-radio-card]');
+    if (card) {
+      const dot = card.querySelector('[data-check-dot]') as HTMLElement;
+      if (dot) dot.style.transform = 'scale(1)';
+    }
+  });
+
+  // Paginas slider
+  if (paginasSlider) {
+    paginasSlider.addEventListener('input', () => {
+      if (paginasDisplay) paginasDisplay.textContent = paginasSlider.value;
+      recalc();
+    });
+  }
+
+  function getFormData() {
+    const data = new FormData(form);
+    return {
+      tipo_sitio: data.get('tipo_sitio') as string || 'landing',
+      num_paginas: parseInt(data.get('num_paginas') as string) || 1,
+      diseno: data.get('diseno') as string || 'plantilla',
+      hosting: data.get('hosting') as string || 'propio',
+      correo: data.get('correo') as string || 'sin',
+      funcionalidades: data.getAll('funcionalidades') as string[],
+      extras: data.getAll('extras') as string[],
+    };
+  }
+
+  function calcTotal(fd: ReturnType<typeof getFormData>) {
+    let total = 0;
+    const items: { cat: string; label: string; precio: number }[] = [];
+
+    const tipo = PRICING.tipoSitio.find((t: any) => t.id === fd.tipo_sitio);
+    if (tipo) { total += tipo.base; items.push({ cat: 'Base', label: tipo.label, precio: tipo.base }); }
+
+    const basePag = tipo?.id === 'landing' ? 3 : tipo?.id === 'basico' ? 4 : tipo?.id === 'profesional' ? 8 : 12;
+    if (fd.num_paginas > basePag) {
+      const extra = (fd.num_paginas - basePag) * PRICING.paginaExtra;
+      total += extra;
+      items.push({ cat: 'Base', label: `${fd.num_paginas - basePag} paginas extra`, precio: extra });
+    }
+
+    const dis = PRICING.diseno.find((d: any) => d.id === fd.diseno);
+    if (dis && dis.precio > 0) { total += dis.precio; items.push({ cat: 'Diseno', label: dis.label, precio: dis.precio }); }
+
+    for (const fid of fd.funcionalidades) {
+      const f = PRICING.funcionalidades.find((x: any) => x.id === fid);
+      if (f && f.precio > 0) { total += f.precio; items.push({ cat: 'Funcionalidad', label: f.label, precio: f.precio }); }
+    }
+
+    const h = PRICING.hosting.find((x: any) => x.id === fd.hosting);
+    if (h && h.precio > 0) { total += h.precio; items.push({ cat: 'Hosting', label: h.label, precio: h.precio }); }
+
+    const c = PRICING.correo.find((x: any) => x.id === fd.correo);
+    if (c && c.precio > 0) { total += c.precio; items.push({ cat: 'Correo', label: c.label, precio: c.precio }); }
+
+    for (const eid of fd.extras) {
+      const e = PRICING.extras.find((x: any) => x.id === eid);
+      if (e && e.precio > 0) { total += e.precio; items.push({ cat: 'Extra', label: e.label, precio: e.precio }); }
+    }
+
+    return { total, items };
+  }
+
+  function recalc() {
+    const fd = getFormData();
+    const { total } = calcTotal(fd);
+    if (totalDisplay) totalDisplay.textContent = '$' + total.toLocaleString('es-MX');
+  }
+
+  function buildResumen() {
+    const container = form.querySelector('#resumen-items');
+    if (!container) return;
+    const fd = getFormData();
+    const { total, items } = calcTotal(fd);
+
+    container.innerHTML = items.map(i => `
+      <div class="flex justify-between items-center py-2 border-b border-white/10 last:border-0">
+        <div>
+          <span class="text-xs text-white/40">${i.cat}</span>
+          <span class="text-sm text-white ml-2">${i.label}</span>
+        </div>
+        <span class="text-sm font-semibold text-cyan-300">$${i.precio.toLocaleString('es-MX')}</span>
+      </div>
+    `).join('') + `
+      <div class="flex justify-between items-center pt-4 mt-2 border-t border-white/20">
+        <span class="text-lg font-bold text-white">Total</span>
+        <span class="text-xl font-bold gradient-text">$${total.toLocaleString('es-MX')} MXN</span>
+      </div>
+    `;
+  }
+
+  btnNext.addEventListener('click', () => {
+    if (currentStep < 4) goToStep(currentStep + 1);
+  });
+
+  btnPrev.addEventListener('click', () => {
+    if (currentStep > 1) goToStep(currentStep - 1);
+  });
+
+  // Submit
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = getFormData();
+    const nombre = (form.querySelector('[name="nombre"]') as HTMLInputElement)?.value;
+    const email = (form.querySelector('[name="email"]') as HTMLInputElement)?.value;
+    const telefono = (form.querySelector('[name="telefono"]') as HTMLInputElement)?.value;
+    const empresa = (form.querySelector('[name="empresa"]') as HTMLInputElement)?.value;
+
+    if (!nombre || !email) {
+      alert('Por favor completa nombre y email');
+      return;
+    }
+
+    btnSubmit.disabled = true;
+    btnSubmit.textContent = 'Enviando...';
+
+    try {
+      const res = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...fd, nombre, email, telefono, empresa }),
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        form.classList.add('hidden');
+        successEl.classList.remove('hidden');
+        const stEl = successEl.querySelector('#success-total');
+        if (stEl) stEl.textContent = '$' + data.total.toLocaleString('es-MX');
+      } else {
+        throw new Error(data.error || 'Error al enviar');
+      }
+    } catch (err: any) {
+      form.classList.add('hidden');
+      errorEl.classList.remove('hidden');
+      const msgEl = errorEl.querySelector('#error-message');
+      if (msgEl) msgEl.textContent = err.message || 'Error al enviar la cotizacion';
+    } finally {
+      btnSubmit.disabled = false;
+      btnSubmit.textContent = 'Enviar cotizacion';
+    }
+  });
+
+  // New quote
+  app.querySelector('#btn-new-quote')?.addEventListener('click', () => {
+    form.reset();
+    form.classList.remove('hidden');
+    successEl.classList.add('hidden');
+    errorEl.classList.add('hidden');
+    goToStep(1);
+    recalc();
+    // Reset visual states
+    form.querySelectorAll('.ring-2').forEach(el => el.classList.remove('ring-2', 'ring-cyan-400'));
+    form.querySelectorAll('[data-check-dot]').forEach(el => (el as HTMLElement).style.transform = 'scale(0)');
+    form.querySelectorAll('[data-check-svg]').forEach(el => (el as HTMLElement).style.transform = 'scale(0)');
+    // Re-select defaults
+    const firstCards = form.querySelectorAll('[data-radio-card]');
+    firstCards.forEach(card => {
+      const radio = card.querySelector('input[type="radio"]:checked') as HTMLInputElement;
+      if (radio) {
+        card.classList.add('ring-2', 'ring-cyan-400');
+        const dot = card.querySelector('[data-check-dot]') as HTMLElement;
+        if (dot) dot.style.transform = 'scale(1)';
+      }
+    });
+  });
+
+  // Retry
+  app.querySelector('#btn-retry')?.addEventListener('click', () => {
+    form.classList.remove('hidden');
+    errorEl.classList.add('hidden');
+  });
+
+  // Initial calculation
+  recalc();
+}
+
+initCotizador();
+document.addEventListener('astro:page-load', initCotizador);
+</script>

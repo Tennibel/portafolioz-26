@@ -1,0 +1,85 @@
+---
+/**
+ * cotizador.astro - Pagina dedicada del cotizador para SEO
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Cotizador from '../components/Cotizador.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+---
+
+<Layout title="Cotizador de Sitios Web | Portafolio Z" description="Cotiza tu sitio web al instante. Selecciona las funcionalidades que necesitas y obten un precio estimado en segundos.">
+  <Navbar />
+
+  <!-- SECCION 1: Hero -->
+  <section class="relative pt-32 pb-16 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-600 via-accent-600 to-pink-600"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-500/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <nav class="flex justify-center items-center gap-2 text-sm text-white/60 mb-6">
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span class="text-white">Cotizador</span>
+      </nav>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">
+        Cotiza tu <span class="gradient-text">sitio web</span>
+      </h1>
+      <p class="text-lg text-white/70 max-w-2xl mx-auto">
+        Selecciona las funcionalidades que necesitas y obten un precio estimado al instante. Sin compromiso.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECCION 2: Cotizador -->
+  <section class="relative py-16 bg-dark-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Cotizador />
+    </div>
+  </section>
+
+  <!-- SECCION 3: Por que cotizar con nosotros -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">Por que cotizar con <span class="gradient-text">Portafolio Z</span></h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          { icon: '⚡', title: 'Precio justo', desc: 'Nuestros precios son transparentes y competitivos. Sin costos ocultos ni sorpresas.' },
+          { icon: '🎯', title: 'A tu medida', desc: 'Solo pagas por lo que necesitas. Arma tu paquete ideal seleccionando cada funcionalidad.' },
+          { icon: '🚀', title: 'Entrega rapida', desc: 'Sitios web listos en 2-4 semanas. Proceso agil y comunicacion constante.' },
+        ].map((item) => (
+          <div class="text-center p-8 rounded-2xl bg-gray-50 hover:shadow-lg transition-shadow" data-animate>
+            <div class="text-4xl mb-4">{item.icon}</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
+            <p class="text-gray-600">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 4: CTA -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-primary-600 via-accent-600 to-pink-600"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Prefieres hablar con un asesor?</h2>
+      <p class="text-white/80 text-lg mb-8">Contactanos por WhatsApp o agenda una llamada. Estamos para ayudarte.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="https://wa.me/525512345678" target="_blank" rel="noopener"
+          class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white text-gray-900 font-semibold hover:bg-gray-100 transition-colors">
+          <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.316 0-4.458-.764-6.182-2.054l-.432-.338-2.844.953.953-2.844-.338-.432A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          WhatsApp
+        </a>
+        <a href="/contacto" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border-2 border-white text-white font-semibold hover:bg-white/10 transition-colors">
+          Formulario de contacto
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>

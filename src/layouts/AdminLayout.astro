@@ -1,0 +1,54 @@
+---
+/**
+ * AdminLayout.astro - Layout minimo para el panel admin
+ * Sin navbar ni footer del sitio principal
+ */
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <title>{title} | Admin PZ</title>
+  </head>
+  <body class="bg-dark-900 text-white min-h-screen">
+    <!-- Admin header -->
+    <header class="border-b border-white/10 bg-dark-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <a href="/admin/cotizaciones" class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center text-xs font-bold text-white">PZ</div>
+            <span class="font-semibold text-white/80">Admin</span>
+          </a>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="/" class="text-sm text-white/50 hover:text-white transition-colors" target="_blank">Ver sitio</a>
+          <button id="btn-logout" class="text-sm text-red-400 hover:text-red-300 transition-colors cursor-pointer">Cerrar sesion</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <slot />
+    </main>
+
+    <script>
+      document.getElementById('btn-logout')?.addEventListener('click', async () => {
+        await fetch('/api/admin/logout', { method: 'POST' });
+        window.location.href = '/admin/';
+      });
+    </script>
+  </body>
+</html>

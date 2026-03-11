@@ -1,0 +1,195 @@
+---
+/**
+ * /admin/cotizaciones/[id] - Detalle de cotizacion
+ */
+export const prerender = false;
+
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { isAuthenticated } from '../../../lib/auth';
+import { getQuoteById } from '../../../lib/db';
+
+if (!isAuthenticated(Astro.request)) {
+  return Astro.redirect('/admin/');
+}
+
+const id = parseInt(Astro.params.id || '0');
+const { quote, items } = getQuoteById(id);
+
+if (!quote) {
+  return Astro.redirect('/admin/cotizaciones');
+}
+
+function formatMXN(n: number): string {
+  return '$' + n.toLocaleString('es-MX');
+}
+
+function formatDate(d: string): string {
+  return new Date(d + 'Z').toLocaleDateString('es-MX', {
+    day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+}
+
+const statusColors: Record<string, string> = {
+  nueva: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+  contactada: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+  cerrada: 'bg-green-500/20 text-green-300 border-green-500/30',
+  descartada: 'bg-red-500/20 text-red-300 border-red-500/30',
+};
+
+// Group items by category
+const grouped = items.reduce((acc, item) => {
+  if (!acc[item.categoria]) acc[item.categoria] = [];
+  acc[item.categoria].push(item);
+  return acc;
+}, {} as Record<string, typeof items>);
+
+const categoryLabels: Record<string, string> = {
+  base: 'Base del sitio',
+  diseno: 'Diseno',
+  funcionalidad: 'Funcionalidades',
+  hosting: 'Hosting',
+  correo: 'Correo',
+  extra: 'Extras',
+};
+---
+
+<AdminLayout title={`Cotizacion #${quote.id}`}>
+  <a href="/admin/cotizaciones" class="text-white/50 hover:text-white text-sm mb-6 inline-block">&larr; Volver a cotizaciones</a>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main info -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Client info -->
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+        <h2 class="text-lg font-bold text-white mb-4">Datos del cliente</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <span class="text-xs text-white/40">Nombre</span>
+            <p class="text-white font-medium">{quote.nombre}</p>
+          </div>
+          <div>
+            <span class="text-xs text-white/40">Email</span>
+            <p class="text-white"><a href={`mailto:${quote.email}`} class="text-cyan-400 hover:underline">{quote.email}</a></p>
+          </div>
+          {quote.telefono && (
+            <div>
+              <span class="text-xs text-white/40">Telefono</span>
+              <p class="text-white"><a href={`tel:${quote.telefono}`} class="text-cyan-400 hover:underline">{quote.telefono}</a></p>
+            </div>
+          )}
+          {quote.empresa && (
+            <div>
+              <span class="text-xs text-white/40">Empresa</span>
+              <p class="text-white">{quote.empresa}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <!-- Items breakdown -->
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+        <h2 class="text-lg font-bold text-white mb-4">Detalle de la cotizacion</h2>
+        {Object.entries(grouped).map(([cat, catItems]) => (
+          <div class="mb-4 last:mb-0">
+            <h3 class="text-xs font-medium text-white/40 uppercase tracking-wider mb-2">{categoryLabels[cat] || cat}</h3>
+            {catItems.map(item => (
+              <div class="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
+                <span class="text-sm text-white/80">{item.nombre}</span>
+                <span class="text-sm font-semibold text-cyan-300">{formatMXN(item.precio)}</span>
+              </div>
+            ))}
+          </div>
+        ))}
+        <div class="flex justify-between items-center pt-4 mt-4 border-t border-white/20">
+          <span class="text-lg font-bold text-white">Total</span>
+          <span class="text-xl font-bold gradient-text">{formatMXN(quote.total)} MXN</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-6">
+      <!-- Status -->
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+        <h2 class="text-lg font-bold text-white mb-4">Status</h2>
+        <div class="space-y-3">
+          {['nueva', 'contactada', 'cerrada', 'descartada'].map(s => (
+            <button
+              data-status={s}
+              class={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-all cursor-pointer border ${
+                quote.status === s
+                  ? statusColors[s]
+                  : 'bg-white/5 text-white/40 border-white/10 hover:bg-white/10'
+              }`}
+            >
+              {s.charAt(0).toUpperCase() + s.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6">
+        <h2 class="text-lg font-bold text-white mb-4">Notas</h2>
+        <textarea id="notas-admin" rows="4" placeholder="Agregar notas..."
+          class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-cyan-500 outline-none transition-colors text-sm resize-none"
+        >{quote.notas_admin || ''}</textarea>
+        <button id="btn-save-notes" class="mt-2 w-full py-2 rounded-lg bg-white/10 text-white/60 hover:bg-white/20 text-sm font-medium transition-all cursor-pointer">
+          Guardar notas
+        </button>
+      </div>
+
+      <!-- Meta -->
+      <div class="bg-white/5 border border-white/10 rounded-xl p-6 text-sm text-white/40 space-y-2">
+        <div>Creada: {formatDate(quote.created_at)}</div>
+        <div>Actualizada: {formatDate(quote.updated_at)}</div>
+        <div>Tipo: {quote.tipo_sitio}</div>
+        <div>Paginas: {quote.num_paginas}</div>
+        <div>Diseno: {quote.diseno}</div>
+      </div>
+
+      <!-- Actions -->
+      <div class="space-y-2">
+        <a href={`https://wa.me/${quote.telefono ? quote.telefono.replace(/\D/g, '') : '525512345678'}?text=${encodeURIComponent(`Hola ${quote.nombre}, recibimos tu cotizacion en Portafolio Z por ${formatMXN(quote.total)}. ¿Podemos agendar una llamada?`)}`}
+          target="_blank" rel="noopener"
+          class="block w-full py-2 px-4 rounded-lg bg-green-500/20 text-green-300 text-sm font-medium text-center hover:bg-green-500/30 transition-colors">
+          WhatsApp
+        </a>
+        <a href={`mailto:${quote.email}?subject=Tu cotizacion en Portafolio Z&body=Hola ${quote.nombre},%0A%0AGracias por tu cotizacion.`}
+          class="block w-full py-2 px-4 rounded-lg bg-cyan-500/20 text-cyan-300 text-sm font-medium text-center hover:bg-cyan-500/30 transition-colors">
+          Enviar email
+        </a>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script define:vars={{ quoteId: quote.id }}>
+  // Status buttons
+  document.querySelectorAll('[data-status]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const status = btn.dataset.status;
+      const res = await fetch(`/api/admin/quotes/${quoteId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      if ((await res.json()).ok) window.location.reload();
+    });
+  });
+
+  // Save notes
+  document.getElementById('btn-save-notes')?.addEventListener('click', async () => {
+    const notas = (document.getElementById('notas-admin')).value;
+    const btn = document.getElementById('btn-save-notes');
+    const res = await fetch(`/api/admin/quotes/${quoteId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: document.querySelector('[data-status].bg-cyan-500\\/20, [data-status].bg-amber-500\\/20, [data-status].bg-green-500\\/20, [data-status].bg-red-500\\/20')?.dataset?.status || 'nueva', notas_admin: notas }),
+    });
+    if ((await res.json()).ok) {
+      btn.textContent = 'Guardado!';
+      setTimeout(() => btn.textContent = 'Guardar notas', 2000);
+    }
+  });
+</script>
