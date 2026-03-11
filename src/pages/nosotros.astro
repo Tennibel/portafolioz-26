@@ -1,0 +1,341 @@
+---
+/**
+ * nosotros.astro - Pagina "Sobre Nosotros" de Portafolio Z
+ *
+ * Secciones:
+ * 1. Hero interno - Banner con titulo y breadcrumb
+ * 2. Nuestra Historia - Fundacion, trayectoria, mision
+ * 3. Mision y Vision - Cards lado a lado
+ * 4. Equipo - 3 miembros con roles y experiencia real
+ * 5. Trayectoria / Timeline - Hitos desde 2013
+ * 6. Numeros / Stats - Metricas de la agencia
+ * 7. Valores - Pilares de trabajo
+ * 8. CTA - Llamada a accion
+ *
+ * Toda la informacion es real de portafolioz.com
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+// Equipo real de Portafolio Z
+const team = [
+  {
+    name: 'Corina Alquicira',
+    role: 'Marketing Digital',
+    desc: 'Con más de 8 años de experiencia en Marketing Digital, trabajando para diferentes proyectos y empresas, siempre cumpliendo con los objetivos que los clientes necesitan.',
+    initials: 'CA',
+    color: 'from-cyan-500 to-primary-500',
+  },
+  {
+    name: 'Iván Gómez',
+    role: 'Líder Comercial y Operativo',
+    desc: 'Líder Comercial y operativo con más de 8 años de experiencia en la industria de Marketing Digital, ha trabajado en la operación de cuentas de clientes internacionales.',
+    initials: 'IG',
+    color: 'from-accent-500 to-pink-500',
+  },
+  {
+    name: 'Hugo Alquicira',
+    role: 'Líder Creativo',
+    desc: 'Líder Creativo con más de 4 años de experiencia laborando en agencias de publicidad, en las que se ha encargado de realizar y ejecutar proyectos de diferentes marcas.',
+    initials: 'HA',
+    color: 'from-pink-500 to-coral-500',
+  },
+];
+
+// Hitos de la trayectoria
+const timeline = [
+  { year: '2013', title: 'Fundación', desc: 'Nacimos el 11 de agosto del 2013 con la misión de ayudar a emprendedores a tener presencia web profesional.' },
+  { year: '2015', title: 'Primeros clientes internacionales', desc: 'Expandimos nuestros servicios a Estados Unidos y España, atendiendo clientes en 3 países.' },
+  { year: '2018', title: 'Especialización en e-commerce', desc: 'Incorporamos desarrollo de tiendas en línea con WooCommerce y Shopify para potenciar las ventas de nuestros clientes.' },
+  { year: '2020', title: 'Transformación digital', desc: 'Ayudamos a más de 10 negocios a migrar al mundo digital durante la pandemia con soluciones web integrales.' },
+  { year: '2023', title: '+10 años de trayectoria', desc: 'Celebramos una década con más de 30 clientes activos y presencia consolidada en 3 países.' },
+  { year: '2025', title: 'Innovación constante', desc: 'Adoptamos tecnologías de última generación como Astro, Tailwind y headless CMS para ofrecer sitios ultra rápidos.' },
+];
+
+// Valores de la agencia
+const values = [
+  { title: 'Confianza', desc: 'Años de experiencia nos respaldan. Nuestros clientes hablan por nosotros.', icon: '🤝' },
+  { title: 'Innovación', desc: 'Usamos las mejores tecnologías del mercado para crear sitios modernos y rápidos.', icon: '🚀' },
+  { title: 'Empatía', desc: 'Entendemos las necesidades de cada cliente y nos adaptamos a su visión.', icon: '💡' },
+  { title: 'Compromiso', desc: 'Estamos contigo desde la cotización hasta mucho después del lanzamiento.', icon: '🎯' },
+  { title: 'Calidad', desc: 'Cada proyecto tiene estándares altos de diseño, rendimiento y seguridad.', icon: '✨' },
+  { title: 'Resultados', desc: 'Nos enfocamos en que tu sitio web genere clientes reales para tu negocio.', icon: '📈' },
+];
+
+// Stats
+const stats = [
+  { number: '+30', label: 'Clientes Activos' },
+  { number: '3', label: 'Países' },
+  { number: '+12', label: 'Años de Experiencia' },
+  { number: '+50', label: 'Proyectos Realizados' },
+];
+---
+
+<Layout title="Nosotros" description="Conoce a Portafolio Z, agencia de diseño web con más de 12 años de experiencia en México, Estados Unidos y España.">
+  <Navbar />
+
+  <!-- ================================================
+       SECCION 1: Hero interno con breadcrumb
+       Fondo degradado cyan -> indigo -> purpura
+       ================================================ -->
+  <section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-cyan-500 via-primary-500 to-accent-600"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-10 right-20 w-80 h-80 bg-pink-500/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-10 w-64 h-64 bg-cyan-400/20 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <!-- Breadcrumb -->
+      <nav class="flex justify-center gap-2 text-sm text-white/60 mb-6" data-animate>
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span class="text-white">Nosotros</span>
+      </nav>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4" data-animate>
+        Conoce <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-pink-300">Portafolio Z</span>
+      </h1>
+      <p class="text-lg text-white/70 max-w-2xl mx-auto" data-animate>
+        Más de 12 años creando experiencias digitales que impulsan negocios en México, Estados Unidos y España.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 2: Nuestra Historia
+       Fondo blanco, 2 columnas
+       ================================================ -->
+  <section class="bg-white py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <!-- Texto -->
+        <div data-animate>
+          <p class="text-accent-600 font-medium text-sm uppercase tracking-widest mb-3">Nuestra Historia</p>
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            Una agencia que nació para <span class="gradient-text">hacer la diferencia</span>
+          </h2>
+          <p class="text-gray-600 text-lg leading-relaxed mb-4">
+            Nacimos el 11 de agosto del 2013 con un propósito claro: dar a nuestros clientes las herramientas para triunfar en el mundo digital.
+          </p>
+          <p class="text-gray-600 text-lg leading-relaxed mb-4">
+            Actualmente contamos con más de 30 clientes en <strong class="text-gray-900">México, Estados Unidos y España</strong>. Nos especializamos en dar un servicio avanzado en desarrollo y diseño web.
+          </p>
+          <p class="text-gray-600 text-lg leading-relaxed mb-8">
+            Nuestro objetivo principal es hacer que tu marca crezca y destaque entre toda la competencia. ¿Cómo lograrlo? Simple, con la creación de páginas web orgánicas, únicas y efectivas.
+          </p>
+          <a href="#contacto" class="inline-flex items-center gap-2 gradient-bg text-white font-semibold px-8 py-3 rounded-full hover:opacity-90 transition-all hover:scale-105">
+            Conoce nuestros planes
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+          </a>
+        </div>
+        <!-- Imagen placeholder / stat visual -->
+        <div class="relative" data-animate>
+          <div class="aspect-[4/3] rounded-2xl bg-gradient-to-br from-primary-500/10 to-accent-500/10 flex items-center justify-center overflow-hidden">
+            <div class="text-center p-8">
+              <p class="text-7xl font-extrabold gradient-text mb-2">2013</p>
+              <p class="text-gray-500 text-lg">Año de fundación</p>
+              <div class="mt-8 flex justify-center gap-8">
+                <div>
+                  <p class="text-3xl font-bold text-primary-600">MX</p>
+                  <p class="text-gray-400 text-xs">México</p>
+                </div>
+                <div>
+                  <p class="text-3xl font-bold text-accent-600">US</p>
+                  <p class="text-gray-400 text-xs">EE.UU.</p>
+                </div>
+                <div>
+                  <p class="text-3xl font-bold text-pink-600">ES</p>
+                  <p class="text-gray-400 text-xs">España</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Orbes decorativos -->
+          <div class="absolute -top-4 -right-4 w-24 h-24 bg-accent-400/20 rounded-full blur-xl"></div>
+          <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-cyan-400/20 rounded-full blur-xl"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 3: Mision y Vision
+       Fondo oscuro con cards de glassmorphism
+       ================================================ -->
+  <section class="bg-dark-900 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-cyan-400 font-medium text-sm uppercase tracking-widest mb-3">Nuestro Propósito</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Lo que nos <span class="gradient-text">impulsa cada día</span>
+        </h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8" data-animate>
+        <!-- Mision -->
+        <div class="glass-card p-10 hover:bg-white/10 transition-colors">
+          <div class="w-14 h-14 rounded-2xl gradient-bg flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-4">Nuestra Misión</h3>
+          <p class="text-white/60 text-lg leading-relaxed">
+            Dar a nuestros clientes las herramientas para triunfar en el mundo digital. Convertimos empresas sin presencia online en marcas con autoridad en internet, incrementando ventas y generando posicionamiento en cada sector.
+          </p>
+        </div>
+        <!-- Vision -->
+        <div class="glass-card p-10 hover:bg-white/10 transition-colors">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-accent-500 flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-4">Nuestra Visión</h3>
+          <p class="text-white/60 text-lg leading-relaxed">
+            Ser la agencia de diseño web de referencia para emprendedores y PyMEs en Latinoamérica, reconocida por crear experiencias digitales que generan resultados medibles y clientes reales.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 4: Numeros / Stats
+       Fondo degradado con glass-cards de metricas
+       ================================================ -->
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-600 via-accent-600 to-pink-600"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-cyan-300 font-medium text-sm uppercase tracking-widest mb-3">Nuestros Números</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Resultados que <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-white">hablan por sí solos</span>
+        </h2>
+      </div>
+      <!-- Grid de stats -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6" data-animate>
+        {stats.map((s) => (
+          <div class="glass-card p-8 text-center hover:bg-white/15 transition-colors">
+            <p class="text-5xl font-extrabold text-white mb-2">{s.number}</p>
+            <p class="text-white/60 text-sm font-medium">{s.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 5: Trayectoria / Timeline
+       Fondo blanco, timeline vertical
+       ================================================ -->
+  <section class="bg-white py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-accent-600 font-medium text-sm uppercase tracking-widest mb-3">Nuestra Trayectoria</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+          Más de una década <span class="gradient-text">creciendo juntos</span>
+        </h2>
+      </div>
+      <!-- Timeline vertical -->
+      <div class="relative" data-animate>
+        <!-- Linea central -->
+        <div class="absolute left-8 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5 bg-gradient-to-b from-cyan-500 via-accent-500 to-pink-500"></div>
+        {timeline.map((item, i) => (
+          <div class={`relative flex items-start gap-8 mb-12 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+            <!-- Dot en la linea -->
+            <div class="absolute left-8 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full gradient-bg border-4 border-white shadow-lg z-10"></div>
+            <!-- Spacer para mobile -->
+            <div class="w-16 md:hidden flex-shrink-0"></div>
+            <!-- Content card -->
+            <div class={`flex-1 bg-gray-50 rounded-2xl p-6 hover:shadow-lg transition-shadow ${i % 2 === 0 ? 'md:mr-[calc(50%+2rem)]' : 'md:ml-[calc(50%+2rem)]'}`}>
+              <span class="inline-block gradient-bg text-white text-xs font-bold px-3 py-1 rounded-full mb-3">{item.year}</span>
+              <h3 class="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
+              <p class="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 6: Equipo
+       Fondo oscuro, 3 cards del equipo real
+       ================================================ -->
+  <section class="bg-dark-900 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-cyan-400 font-medium text-sm uppercase tracking-widest mb-3">Nuestro Equipo</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Las personas detrás de <span class="gradient-text">tu proyecto</span>
+        </h2>
+        <p class="text-white/50 mt-4 max-w-2xl mx-auto">
+          Nuestros años de experiencia demuestran que somos una agencia digital confiable y eficiente. Simplemente empatizamos con rapidez.
+        </p>
+      </div>
+      <!-- Grid del equipo -->
+      <div class="grid md:grid-cols-3 gap-8" data-animate>
+        {team.map((member) => (
+          <div class="glass-card p-8 text-center hover:bg-white/10 transition-all duration-300 group">
+            <!-- Avatar con iniciales y degradado -->
+            <div class={`w-24 h-24 rounded-full bg-gradient-to-br ${member.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform`}>
+              <span class="text-white text-2xl font-bold">{member.initials}</span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-1">{member.name}</h3>
+            <p class="text-cyan-400 text-sm font-medium mb-4">{member.role}</p>
+            <p class="text-white/50 text-sm leading-relaxed">{member.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 7: Valores
+       Fondo blanco, grid de 6 valores
+       ================================================ -->
+  <section class="bg-white py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-accent-600 font-medium text-sm uppercase tracking-widest mb-3">Nuestros Valores</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+          Los pilares de <span class="gradient-text">nuestro trabajo</span>
+        </h2>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate>
+        {values.map((v) => (
+          <div class="bg-gray-50 rounded-2xl p-8 hover:-translate-y-2 hover:shadow-lg transition-all duration-300 group">
+            <span class="text-3xl mb-4 block group-hover:scale-110 transition-transform">{v.icon}</span>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">{v.title}</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">{v.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 8: CTA
+       Degradado coral -> amber con glassmorphism
+       ================================================ -->
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-coral-500 via-coral-600 to-amber-500"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-animate>
+      <div class="glass-card-light p-12 md:p-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-dark-900 mb-4">
+          ¿Listo para trabajar <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-600">juntos?</span>
+        </h2>
+        <p class="text-dark-700/70 text-lg mb-10 max-w-2xl mx-auto">
+          Estaremos a tu lado para darte atención y asesoría personalizada hasta alcanzar tus objetivos con éxito.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/#contacto" class="gradient-bg text-white font-semibold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105">
+            Contáctanos
+          </a>
+          <a href="https://wa.me/5215561959724" target="_blank" rel="noopener" class="bg-dark-900 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-dark-800 transition-all">
+            Hablar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>

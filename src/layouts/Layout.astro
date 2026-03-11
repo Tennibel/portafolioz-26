@@ -1,0 +1,65 @@
+---
+/**
+ * Layout.astro - Layout base del sitio Portafolio Z
+ *
+ * Responsabilidades:
+ * - Carga la fuente Poppins desde Google Fonts (preconnect para performance)
+ * - Inyecta meta tags globales (charset, viewport, description)
+ * - Inicializa el IntersectionObserver para animaciones de scroll
+ *   (cualquier elemento con data-animate se anima al entrar al viewport)
+ * - Importa los estilos globales (Tailwind + custom tokens)
+ */
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Agencia de Diseño Web. Especialistas en diseño y desarrollo web a la medida.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Google Fonts: Poppins (300-900) con preconnect para carga rapida -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <title>{title} | Portafolio Z</title>
+  </head>
+  <body class="bg-white text-gray-900 overflow-x-hidden">
+    <!-- Slot para el contenido de cada pagina -->
+    <slot />
+
+    <!--
+      IntersectionObserver para animaciones de scroll.
+      Observa todos los elementos con [data-animate], les pone opacity:0
+      de inicio, y al entrar al viewport les aplica .animate-fade-up.
+      Solo se anima una vez (unobserve al intersectar).
+    -->
+    <script>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate-fade-up');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+      );
+      document.querySelectorAll('[data-animate]').forEach((el) => {
+        el.style.opacity = '0';
+        observer.observe(el);
+      });
+    </script>
+  </body>
+</html>

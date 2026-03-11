@@ -1,0 +1,69 @@
+---
+// Mock posts - se reemplazará con WP REST API
+const posts = [
+  {
+    title: '¿Cuándo es necesaria una agencia de SEO en México?',
+    excerpt: 'Descubre en qué momento tu negocio necesita ayuda profesional para posicionarse en buscadores.',
+    category: 'SEO',
+    date: '15 Mar 2025',
+    color: 'from-cyan-500 to-primary-500',
+  },
+  {
+    title: '¿Cómo mejorar la seguridad de un sitio web?',
+    excerpt: 'Consejos esenciales de seguridad web que todo dueño de negocio debe conocer.',
+    category: 'Seguridad',
+    date: '10 Mar 2025',
+    color: 'from-accent-500 to-pink-500',
+  },
+  {
+    title: 'Marketing de autos de lujo: estrategias para clientes exigentes',
+    excerpt: 'Estrategias adaptadas para satisfacer la exigente clientela del mercado automotriz de lujo.',
+    category: 'Marketing',
+    date: '05 Mar 2025',
+    color: 'from-coral-500 to-amber-500',
+  },
+];
+---
+
+<section id="blog" class="bg-white py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16" data-animate>
+      <p class="text-accent-600 font-medium text-sm uppercase tracking-widest mb-3">Blog para Emprendedores</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+        Actualiza tu <span class="gradient-text">presencia en línea</span>
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8" data-animate>
+      {posts.map((post) => (
+        <article class="group rounded-2xl overflow-hidden bg-gray-50 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 cursor-pointer">
+          <div class={`h-48 bg-gradient-to-br ${post.color} relative`}>
+            <div class="absolute top-4 left-4">
+              <span class="bg-white/20 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full">{post.category}</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <time class="text-gray-400 text-xs">{post.date}</time>
+            <h3 class="text-base font-bold text-gray-900 mt-2 mb-3 group-hover:text-accent-600 transition-colors">{post.title}</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">{post.excerpt}</p>
+            <div class="flex items-center gap-2 mt-4 text-accent-600 text-sm font-medium">
+              <span>Leer más</span>
+              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="text-center mt-12" data-animate>
+      <a href="/blog" class="inline-flex items-center gap-2 border-2 border-accent-500 text-accent-600 font-semibold px-8 py-3 rounded-full hover:bg-accent-500 hover:text-white transition-all">
+        Ver todos los artículos
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

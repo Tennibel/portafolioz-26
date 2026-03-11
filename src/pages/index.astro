@@ -1,0 +1,92 @@
+---
+/**
+ * index.astro - Homepage de Portafolio Z
+ *
+ * Ensambla las 14 secciones del sitio en orden segun el diseno de Figma Make.
+ * Las secciones alternan entre fondos oscuros y claros para crear
+ * contraste visual. Cada componente es independiente y reutilizable.
+ *
+ * Orden de secciones:
+ * 1.  Hero (oscuro)          - Banner principal con CTA
+ * 2.  TrustBar (blanco)      - Logos de herramientas/plataformas
+ * 3.  Services (oscuro)      - 8 servicios con hover reveal
+ * 4.  WhyUs (degradado)      - Historia y razones para elegirnos
+ * 5.  Plans (blanco)         - 4 planes de precios
+ * 6.  Features (degradado)   - 6 caracteristicas incluidas
+ * 7.  Projects (blanco)      - Portafolio de proyectos
+ * 8.  TechStack (oscuro)     - 12 tecnologias que usamos
+ * 9.  Process (blanco)       - 4 pasos de nuestro proceso
+ * 10. CtaSection (degradado) - Call to Action principal
+ * 11. BlogPreview (blanco)   - 3 ultimos posts (mock, sera WP REST API)
+ * 12. Testimonials (blanco)  - 3 testimonios de clientes
+ * 13. ContactForm (oscuro)   - Formulario de contacto + info
+ * 14. Footer (oscuro)        - Footer con 3 columnas
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import TrustBar from '../components/TrustBar.astro';
+import Services from '../components/Services.astro';
+import WhyUs from '../components/WhyUs.astro';
+import Plans from '../components/Plans.astro';
+import Features from '../components/Features.astro';
+import Projects from '../components/Projects.astro';
+import TechStack from '../components/TechStack.astro';
+import Process from '../components/Process.astro';
+import CtaSection from '../components/CtaSection.astro';
+import BlogPreview from '../components/BlogPreview.astro';
+import Testimonials from '../components/Testimonials.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+---
+
+<Layout title="Agencia de Diseno Web">
+  <!-- Navegacion fija (se oscurece al hacer scroll) -->
+  <Navbar />
+
+  <!-- 1. Hero (oscuro) - Banner principal con stats y CTAs -->
+  <Hero />
+
+  <!-- 2. Trust (blanco) - Logos de herramientas que utilizamos -->
+  <TrustBar />
+
+  <!-- 3. Servicios (oscuro) - Cards con hover reveal de descripcion -->
+  <Services />
+
+  <!-- 4. Why Portafolio Z (degradado purpura-rosa) - Nuestra historia -->
+  <WhyUs />
+
+  <!-- 5. Planes (blanco) - 4 paquetes de precios en MXN -->
+  <Plans />
+
+  <!-- 6. Features (degradado rosa-coral) - Caracteristicas incluidas -->
+  <Features />
+
+  <!-- 7. Proyectos (blanco) - Galeria de trabajos realizados -->
+  <Projects />
+
+  <!-- 8. Tecnologias (oscuro) - Stack tecnologico -->
+  <TechStack />
+
+  <!-- 9. Proceso (blanco) - 4 pasos horizontales con flechas -->
+  <Process />
+
+  <!-- 10. CTA (degradado coral-amber) - Call to Action glassmorphism -->
+  <CtaSection />
+
+  <!-- 11. Blog (blanco) - Previews de articulos (mock -> WP REST API) -->
+  <BlogPreview />
+
+  <!-- 12. Testimonios (blanco) - Opiniones de clientes -->
+  <Testimonials />
+
+  <!-- 13. Formulario (oscuro) - Contacto con glassmorphism -->
+  <ContactForm />
+
+  <!-- 14. Footer (oscuro) - 3 columnas: CTA + contacto + direccion -->
+  <Footer />
+
+  <!-- Widget flotante de WhatsApp (bottom-right, siempre visible) -->
+  <WhatsAppWidget />
+</Layout>

@@ -1,0 +1,154 @@
+/* ============================================================
+   global.css - Estilos globales de Portafolio Z
+   ============================================================
+   Usa Tailwind CSS v4 con directiva @theme para custom tokens.
+   Paleta basada en la presentacion PDF de la agencia:
+   cyan -> indigo -> purpura -> rosa -> coral -> amber
+   ============================================================ */
+@import "tailwindcss";
+
+/* ----------------------------------------------------------
+   THEME TOKENS
+   Define colores custom, fuente Poppins y tokens de dark mode.
+   Estos valores se usan como clases de Tailwind (ej: bg-cyan-500)
+   ---------------------------------------------------------- */
+@theme {
+  /* Fuente principal - Poppins (se carga desde Google Fonts en Layout.astro) */
+  --font-sans: 'Poppins', system-ui, -apple-system, sans-serif;
+
+  /* Cyan - Acento brillante, links, iconos, CTAs secundarios */
+  --color-cyan-400: #22d3ee;
+  --color-cyan-500: #06b6d4;
+  --color-cyan-600: #0891b2;
+
+  /* Primary (indigo) - Botones principales, degradados del hero */
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+
+  /* Accent (purpura) - Badges, highlights, plan popular */
+  --color-accent-400: #c084fc;
+  --color-accent-500: #a855f7;
+  --color-accent-600: #9333ea;
+
+  /* Pink - Degradados secundarios, iconos decorativos */
+  --color-pink-400: #f472b6;
+  --color-pink-500: #ec4899;
+  --color-pink-600: #db2777;
+
+  /* Coral - Seccion CTA, degradados calidos */
+  --color-coral-400: #fb923c;
+  --color-coral-500: #f97316;
+  --color-coral-600: #ea580c;
+
+  /* Amber - Complemento del coral en degradados */
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+
+  /* Dark - Fondos de secciones oscuras, navbar y footer */
+  --color-dark-700: #1e293b;
+  --color-dark-800: #0f172a;
+  --color-dark-900: #020617;
+}
+
+/* ----------------------------------------------------------
+   BASE STYLES
+   Smooth scroll global y font rendering optimizado
+   ---------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ----------------------------------------------------------
+   COMPONENT CLASSES
+   Clases reutilizables: degradados, glassmorphism, etc.
+   Se usan en multiples componentes del sitio.
+   ---------------------------------------------------------- */
+@layer components {
+  /* Texto con degradado arcoiris (cyan -> indigo -> purpura -> rosa) */
+  .gradient-text {
+    background: linear-gradient(135deg, #06b6d4, #6366f1, #a855f7, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Fondo degradado para botones y CTAs (indigo -> purpura -> rosa) */
+  .gradient-bg {
+    background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+  }
+
+  /* Degradado completo del espectro (cyan -> indigo -> purpura -> rosa -> coral) */
+  .gradient-bg-full {
+    background: linear-gradient(135deg, #06b6d4, #6366f1, #a855f7, #ec4899, #f97316);
+  }
+
+  /* Glassmorphism basico - efecto vidrio esmerilado para iconos y badges */
+  .glass {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Glassmorphism card - para tarjetas sobre secciones oscuras */
+  .glass-card {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 1rem;
+  }
+
+  /* Glassmorphism card light - para tarjetas sobre fondos de color (ej: seccion CTA) */
+  .glass-card-light {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 1rem;
+  }
+}
+
+/* ----------------------------------------------------------
+   ANIMATION UTILITIES
+   Animaciones de entrada activadas via IntersectionObserver.
+   Se aplican con el atributo data-animate en el HTML.
+   El observer esta configurado en Layout.astro.
+   ---------------------------------------------------------- */
+@layer utilities {
+  /* Entrada desde abajo con fade - animacion principal de scroll */
+  .animate-fade-up {
+    animation: fadeUp 0.6s ease-out both;
+  }
+
+  /* Fade in simple sin movimiento */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out both;
+  }
+}
+
+/* Keyframes para las animaciones de scroll */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

@@ -1,0 +1,126 @@
+---
+/**
+ * Navbar.astro - Barra de navegacion fija con efecto sticky mejorado
+ *
+ * Comportamiento:
+ * - Inicial: Transparente sobre el hero
+ * - Al scroll > 20px: Fondo degradado solido (indigo -> purpura) + shadow + border
+ * - Transicion suave de 500ms para el cambio de color
+ * - Desktop: Links + CTA "Cotiza Ahora"
+ * - Mobile: Hamburguesa animada (X al abrir) + menu con backdrop-blur
+ */
+const links = [
+  { label: 'Nosotros', href: '/nosotros' },
+  { label: 'Servicios', href: '#servicios' },
+  { label: 'Paquetes', href: '#paquetes' },
+  { label: 'Proyectos', href: '#proyectos' },
+  { label: 'Blog', href: '#blog' },
+  { label: 'Contacto', href: '#contacto' },
+];
+---
+
+<!-- Nav fija: transparente al inicio, degradado solido al scroll -->
+<nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="navbar">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      <!-- Logo con degradado -->
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-2xl font-bold gradient-text">Portafolio Z</span>
+      </a>
+
+      <!-- Links de navegacion (desktop) -->
+      <div class="hidden md:flex items-center gap-8">
+        {links.map((link) => (
+          <a href={link.href} class="text-sm font-medium text-white/80 hover:text-white transition-colors relative group">
+            {link.label}
+            <!-- Underline animado al hover -->
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
+          </a>
+        ))}
+        <!-- CTA principal con glow -->
+        <a href="#contacto" class="gradient-bg text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-90 transition-all hover:shadow-lg hover:shadow-accent-500/25">
+          Cotiza Ahora
+        </a>
+      </div>
+
+      <!-- Boton hamburguesa animado (mobile) -->
+      <button class="md:hidden text-white p-2 relative w-10 h-10 flex items-center justify-center" id="mobile-toggle" aria-label="Abrir menú">
+        <!-- Icono hamburguesa (se transforma en X via JS) -->
+        <span class="hamburger-icon">
+          <span class="block w-6 h-0.5 bg-white transition-all duration-300" id="bar1"></span>
+          <span class="block w-6 h-0.5 bg-white mt-1.5 transition-all duration-300" id="bar2"></span>
+          <span class="block w-6 h-0.5 bg-white mt-1.5 transition-all duration-300" id="bar3"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Menu mobile con backdrop-blur -->
+  <div class="md:hidden hidden bg-dark-900/95 backdrop-blur-xl border-t border-white/10" id="mobile-menu">
+    <div class="px-4 py-4 space-y-3">
+      {links.map((link) => (
+        <a href={link.href} class="block text-white/80 hover:text-white hover:pl-2 py-2 text-sm font-medium transition-all">
+          {link.label}
+        </a>
+      ))}
+      <a href="#contacto" class="block gradient-bg text-white text-sm font-semibold px-6 py-2.5 rounded-full text-center mt-4">
+        Cotiza Ahora
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // ---- Navbar sticky con cambio de color visible ----
+  const navbar = document.getElementById('navbar');
+  const toggle = document.getElementById('mobile-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const bar1 = document.getElementById('bar1');
+  const bar2 = document.getElementById('bar2');
+  const bar3 = document.getElementById('bar3');
+
+  // Clases para el estado "scrolled" - degradado solido + shadow + borde inferior
+  const scrolledClasses = [
+    'bg-gradient-to-r', 'from-dark-900', 'via-primary-600', 'to-accent-600',
+    'backdrop-blur-xl', 'shadow-2xl', 'shadow-accent-500/20',
+    'border-b', 'border-white/15'
+  ];
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+      scrolledClasses.forEach(c => navbar?.classList.add(c));
+    } else {
+      scrolledClasses.forEach(c => navbar?.classList.remove(c));
+    }
+  });
+
+  // ---- Mobile menu toggle con animacion hamburguesa -> X ----
+  let menuOpen = false;
+  toggle?.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    menu?.classList.toggle('hidden');
+
+    if (menuOpen) {
+      // Transformar en X
+      bar1?.style.setProperty('transform', 'rotate(45deg) translate(4px, 4px)');
+      bar2?.style.setProperty('opacity', '0');
+      bar3?.style.setProperty('transform', 'rotate(-45deg) translate(4px, -4px)');
+    } else {
+      // Volver a hamburguesa
+      bar1?.style.setProperty('transform', 'none');
+      bar2?.style.setProperty('opacity', '1');
+      bar3?.style.setProperty('transform', 'none');
+    }
+  });
+
+  // Cerrar menu mobile al hacer click en un link
+  menu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      menu?.classList.add('hidden');
+      menuOpen = false;
+      bar1?.style.setProperty('transform', 'none');
+      bar2?.style.setProperty('opacity', '1');
+      bar3?.style.setProperty('transform', 'none');
+    });
+  });
+</script>

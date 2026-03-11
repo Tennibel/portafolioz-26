@@ -1,0 +1,60 @@
+---
+const testimonials = [
+  {
+    name: 'Carlos Martinez',
+    role: 'CEO, Hotel Boutique Riviera',
+    quote: 'Nuestro sitio web incremento las reservas directas un 40%. El equipo de Portafolio Z entendio perfectamente nuestra vision.',
+    avatar: 'CM',
+  },
+  {
+    name: 'Ana Lucia Gomez',
+    role: 'Directora, Clinica Dental Sonrisa',
+    quote: 'Profesionales y puntuales. El diseno supero nuestras expectativas y nuestros pacientes nos encuentran facilmente.',
+    avatar: 'AG',
+  },
+  {
+    name: 'Roberto Sanchez',
+    role: 'Fundador, TechShop MX',
+    quote: 'La tienda en linea que nos crearon es rapida, segura y facil de administrar. Las ventas crecieron desde el primer mes.',
+    avatar: 'RS',
+  },
+];
+---
+
+<section class="bg-white py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16" data-animate>
+      <p class="text-accent-600 font-medium text-sm uppercase tracking-widest mb-3">Testimonios</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+        Lo que dicen <span class="gradient-text">nuestros clientes</span>
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8" data-animate>
+      {testimonials.map((t) => (
+        <div class="bg-gray-50 rounded-2xl p-8 hover:-translate-y-2 hover:shadow-lg transition-all duration-300">
+          <!-- Stars -->
+          <div class="flex gap-1 mb-4">
+            {[1,2,3,4,5].map(() => (
+              <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            ))}
+          </div>
+
+          <p class="text-gray-600 text-sm leading-relaxed mb-6">"{t.quote}"</p>
+
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center">
+              <span class="text-white text-sm font-bold">{t.avatar}</span>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-900">{t.name}</p>
+              <p class="text-xs text-gray-500">{t.role}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

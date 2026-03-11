@@ -1,0 +1,56 @@
+---
+/**
+ * Projects.astro - Galeria de proyectos realizados
+ *
+ * Seccion #7: Proyectos (fondo blanco)
+ * 6 proyectos en grid de 3 columnas con aspect ratio 4:3.
+ * Patron de diseno:
+ * - Label visible por defecto (bg-white/20 blur)
+ * - Al hover: overlay oscuro + titulo + categoria
+ *
+ * TODO: Reemplazar degradados placeholder con imagenes reales de proyectos
+ */
+const projects = [
+  { title: 'Hotel Boutique', category: 'Diseno Web', color: 'from-primary-500 to-accent-500' },
+  { title: 'E-Commerce Moda', category: 'Tienda Online', color: 'from-accent-500 to-pink-500' },
+  { title: 'Clinica Dental', category: 'Landing Page', color: 'from-pink-500 to-primary-500' },
+  { title: 'App Fintech', category: 'Desarrollo', color: 'from-primary-500 to-pink-500' },
+  { title: 'Restaurant Gourmet', category: 'Diseno Web', color: 'from-accent-500 to-primary-500' },
+  { title: 'Agencia Inmobiliaria', category: 'Sitio Corporativo', color: 'from-pink-500 to-accent-500' },
+];
+---
+
+<section id="proyectos" class="bg-white py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Encabezado -->
+    <div class="text-center mb-16" data-animate>
+      <p class="text-accent-600 font-medium text-sm uppercase tracking-widest mb-3">Portafolio</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+        Proyectos que <span class="gradient-text">hablan por si solos</span>
+      </h2>
+    </div>
+
+    <!-- Grid de proyectos -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate>
+      {projects.map((p) => (
+        <div class="group relative rounded-2xl overflow-hidden cursor-pointer aspect-[4/3]">
+          <!-- Fondo degradado placeholder (reemplazar con imagen real) -->
+          <div class={`absolute inset-0 bg-gradient-to-br ${p.color} opacity-80`}></div>
+
+          <!-- Overlay que aparece al hover con info del proyecto -->
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-500 flex items-end p-6">
+            <div class="translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+              <span class="text-xs font-medium text-accent-400 uppercase tracking-wider">{p.category}</span>
+              <h3 class="text-xl font-bold text-white mt-1">{p.title}</h3>
+            </div>
+          </div>
+
+          <!-- Label siempre visible (desaparece al hover) -->
+          <div class="absolute bottom-4 left-4 group-hover:opacity-0 transition-opacity">
+            <span class="bg-white/20 backdrop-blur-sm text-white text-sm font-medium px-3 py-1 rounded-full">{p.title}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

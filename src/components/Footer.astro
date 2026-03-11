@@ -1,0 +1,80 @@
+---
+const socialLinks = [
+  { name: 'Facebook', href: 'https://facebook.com/portafolioz' },
+  { name: 'Instagram', href: 'https://instagram.com/portafolio.z' },
+  { name: 'TikTok', href: 'https://tiktok.com/@portafolioz' },
+  { name: 'X', href: 'https://x.com/PortafolioZ' },
+];
+---
+
+<footer class="bg-gradient-to-b from-dark-900 to-dark-800 pt-20 pb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-3 gap-12 pb-12 border-b border-white/10">
+      <!-- Col 1: CTA -->
+      <div>
+        <span class="inline-block bg-white/10 text-white/60 text-xs font-medium px-3 py-1 rounded-full mb-4">¡HOLA!</span>
+        <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">
+          Queremos <span class="gradient-text">ayudarte</span>
+        </h3>
+        <p class="text-white/50 text-sm leading-relaxed mb-6">
+          Estamos listos para llevar tu negocio al siguiente nivel con una presencia web que convierte visitantes en clientes.
+        </p>
+        <a href="#contacto" class="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors">
+          Iniciar proyecto &rarr;
+        </a>
+      </div>
+
+      <!-- Col 2: Contact + Subscribe -->
+      <div>
+        <span class="inline-block bg-white/10 text-white/60 text-xs font-medium px-3 py-1 rounded-full mb-4">Contáctanos</span>
+        <div class="space-y-2 mb-8">
+          <p class="text-white/60 text-sm">hola@portafolioz.com</p>
+          <p class="text-white/60 text-sm">55 6195 9724</p>
+          <p class="text-white/60 text-sm">56 4721 5472</p>
+        </div>
+
+        <span class="inline-block bg-white/10 text-white/60 text-xs font-medium px-3 py-1 rounded-full mb-4">Suscríbete</span>
+        <form class="flex gap-2">
+          <input type="email" placeholder="tu@email.com" class="flex-1 bg-transparent border-b border-white/20 text-white text-sm py-2 placeholder-white/30 outline-none focus:border-cyan-500 transition-colors" />
+          <button type="submit" class="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors">Enviar</button>
+        </form>
+      </div>
+
+      <!-- Col 3: Address + Social -->
+      <div>
+        <span class="inline-block bg-white/10 text-white/60 text-xs font-medium px-3 py-1 rounded-full mb-4">Dirección</span>
+        <p class="text-white/60 text-sm leading-relaxed mb-1">
+          Dr. José María Vértiz 84BIS, Doctores,
+        </p>
+        <p class="text-white/60 text-sm mb-1">Cuauhtémoc, 06720 CDMX</p>
+        <p class="text-white/60 text-sm mb-1">Lun - Vie: 8:00 am - 6:00 pm</p>
+        <p class="text-white/60 text-sm mb-8">Sáb: 9:00 am - 2:00 pm</p>
+
+        <span class="inline-block bg-white/10 text-white/60 text-xs font-medium px-3 py-1 rounded-full mb-4">Síguenos</span>
+        <div class="flex gap-4">
+          {socialLinks.map((link) => (
+            <a href={link.href} class="text-pink-400 hover:text-pink-300 text-sm font-medium transition-colors" target="_blank" rel="noopener">
+              {link.name}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom footer -->
+    <div class="flex flex-col md:flex-row items-center justify-between pt-8 gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl font-bold gradient-text">Portafolio Z</span>
+        <span class="text-white/30 text-xs">~ Agencia de Diseño Web</span>
+      </div>
+      <div class="flex flex-wrap gap-6 text-xs">
+        <a href="#" class="text-white/40 hover:text-white/70 transition-colors">Aviso de Privacidad</a>
+        <a href="#" class="text-white/40 hover:text-white/70 transition-colors">Aviso Legal</a>
+        <a href="#" class="text-white/40 hover:text-white/70 transition-colors">Política de Cookies</a>
+      </div>
+      <p class="text-white/30 text-xs">
+        &copy; 2026 Portafolio Z. Powered by Portafolio Z
+      </p>
+    </div>
+  </div>
+</footer>
