@@ -4,19 +4,27 @@
  *
  * Responsabilidades:
  * - Carga la fuente Poppins desde Google Fonts (preconnect para performance)
- * - Inyecta meta tags globales (charset, viewport, description)
+ * - Inyecta meta tags globales (charset, viewport, description, Open Graph)
+ * - View Transitions API para navegacion suave entre paginas
  * - Inicializa el IntersectionObserver para animaciones de scroll
- *   (cualquier elemento con data-animate se anima al entrar al viewport)
  * - Importa los estilos globales (Tailwind + custom tokens)
  */
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
 }
 
-const { title, description = 'Agencia de Diseño Web. Especialistas en diseño y desarrollo web a la medida.' } = Astro.props;
+const {
+  title,
+  description = 'Agencia de Diseño Web con más de 12 años de experiencia. Especialistas en diseño y desarrollo web a la medida en México, EE.UU. y España.',
+  ogImage = '/og-image.jpg',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://portafolioz.com');
 ---
 
 <!doctype html>
@@ -25,7 +33,19 @@ const { title, description = 'Agencia de Diseño Web. Especialistas en diseño y
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="author" content="Portafolio Z" />
+    <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={`${title} | Portafolio Z`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="es_MX" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@PortafolioZ" />
 
     <!-- Google Fonts: Poppins (300-900) con preconnect para carga rapida -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -33,33 +53,42 @@ const { title, description = 'Agencia de Diseño Web. Especialistas en diseño y
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
     <title>{title} | Portafolio Z</title>
+
+    <!-- ClientRouter (Astro v6): navegacion SPA entre subpaginas -->
+    <ClientRouter />
   </head>
   <body class="bg-white text-gray-900 overflow-x-hidden">
-    <!-- Slot para el contenido de cada pagina -->
     <slot />
 
     <!--
       IntersectionObserver para animaciones de scroll.
-      Observa todos los elementos con [data-animate], les pone opacity:0
-      de inicio, y al entrar al viewport les aplica .animate-fade-up.
-      Solo se anima una vez (unobserve al intersectar).
+      Se re-ejecuta en cada navegacion gracias a astro:page-load
+      (necesario con View Transitions habilitado).
     -->
     <script>
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('animate-fade-up');
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-      );
-      document.querySelectorAll('[data-animate]').forEach((el) => {
-        el.style.opacity = '0';
-        observer.observe(el);
-      });
+      function initAnimations() {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fade-up');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+        );
+        document.querySelectorAll('[data-animate]').forEach((el) => {
+          el.style.opacity = '0';
+          observer.observe(el);
+        });
+      }
+
+      // Ejecutar en carga inicial
+      initAnimations();
+
+      // Re-ejecutar despues de cada navegacion con View Transitions
+      document.addEventListener('astro:page-load', initAnimations);
     </script>
   </body>
 </html>

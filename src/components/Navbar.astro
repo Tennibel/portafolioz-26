@@ -11,11 +11,11 @@
  */
 const links = [
   { label: 'Nosotros', href: '/nosotros' },
-  { label: 'Servicios', href: '#servicios' },
-  { label: 'Paquetes', href: '#paquetes' },
-  { label: 'Proyectos', href: '#proyectos' },
-  { label: 'Blog', href: '#blog' },
-  { label: 'Contacto', href: '#contacto' },
+  { label: 'Servicios', href: '/servicios' },
+  { label: 'Paquetes', href: '/#paquetes' },
+  { label: 'Proyectos', href: '/#proyectos' },
+  { label: 'Blog', href: '/#blog' },
+  { label: 'Contacto', href: '/contacto' },
 ];
 ---
 
@@ -38,7 +38,7 @@ const links = [
           </a>
         ))}
         <!-- CTA principal con glow -->
-        <a href="#contacto" class="gradient-bg text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-90 transition-all hover:shadow-lg hover:shadow-accent-500/25">
+        <a href="/contacto" class="gradient-bg text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-90 transition-all hover:shadow-lg hover:shadow-accent-500/25">
           Cotiza Ahora
         </a>
       </div>
@@ -71,56 +71,63 @@ const links = [
 </nav>
 
 <script>
-  // ---- Navbar sticky con cambio de color visible ----
-  const navbar = document.getElementById('navbar');
-  const toggle = document.getElementById('mobile-toggle');
-  const menu = document.getElementById('mobile-menu');
-  const bar1 = document.getElementById('bar1');
-  const bar2 = document.getElementById('bar2');
-  const bar3 = document.getElementById('bar3');
+  // Navbar init - compatible con View Transitions (astro:page-load)
+  function initNavbar() {
+    const navbar = document.getElementById('navbar');
+    const toggle = document.getElementById('mobile-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const bar1 = document.getElementById('bar1');
+    const bar2 = document.getElementById('bar2');
+    const bar3 = document.getElementById('bar3');
 
-  // Clases para el estado "scrolled" - degradado solido + shadow + borde inferior
-  const scrolledClasses = [
-    'bg-gradient-to-r', 'from-dark-900', 'via-primary-600', 'to-accent-600',
-    'backdrop-blur-xl', 'shadow-2xl', 'shadow-accent-500/20',
-    'border-b', 'border-white/15'
-  ];
+    // Clases para el estado "scrolled" - degradado solido + shadow + borde inferior
+    const scrolledClasses = [
+      'bg-gradient-to-r', 'from-dark-900', 'via-primary-600', 'to-accent-600',
+      'backdrop-blur-xl', 'shadow-2xl', 'shadow-accent-500/20',
+      'border-b', 'border-white/15'
+    ];
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
-      scrolledClasses.forEach(c => navbar?.classList.add(c));
-    } else {
-      scrolledClasses.forEach(c => navbar?.classList.remove(c));
+    // Aplicar estado correcto al cargar (por si ya hay scroll)
+    function updateNavbar() {
+      if (window.scrollY > 20) {
+        scrolledClasses.forEach(c => navbar?.classList.add(c));
+      } else {
+        scrolledClasses.forEach(c => navbar?.classList.remove(c));
+      }
     }
-  });
+    updateNavbar();
+    window.addEventListener('scroll', updateNavbar);
 
-  // ---- Mobile menu toggle con animacion hamburguesa -> X ----
-  let menuOpen = false;
-  toggle?.addEventListener('click', () => {
-    menuOpen = !menuOpen;
-    menu?.classList.toggle('hidden');
+    // Mobile menu toggle con animacion hamburguesa -> X
+    let menuOpen = false;
 
-    if (menuOpen) {
-      // Transformar en X
-      bar1?.style.setProperty('transform', 'rotate(45deg) translate(4px, 4px)');
-      bar2?.style.setProperty('opacity', '0');
-      bar3?.style.setProperty('transform', 'rotate(-45deg) translate(4px, -4px)');
-    } else {
-      // Volver a hamburguesa
-      bar1?.style.setProperty('transform', 'none');
-      bar2?.style.setProperty('opacity', '1');
-      bar3?.style.setProperty('transform', 'none');
-    }
-  });
-
-  // Cerrar menu mobile al hacer click en un link
-  menu?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
+    function closeMenu() {
       menu?.classList.add('hidden');
       menuOpen = false;
       bar1?.style.setProperty('transform', 'none');
       bar2?.style.setProperty('opacity', '1');
       bar3?.style.setProperty('transform', 'none');
+    }
+
+    toggle?.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      menu?.classList.toggle('hidden');
+      if (menuOpen) {
+        bar1?.style.setProperty('transform', 'rotate(45deg) translate(4px, 4px)');
+        bar2?.style.setProperty('opacity', '0');
+        bar3?.style.setProperty('transform', 'rotate(-45deg) translate(4px, -4px)');
+      } else {
+        closeMenu();
+      }
     });
-  });
+
+    // Cerrar menu mobile al hacer click en un link
+    menu?.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', closeMenu);
+    });
+  }
+
+  // Ejecutar en carga inicial y en cada navegacion con View Transitions
+  initNavbar();
+  document.addEventListener('astro:page-load', initNavbar);
 </script>
