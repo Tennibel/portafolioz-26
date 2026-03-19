@@ -1,0 +1,431 @@
+---
+/**
+ * growth-marketing.astro - Landing page para Growth Marketing (Google Ads + Meta Ads)
+ *
+ * Secciones:
+ * 1. Hero - Banner con CTA y stats
+ * 2. Problema - Pain points de PyMEs
+ * 3. Servicios detallados (Google Ads, Meta Ads, Dashboard)
+ * 4. Planes Growth Marketing (3 tiers)
+ * 5. Resultados (animated counters)
+ * 6. FAQ
+ * 7. CTA final
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+const painPoints = [
+  {
+    icon: '💸',
+    title: 'Gasto $5,000/mes en Google Ads y no sé si me funciona',
+    desc: 'Sin tracking de conversiones ni métricas claras, estás tirando dinero. Cada peso debe ser rastreable.',
+    gradient: 'from-orange-500 to-amber-500',
+  },
+  {
+    icon: '📄',
+    title: 'Mi agencia anterior solo me mandaba un PDF al mes',
+    desc: 'Eso no es gestión, es negligencia. Necesitas optimización semanal y acceso a métricas en tiempo real.',
+    gradient: 'from-amber-500 to-coral-500',
+  },
+  {
+    icon: '👆',
+    title: 'Tengo muchos clicks pero nadie me compra',
+    desc: 'El problema está en la segmentación y el landing page. Clicks sin conversión es presupuesto desperdiciado.',
+    gradient: 'from-coral-500 to-orange-600',
+  },
+];
+
+const googleAdsFeatures = [
+  'Campañas de Búsqueda',
+  'Performance Max',
+  'Display & Remarketing',
+  'Configuración de conversiones',
+  'Optimización semanal',
+  'Reportes con métricas claras (CPC, CPA, ROAS)',
+];
+
+const metaAdsFeatures = [
+  'Campañas de Tráfico/Leads/Conversiones',
+  'Creativos A/B',
+  'Audiencias custom/lookalike',
+  'Retargeting dinámico',
+  'Pixel de Meta configurado',
+  'Optimización semanal',
+];
+
+const dashboardFeatures = [
+  'Métricas unificadas Google + Meta',
+  'Costo por lead por canal',
+  'Tasa de conversión en tiempo real',
+  'Comparativa mensual',
+  'Acceso 24/7',
+];
+
+const planes = [
+  {
+    name: 'Campaña Google Ads',
+    price: '$4,500',
+    desc: 'Gestión profesional de campañas en Google Ads.',
+    features: [
+      'Configuración y estructura de campaña',
+      'Investigación de keywords',
+      'Creación de anuncios optimizados',
+      'Configuración de conversiones',
+      'Optimización semanal',
+      'Reporte mensual detallado',
+    ],
+    note: 'No incluye: presupuesto de ads (se paga directo a Google)',
+    popular: false,
+  },
+  {
+    name: 'Campaña Meta Ads',
+    price: '$4,500',
+    desc: 'Gestión profesional de campañas en Facebook e Instagram.',
+    features: [
+      'Estrategia de campaña y objetivos',
+      'Creación de audiencias y segmentación',
+      'Diseño de creativos (imagen + copy)',
+      'Configuración de Pixel y eventos',
+      'Optimización semanal',
+      'Reporte mensual detallado',
+    ],
+    note: 'No incluye: presupuesto de ads (se paga directo a Meta)',
+    popular: false,
+  },
+  {
+    name: 'Paquete Integral',
+    price: '$7,500',
+    desc: 'Google + Meta + optimización cruzada. La mejor opción para maximizar resultados.',
+    features: [
+      'Todo de Google Ads + Meta Ads',
+      'Estrategia cross-channel',
+      'Dashboard unificado en tiempo real',
+      'Optimización de presupuesto entre canales',
+      'Reportes quincenales',
+      'Sesión mensual de estrategia',
+    ],
+    note: 'No incluye: presupuesto de ads (se paga directo a Google y Meta)',
+    popular: true,
+  },
+];
+
+const resultados = [
+  { num: '+$2M', suffix: 'MXN', label: 'en inversión publicitaria gestionada' },
+  { num: '4.5x', suffix: '', label: 'ROI promedio en campañas' },
+  { num: '-45%', suffix: '', label: 'costo por lead vs promedio del mercado' },
+  { num: '+85', suffix: '', label: 'campañas activas en Google y Meta' },
+];
+
+const faqs = [
+  {
+    q: '¿Cuánto debo invertir en ads?',
+    a: 'Recomendamos un mínimo de $3,000 a $5,000 MXN/mes en presupuesto de ads (además de la gestión). Este presupuesto se paga directamente a Google o Meta, no a nosotros.',
+  },
+  {
+    q: '¿En cuánto tiempo veo resultados?',
+    a: 'Google Ads genera leads desde la primera semana una vez configuradas las campañas. Meta Ads necesita 2-3 semanas de aprendizaje para optimizar la entrega y encontrar las mejores audiencias.',
+  },
+  {
+    q: '¿Puedo pausar las campañas?',
+    a: 'Sí, puedes pausar las campañas con 15 días de aviso previo. Pausar y reactivar constantemente puede afectar el rendimiento del algoritmo.',
+  },
+  {
+    q: '¿Cómo sé si está funcionando?',
+    a: 'Tienes acceso a un dashboard 24/7 con métricas en tiempo real (leads, costo por lead, ROAS). Además recibes reportes mensuales detallados con análisis y recomendaciones.',
+  },
+];
+---
+
+<Layout title="Google Ads y Meta Ads para PyMEs | Gestión Profesional | Portafolio Z" description="Campañas de anuncios que generan clientes, no likes. Google + Meta Ads + optimización semanal. Desde $4,500/mes. Reportes transparentes.">
+  <Navbar />
+
+  <!-- ================================================
+       SECCION 1: Hero
+       ================================================ -->
+  <section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-orange-600 via-amber-600 to-coral-600"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-10 left-20 w-80 h-80 bg-amber-400/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-10 w-96 h-96 bg-orange-400/20 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <nav class="flex justify-center gap-2 text-sm text-white/60 mb-6" data-animate>
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span class="text-white">Growth Marketing</span>
+      </nav>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6" data-animate>
+        Publicidad Digital que Genera <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-200">Clientes, No Likes</span>
+      </h1>
+      <p class="text-lg text-white/80 max-w-3xl mx-auto mb-8" data-animate>
+        Gestión profesional de campañas de Google Ads y Meta Ads. Optimización semanal, reportes transparentes, resultados medibles. <strong class="text-white">Tu inversión en ads por fin va a funcionar.</strong>
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-10" data-animate>
+        <a href="/contacto" class="bg-white text-orange-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl">
+          Solicitar Propuesta Gratis
+        </a>
+        <a href="#resultados" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Ver Caso de Éxito
+        </a>
+      </div>
+      <div class="inline-flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/70" data-animate>
+        <span>+$2M MXN en ads gestionados</span>
+        <span class="hidden sm:inline">·</span>
+        <span>ROI promedio 4.5x</span>
+        <span class="hidden sm:inline">·</span>
+        <span>+85 campañas activas</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 2: Problema
+       ================================================ -->
+  <section class="bg-dark-900 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-orange-400 font-medium text-sm uppercase tracking-widest mb-3">El problema</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          ¿Cansado de gastar en anuncios <span class="gradient-text">sin ver resultados?</span>
+        </h2>
+        <p class="text-white/50 mt-4 max-w-2xl mx-auto">El 65% de las PyMEs que invierten en Google Ads o Facebook Ads no ven retorno porque sus campañas están mal configuradas, sin tracking de conversiones y sin optimización constante.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8" data-animate>
+        {painPoints.map((p) => (
+          <div class="group relative glass-card p-8 hover:scale-[1.03] hover:-translate-y-2 transition-all duration-500 cursor-pointer overflow-hidden">
+            <div class={`absolute inset-0 bg-gradient-to-br ${p.gradient} opacity-0 group-hover:opacity-15 transition-opacity duration-500 rounded-2xl`}></div>
+            <div class="relative z-10">
+              <span class="text-4xl mb-4 block group-hover:scale-110 transition-transform">{p.icon}</span>
+              <h3 class="text-lg font-bold text-white mb-3">{p.title}</h3>
+              <p class="text-white/50 text-sm leading-relaxed">{p.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 3: Servicios Detallados
+       ================================================ -->
+  <section class="bg-white py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-orange-500 font-medium text-sm uppercase tracking-widest mb-3">Nuestros Servicios</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+          Gestión completa de <span class="gradient-text">publicidad digital</span>
+        </h2>
+        <p class="text-gray-500 mt-4 max-w-2xl mx-auto">No somos una agencia genérica. Nos especializamos en campañas de rendimiento para PyMEs que quieren clientes, no vanity metrics.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8" data-animate>
+        <!-- Google Ads -->
+        <div class="relative rounded-2xl p-8 bg-gray-50 border border-gray-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
+            🔍
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Google Ads</h3>
+          <p class="text-gray-500 text-sm mb-6 leading-relaxed">Campañas de búsqueda, display, Performance Max y remarketing. Aparece justo cuando tu cliente te busca.</p>
+          <ul class="space-y-3">
+            {googleAdsFeatures.map((f) => (
+              <li class="flex items-start gap-2.5 text-sm text-gray-600">
+                <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                {f}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Meta Ads -->
+        <div class="relative rounded-2xl p-8 bg-gray-50 border border-gray-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-coral-500 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
+            📱
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Meta Ads</h3>
+          <p class="text-gray-500 text-sm mb-6 leading-relaxed">Campañas de awareness, consideración y conversión en Facebook e Instagram. Llega a tu audiencia ideal.</p>
+          <ul class="space-y-3">
+            {metaAdsFeatures.map((f) => (
+              <li class="flex items-start gap-2.5 text-sm text-gray-600">
+                <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                {f}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Dashboard Unificado -->
+        <div class="relative rounded-2xl p-8 bg-gray-50 border border-gray-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-coral-500 to-orange-600 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
+            📊
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Dashboard Unificado</h3>
+          <p class="text-gray-500 text-sm mb-6 leading-relaxed">Un solo panel donde ves el rendimiento de todas tus campañas en tiempo real. Sin PDFs, sin esperas.</p>
+          <ul class="space-y-3">
+            {dashboardFeatures.map((f) => (
+              <li class="flex items-start gap-2.5 text-sm text-gray-600">
+                <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-coral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                {f}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 4: Planes Growth Marketing
+       ================================================ -->
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-orange-600 via-amber-600 to-coral-600"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-amber-400/15 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-20 w-80 h-80 bg-orange-400/15 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-amber-200 font-medium text-sm uppercase tracking-widest mb-3">Planes y Precios</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Planes <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-white">Growth Marketing</span>
+        </h2>
+        <p class="text-white/60 mt-4 max-w-2xl mx-auto">Precios + IVA. El presupuesto de ads se paga directamente a Google y Meta.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto" data-animate>
+        {planes.map((plan) => (
+          <div class={`relative rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 ${plan.popular ? 'bg-white text-gray-900 ring-2 ring-amber-400 shadow-2xl scale-105' : 'bg-white/10 backdrop-blur-sm border border-white/20 text-white'}`}>
+            {plan.popular && (
+              <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span class="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-bold px-4 py-1.5 rounded-full">Recomendado</span>
+              </div>
+            )}
+            <h3 class={`text-xl font-bold mb-1 ${plan.popular ? 'text-gray-900' : 'text-white'}`}>{plan.name}</h3>
+            <p class={`text-sm mb-5 ${plan.popular ? 'text-gray-500' : 'text-white/60'}`}>{plan.desc}</p>
+            <div class="mb-2">
+              <span class={`text-4xl font-extrabold ${plan.popular ? 'text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500' : 'text-white'}`}>Desde {plan.price}</span>
+              <span class={`text-sm ml-1 ${plan.popular ? 'text-gray-400' : 'text-white/50'}`}>/mes + IVA</span>
+            </div>
+            <p class={`text-xs mb-6 ${plan.popular ? 'text-gray-400' : 'text-white/40'}`}>Servicio mensual</p>
+            <ul class="space-y-3 mb-6">
+              {plan.features.map((f) => (
+                <li class="flex items-start gap-2.5 text-sm">
+                  <svg class={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.popular ? 'text-orange-500' : 'text-amber-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <span class={plan.popular ? 'text-gray-600' : 'text-white/80'}>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <p class={`text-xs mb-6 italic ${plan.popular ? 'text-gray-400' : 'text-white/40'}`}>{plan.note}</p>
+            <a href="/contacto" class={`block text-center font-semibold py-3.5 px-5 rounded-full transition-all text-sm ${plan.popular ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:opacity-90' : 'border-2 border-white/40 text-white hover:bg-white/10'}`}>
+              Solicitar Propuesta
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 5: Resultados
+       ================================================ -->
+  <section id="resultados" class="bg-dark-900 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-orange-400 font-medium text-sm uppercase tracking-widest mb-3">Resultados Reales</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Resultados que Hablan <span class="gradient-text">por Sí Solos</span>
+        </h2>
+      </div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6" data-animate>
+        {resultados.map((r) => (
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-8 text-center hover:bg-white/10 transition-colors group">
+            <div class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400 counter-value mb-1" data-target={r.num}>
+              {r.num}
+            </div>
+            {r.suffix && (
+              <span class="text-sm font-semibold text-orange-400">{r.suffix}</span>
+            )}
+            <p class="text-white/50 text-sm mt-2">{r.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 6: FAQ
+       ================================================ -->
+  <section class="bg-white py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-orange-500 font-medium text-sm uppercase tracking-widest mb-3">Preguntas Frecuentes</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+          Resolvemos tus <span class="gradient-text">dudas</span>
+        </h2>
+      </div>
+      <div class="space-y-4" data-animate>
+        {faqs.map((faq) => (
+          <details class="group bg-gray-50 rounded-2xl overflow-hidden">
+            <summary class="flex items-center justify-between p-6 cursor-pointer hover:bg-gray-100 transition-colors">
+              <h3 class="text-base font-semibold text-gray-900 pr-4">{faq.q}</h3>
+              <svg class="w-5 h-5 text-orange-500 flex-shrink-0 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="px-6 pb-6">
+              <p class="text-gray-500 text-sm leading-relaxed">{faq.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 7: CTA Final
+       ================================================ -->
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-orange-500 via-amber-600 to-coral-500"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-animate>
+      <div class="glass-card-light p-12 md:p-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-dark-900 mb-4">
+          Tu inversión en ads por fin va a <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-600">generar resultados</span>
+        </h2>
+        <p class="text-dark-700/70 text-lg mb-10 max-w-2xl mx-auto">
+          Deja de quemar presupuesto en campañas sin estrategia. Agenda una consulta gratuita y te mostramos cómo podemos escalar tu negocio con publicidad digital.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/contacto" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105">
+            Solicitar Propuesta Gratis
+          </a>
+          <a href="https://wa.me/5215561959724" target="_blank" rel="noopener" class="bg-dark-900 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-dark-800 transition-all">
+            Hablar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>
+
+<script>
+// Animated counters for results section
+function initCounters() {
+  const counters = document.querySelectorAll('.counter-value');
+  if (!counters.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-count');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach(counter => observer.observe(counter));
+}
+
+initCounters();
+document.addEventListener('astro:page-load', initCounters);
+</script>

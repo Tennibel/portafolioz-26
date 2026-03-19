@@ -1,0 +1,318 @@
+---
+/**
+ * leadboost-z.astro - Landing page para LeadBoost Z (Automatizacion de Ventas con IA)
+ *
+ * Secciones:
+ * 1. Hero - Dark con acentos neon emerald/cyan
+ * 2. Problema - Por que se pierden leads
+ * 3. 3 Pilares - LeadCapture, NurtureFlow, ConvertX
+ * 4. Planes / Pricing (mensual)
+ * 5. FAQ
+ * 6. CTA final
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+const pilares = [
+  {
+    icon: '🎯',
+    title: 'LeadCapture Engine',
+    desc: 'Captura leads desde todos los canales: formularios inteligentes, chatbot IA en tu sitio web, WhatsApp Business API, redes sociales. Todo centralizado en un solo dashboard.',
+    gradient: 'from-emerald-500 to-cyan-500',
+  },
+  {
+    icon: '🤖',
+    title: 'NurtureFlow AI',
+    desc: 'Flujos automáticos de nutrición por email y WhatsApp. Segmentación dinámica por comportamiento. Mensajes personalizados según la etapa del embudo.',
+    gradient: 'from-cyan-500 to-teal-500',
+  },
+  {
+    icon: '🚀',
+    title: 'ConvertX System',
+    desc: 'Lead scoring con IA. Alertas en tiempo real cuando un lead está caliente. Embudos personalizados por industria. Auto-agendamiento de citas.',
+    gradient: 'from-teal-500 to-emerald-500',
+  },
+];
+
+const planes = [
+  {
+    name: 'Starter Automation',
+    price: '$6,900',
+    desc: 'Para emprendedores que quieren empezar a automatizar su captación de leads.',
+    features: [
+      'Campaña Google Ads con anuncio optimizado',
+      'Chatbot inteligente básico (sitio web + WhatsApp)',
+      'Integración con sitio web o landing page',
+      'Reporte mensual de conversiones',
+      'Dashboard básico de seguimiento de leads',
+      'Soporte por correo + WhatsApp',
+    ],
+    popular: false,
+  },
+  {
+    name: 'Funnel Automation',
+    price: '$8,600',
+    desc: 'Para negocios que ya generan leads y quieren escalar sus conversiones.',
+    features: [
+      'Todo lo de Starter más:',
+      'Campañas Facebook/Instagram Ads',
+      '2 flujos de nutrición inteligente',
+      'Automatización de WhatsApp avanzada',
+      'Integración con CRM',
+      'Reportes quincenales + optimización activa',
+      'Soporte prioritario (respuesta < 4 horas)',
+    ],
+    popular: true,
+  },
+  {
+    name: 'AI Sales System',
+    price: '$12,900',
+    desc: 'Sistema completo de ventas automatizadas con IA para dominar tu mercado.',
+    features: [
+      'Todo lo de Funnel más:',
+      'Asistente conversacional IA entrenado en tu negocio',
+      'Automatizaciones ilimitadas (email + WhatsApp + CRM)',
+      'Embudos de ventas personalizados',
+      'Integración avanzada con APIs de terceros',
+      'Reporte semanal con análisis de performance',
+      'Dashboard avanzado con KPIs en tiempo real',
+      'Soporte premium + sesión de coaching mensual',
+    ],
+    popular: false,
+  },
+];
+
+const faqs = [
+  {
+    q: '¿Qué tan rápido puedo ver resultados?',
+    a: 'Desde la primera semana tu chatbot estará activo capturando leads. Los flujos de nutrición se configuran en los primeros 10 días. La mayoría de nuestros clientes ven un incremento en leads calificados durante el primer mes.',
+  },
+  {
+    q: '¿Necesito conocimientos técnicos para usar LeadBoost Z?',
+    a: 'No. Nosotros configuramos todo por ti: chatbot, embudos, integraciones y automatizaciones. Tú solo revisas tu dashboard y atiendes los leads calientes que el sistema te envía.',
+  },
+  {
+    q: '¿Puedo cancelar en cualquier momento?',
+    a: 'Sí, nuestros planes son mensuales sin contrato de permanencia. Puedes cancelar, pausar o cambiar de plan cuando lo necesites. Solo te pedimos un aviso con 15 días de anticipación.',
+  },
+  {
+    q: '¿Se integra con mi CRM o herramientas actuales?',
+    a: 'Sí. LeadBoost Z se integra con los CRMs más populares (HubSpot, Salesforce, Pipedrive, etc.), además de herramientas como Google Sheets, Zapier, Make y APIs personalizadas.',
+  },
+  {
+    q: '¿Los precios incluyen inversión en publicidad?',
+    a: 'No. Los precios son por el servicio de automatización, configuración y gestión. La inversión en pauta publicitaria (Google Ads, Meta Ads) se cobra por separado y se adapta a tu presupuesto.',
+  },
+];
+---
+
+<Layout title="LeadBoost Z | Automatización de Ventas con IA | Portafolio Z" description="Captura, nutre y convierte leads en piloto automático. Chatbot IA + CRM + embudos. Desde $6,900/mes. Demo gratis.">
+  <Navbar />
+
+  <!-- ================================================
+       SECCION 1: Hero - Dark con acentos neon
+       ================================================ -->
+  <section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-dark-900"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/40 via-dark-900 to-cyan-900/40"></div>
+    <div class="absolute top-10 left-10 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-10 w-80 h-80 bg-cyan-500/15 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <nav class="flex justify-center items-center gap-2 text-sm text-white/60 mb-6" data-animate>
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span class="text-white">LeadBoost Z</span>
+      </nav>
+      <div class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-4 py-2 mb-8" data-animate>
+        <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+        <span class="text-emerald-400 text-sm font-medium">Potenciado por Inteligencia Artificial</span>
+      </div>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6" data-animate>
+        Automatiza Tus Ventas con <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Inteligencia Artificial</span>
+      </h1>
+      <p class="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto mb-8" data-animate>
+        LeadBoost Z es tu sistema de ventas inteligente. Chatbot IA + CRM + embudos automatizados + WhatsApp. Tu equipo de ventas digital que trabaja 24/7 sin descansar.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12" data-animate>
+        <a href="/contacto" class="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105 shadow-xl shadow-emerald-500/25">
+          Agendar Demo Gratis
+        </a>
+        <a href="#pilares" class="border-2 border-emerald-500/30 text-emerald-400 font-semibold px-8 py-4 rounded-full text-lg hover:bg-emerald-500/10 transition-all">
+          Ver Cómo Funciona
+        </a>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 text-sm" data-animate>
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-400 font-bold text-lg">+350%</span>
+          <span class="text-white/50">más leads convertidos</span>
+        </div>
+        <div class="hidden sm:block w-px h-6 bg-white/20"></div>
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-400 font-bold text-lg">24/7</span>
+          <span class="text-white/50">sin pausas</span>
+        </div>
+        <div class="hidden sm:block w-px h-6 bg-white/20"></div>
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-400 font-bold text-lg">+120</span>
+          <span class="text-white/50">empresas activas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 2: Problema
+       ================================================ -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-dark-900 via-emerald-950 to-dark-900"></div>
+    <div class="absolute top-0 right-0 w-72 h-72 bg-red-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-0 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-10 sm:p-14" data-animate>
+        <div class="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-full px-4 py-2 mb-6">
+          <span class="text-red-400 text-sm font-medium">⚠️ El problema</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">
+          El <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400">78%</span> de los leads se pierden por falta de seguimiento
+        </h2>
+        <p class="text-white/60 text-lg leading-relaxed max-w-3xl mx-auto">
+          Un prospecto te escribe por WhatsApp. Estás ocupado. No contestas en 5 minutos. El prospecto ya contactó a tu competencia. Con <strong class="text-emerald-400">LeadBoost Z</strong>, cada lead recibe respuesta inmediata, seguimiento inteligente y nutrición automatizada hasta que cierra.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 3: 3 Pilares
+       ================================================ -->
+  <section id="pilares" class="py-24 bg-dark-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-emerald-400 font-medium text-sm uppercase tracking-widest mb-3">Cómo funciona</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">
+          3 sistemas que trabajan <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">en piloto automático</span>
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {pilares.map((p, i) => (
+          <div class="group relative bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 hover:-translate-y-2 transition-all duration-500 overflow-hidden" data-animate>
+            <div class={`absolute inset-0 bg-gradient-to-br ${p.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-2xl`}></div>
+            <div class="relative z-10">
+              <div class={`w-14 h-14 rounded-xl bg-gradient-to-br ${p.gradient} flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform`}>
+                {p.icon}
+              </div>
+              <div class="text-emerald-400/60 text-xs font-bold uppercase tracking-widest mb-2">Pilar {i + 1}</div>
+              <h3 class="text-xl font-bold text-white mb-3">{p.title}</h3>
+              <p class="text-white/50 leading-relaxed text-sm">{p.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 4: Planes / Pricing (mensual)
+       ================================================ -->
+  <section class="py-24 bg-dark-900 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-emerald-400 font-medium text-sm uppercase tracking-widest mb-3">Planes y Precios</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">
+          Planes <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">LeadBoost Z</span>
+        </h2>
+        <p class="text-white/50 mt-4 max-w-2xl mx-auto">Elige el nivel de automatización que necesita tu negocio. Todos los planes son mensuales y sin contrato de permanencia.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        {planes.map((plan) => (
+          <div class={`relative rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 ${plan.popular ? 'bg-gradient-to-br from-emerald-600 via-cyan-600 to-teal-600 text-white ring-2 ring-emerald-400 shadow-2xl shadow-emerald-500/20 scale-105' : 'bg-white/5 border border-white/10 text-white'}`} data-animate>
+            {plan.popular && (
+              <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span class="bg-emerald-400 text-dark-900 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">Más Popular</span>
+              </div>
+            )}
+            <h3 class="text-xl font-bold mb-2">{plan.name}</h3>
+            <p class={`text-sm mb-5 ${plan.popular ? 'text-white/70' : 'text-white/50'}`}>{plan.desc}</p>
+            <div class="mb-1">
+              <span class="text-4xl font-extrabold">{plan.price}</span>
+              <span class={`text-sm ml-1 ${plan.popular ? 'text-white/60' : 'text-white/40'}`}>MXN</span>
+            </div>
+            <p class={`text-xs mb-6 ${plan.popular ? 'text-white/50' : 'text-white/30'}`}>/mes + IVA</p>
+            <ul class="space-y-3 mb-8">
+              {plan.features.map((f) => (
+                <li class="flex items-start gap-2.5 text-sm">
+                  <svg class={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.popular ? 'text-emerald-200' : 'text-emerald-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <span class={plan.popular ? 'text-white/90' : 'text-white/60'}>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <a href="/contacto" class={`block text-center font-semibold py-3.5 px-5 rounded-full transition-all text-sm ${plan.popular ? 'bg-white text-emerald-700 hover:bg-white/90' : 'border-2 border-emerald-500/50 text-emerald-400 hover:bg-emerald-500 hover:text-white'}`}>
+              Agendar Demo Gratis
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 5: FAQ
+       ================================================ -->
+  <section class="bg-dark-900 py-24 border-t border-white/5">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-emerald-400 font-medium text-sm uppercase tracking-widest mb-3">Preguntas Frecuentes</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">
+          Resolvemos tus <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">dudas</span>
+        </h2>
+      </div>
+      <div class="space-y-4" data-animate>
+        {faqs.map((faq) => (
+          <details class="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+            <summary class="flex items-center justify-between p-6 cursor-pointer hover:bg-white/5 transition-colors">
+              <h3 class="text-base font-semibold text-white pr-4">{faq.q}</h3>
+              <svg class="w-5 h-5 text-emerald-400 flex-shrink-0 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="px-6 pb-6">
+              <p class="text-white/50 text-sm leading-relaxed">{faq.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       SECCION 6: CTA Final
+       ================================================ -->
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-600 via-cyan-600 to-teal-600"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-10 left-10 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-10 w-72 h-72 bg-emerald-300/10 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-animate>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+        Deja de perder leads. Automatiza tus ventas hoy.
+      </h2>
+      <p class="text-white/80 text-lg mb-10 max-w-2xl mx-auto">
+        Agenda una demo gratuita y descubre cómo LeadBoost Z puede transformar tu proceso de ventas con inteligencia artificial.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/contacto" class="bg-white text-emerald-700 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl">
+          Agendar Demo Gratis
+        </a>
+        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Hablar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>
