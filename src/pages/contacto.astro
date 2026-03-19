@@ -188,27 +188,59 @@ const faqs = [
           <form class="glass-card p-8 space-y-5">
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-white/60 text-sm mb-2">Nombre</label>
-                <input type="text" placeholder="Tu nombre" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors" />
+                <label class="block text-white/60 text-sm mb-2" for="contacto-nombre">Nombre</label>
+                <input
+                  id="contacto-nombre"
+                  name="nombre"
+                  type="text"
+                  autocomplete="given-name"
+                  placeholder="Tu nombre"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors"
+                />
               </div>
               <div>
-                <label class="block text-white/60 text-sm mb-2">Apellido</label>
-                <input type="text" placeholder="Tu apellido" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors" />
+                <label class="block text-white/60 text-sm mb-2" for="contacto-apellido">Apellido</label>
+                <input
+                  id="contacto-apellido"
+                  name="apellido"
+                  type="text"
+                  autocomplete="family-name"
+                  placeholder="Tu apellido"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors"
+                />
               </div>
             </div>
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-white/60 text-sm mb-2">Email</label>
-                <input type="email" placeholder="tu@email.com" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors" />
+                <label class="block text-white/60 text-sm mb-2" for="contacto-email">Email</label>
+                <input
+                  id="contacto-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="tu@email.com"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors"
+                />
               </div>
               <div>
-                <label class="block text-white/60 text-sm mb-2">Teléfono</label>
-                <input type="tel" placeholder="55 1234 5678" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors" />
+                <label class="block text-white/60 text-sm mb-2" for="contacto-telefono">Teléfono</label>
+                <input
+                  id="contacto-telefono"
+                  name="telefono"
+                  type="tel"
+                  autocomplete="tel"
+                  placeholder="55 1234 5678"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors"
+                />
               </div>
             </div>
             <div>
-              <label class="block text-white/60 text-sm mb-2">¿Qué tipo de sitio necesitas?</label>
-              <select class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/70 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors">
+              <label class="block text-white/60 text-sm mb-2" for="contacto-tipo-sitio">¿Qué tipo de sitio necesitas?</label>
+              <select
+                id="contacto-tipo-sitio"
+                name="tipo_sitio"
+                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/70 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors"
+              >
                 <option value="" class="bg-dark-900">Selecciona una opción</option>
                 <option value="landing" class="bg-dark-900">Landing Page ($5,600)</option>
                 <option value="basico" class="bg-dark-900">Sitio Básico ($6,400)</option>
@@ -219,8 +251,14 @@ const faqs = [
               </select>
             </div>
             <div>
-              <label class="block text-white/60 text-sm mb-2">Cuéntanos tu proyecto</label>
-              <textarea rows="4" placeholder="Describe brevemente qué necesitas..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors resize-none"></textarea>
+              <label class="block text-white/60 text-sm mb-2" for="contacto-mensaje">Cuéntanos tu proyecto</label>
+              <textarea
+                id="contacto-mensaje"
+                name="mensaje"
+                rows="4"
+                placeholder="Describe brevemente qué necesitas..."
+                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors resize-none"
+              ></textarea>
             </div>
             <button type="submit" class="w-full gradient-bg text-white font-semibold py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-[1.02]">
               Enviar Mensaje

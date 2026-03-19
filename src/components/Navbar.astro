@@ -12,9 +12,9 @@
 const links = [
   { label: 'Nosotros', href: '/nosotros' },
   { label: 'Servicios', href: '/servicios' },
-  { label: 'Paquetes', href: '/#paquetes' },
-  { label: 'Proyectos', href: '/#proyectos' },
-  { label: 'Blog', href: '/#blog' },
+  { label: 'Paquetes', href: '/paquetes-para-emprendedores' },
+  { label: 'Proyectos', href: '/proyectos-desarrollo-web' },
+  { label: 'Blog', href: '/blog' },
   { label: 'Contacto', href: '/contacto' },
 ];
 ---
@@ -67,6 +67,8 @@ const links = [
             class="lg:hidden text-white p-2 rounded-xl hover:bg-white/10 transition-colors relative w-10 h-10 flex items-center justify-center"
             id="mobile-toggle"
             aria-label="Abrir menú"
+            aria-controls="mobile-overlay"
+            aria-expanded="false"
           >
             <span class="flex flex-col items-center justify-center gap-1.5">
               <span class="block w-5 h-[2px] bg-white rounded-full transition-all duration-300 origin-center" id="bar1"></span>
@@ -81,7 +83,7 @@ const links = [
 </div>
 
 <!-- Menu mobile: overlay fullscreen con glassmorphism -->
-<div class="fixed inset-0 z-40 hidden" id="mobile-overlay">
+<div class="fixed inset-0 z-40 hidden" id="mobile-overlay" role="dialog" aria-modal="true" aria-label="Menú móvil">
   <!-- Backdrop oscuro -->
   <div class="absolute inset-0 bg-dark-900/80 backdrop-blur-md" id="mobile-backdrop"></div>
   <!-- Panel de menu -->
@@ -141,6 +143,9 @@ const links = [
     const bar2 = document.getElementById('bar2');
     const bar3 = document.getElementById('bar3');
 
+    // A11y: estado inicial del menú
+    toggle?.setAttribute('aria-expanded', 'false');
+
     // Estado scrolled: navbar se expande a ancho completo y se solidifica
     function updateNavbar() {
       if (!wrapper || !navbar) return;
@@ -171,6 +176,7 @@ const links = [
       }, 300);
       menuOpen = false;
       document.body.style.overflow = '';
+      toggle?.setAttribute('aria-expanded', 'false');
       // Reset hamburguesa
       if (bar1) { bar1.style.transform = ''; bar1.style.width = ''; }
       if (bar2) bar2.style.opacity = '';
@@ -185,6 +191,7 @@ const links = [
       overlay.classList.add('open');
       menuOpen = true;
       document.body.style.overflow = 'hidden';
+      toggle?.setAttribute('aria-expanded', 'true');
       // Animar hamburguesa -> X
       if (bar1) { bar1.style.transform = 'rotate(45deg) translate(4px, 6px)'; bar1.style.width = '1.25rem'; }
       if (bar2) bar2.style.opacity = '0';

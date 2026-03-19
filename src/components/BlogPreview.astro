@@ -9,6 +9,7 @@
 // Mock posts - se reemplazará con WP REST API
 const posts = [
   {
+    id: 'agencia-seo',
     title: '¿Cuándo es necesaria una agencia de SEO en México?',
     excerpt: 'Descubre en qué momento tu negocio necesita ayuda profesional para posicionarse en buscadores.',
     category: 'SEO',
@@ -16,6 +17,7 @@ const posts = [
     color: 'from-cyan-500 to-primary-500',
   },
   {
+    id: 'seguridad-sitio',
     title: '¿Cómo mejorar la seguridad de un sitio web?',
     excerpt: 'Consejos esenciales de seguridad web que todo dueño de negocio debe conocer.',
     category: 'Seguridad',
@@ -23,6 +25,7 @@ const posts = [
     color: 'from-accent-500 to-pink-500',
   },
   {
+    id: 'marketing-autos-lujo',
     title: 'Marketing de autos de lujo: estrategias para clientes exigentes',
     excerpt: 'Estrategias adaptadas para satisfacer la exigente clientela del mercado automotriz de lujo.',
     category: 'Marketing',
@@ -43,7 +46,11 @@ const posts = [
 
     <div class="grid md:grid-cols-3 gap-8" data-animate>
       {posts.map((post) => (
-        <article class="group rounded-2xl overflow-hidden border border-gray-200/60 bg-white/80 backdrop-blur-sm hover:-translate-y-2 hover:shadow-xl hover:shadow-accent-500/10 transition-all duration-300 cursor-pointer">
+        <a
+          href={`/blog#post-${post.id}`}
+          class="group rounded-2xl overflow-hidden border border-gray-200/60 bg-white/80 backdrop-blur-sm hover:-translate-y-2 hover:shadow-xl hover:shadow-accent-500/10 transition-all duration-300 cursor-pointer"
+          aria-label={`Leer más: ${post.title}`}
+        >
           <div class={`h-48 bg-gradient-to-br ${post.color} relative`}>
             <div class="absolute top-4 left-4">
               <span class="bg-white/20 backdrop-blur-md text-white text-xs font-medium px-3 py-1 rounded-full border border-white/20">{post.category}</span>
@@ -60,7 +67,7 @@ const posts = [
               </svg>
             </div>
           </div>
-        </article>
+        </a>
       ))}
     </div>
 

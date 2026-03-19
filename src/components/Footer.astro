@@ -35,7 +35,15 @@ const socialLinks = [
 
         <span class="inline-block bg-white/10 text-white/60 text-xs font-medium px-3 py-1 rounded-full mb-4">Suscríbete</span>
         <form class="flex gap-2">
-          <input type="email" placeholder="tu@email.com" class="flex-1 bg-transparent border-b border-white/20 text-white text-sm py-2 placeholder-white/30 outline-none focus:border-cyan-500 transition-colors" />
+          <input
+            id="footer-subscribe-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="tu@email.com"
+            aria-label="Correo para suscripción"
+            class="flex-1 bg-transparent border-b border-white/20 text-white text-sm py-2 placeholder-white/30 outline-none focus:border-cyan-500 transition-colors"
+          />
           <button type="submit" class="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors">Enviar</button>
         </form>
       </div>
