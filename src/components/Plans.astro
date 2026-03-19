@@ -5,12 +5,32 @@
  * Seccion #5: Paquetes (fondo oscuro con gradientes)
  * 4 planes con cards coloridas. El popular destaca con gradient.
  */
+const accentColors = {
+  cyan: { border: 'border-cyan-500/30', check: 'text-cyan-400', badge: 'bg-cyan-500/20 text-cyan-300', btn: 'border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-white' },
+  violet: { border: 'border-violet-500/30', check: 'text-violet-400', badge: 'bg-violet-500/20 text-violet-300', btn: 'border-violet-500 text-violet-400 hover:bg-violet-500 hover:text-white' },
+  amber: { border: 'border-amber-500/30', check: 'text-amber-400', badge: 'bg-amber-500/20 text-amber-300', btn: 'border-amber-500 text-amber-400 hover:bg-amber-500 hover:text-white' },
+  rose: { border: 'border-rose-500/30', check: 'text-rose-400', badge: 'bg-rose-500/20 text-rose-300', btn: 'border-rose-500 text-rose-400 hover:bg-rose-500 hover:text-white' },
+};
+
+type AccentKey = keyof typeof accentColors;
+
 const plans = [
-  { name: 'Landing Performance', price: '$3,800', desc: 'Ideal para campañas y emprendedores', renewal: '$1,840', delivery: '7 días', features: ['Hosting y Dominio incluido', 'Diseño estratégico Landing Page', 'Desarrollo ultra rápido y a la medida', 'Responsive + WhatsApp CTA', 'Formulario de contacto', 'Google Analytics + eventos', 'SEO básico on-page', 'Certificado SSL'], popular: false, accent: 'cyan' },
-  { name: 'Web Corporativa', price: '$6,400', desc: 'Presencia profesional completa', renewal: '$2,450', delivery: '15 días', features: ['Hosting y Dominio incluido', 'Diseño personalizado', 'Desarrollo ultra rápido y a la medida', 'Hasta 6 páginas internas', 'Formulario + WhatsApp CTA', 'SEO técnico básico', 'Core Web Vitals optimizado', 'Certificado SSL'], popular: true, accent: 'violet' },
-  { name: 'Web SEO Performance', price: '$8,900', desc: 'Crece con Google orgánicamente', renewal: '$3,140', delivery: '20 días', features: ['Hosting y Dominio incluido', 'Arquitectura SEO completa', 'Desarrollo ultra rápido y a la medida', 'Hasta 10 páginas', 'Estrategia de palabras clave', 'Schema markup', 'Search Console integrado', 'Analytics con eventos conversión', 'Certificado SSL'], popular: false, accent: 'amber' },
-  { name: 'Headless Premium', price: '$10,600', desc: 'CMS Blog + Desarrollo a la medida', renewal: '$3,860', delivery: '25 días', features: ['WordPress como editor de contenido', 'Astro como frontend rápido', 'API de contenido', 'Blog autoadministrable', 'Capacitación incluida', 'SEO técnico avanzado', 'Seguridad mejorada', 'Hosting y Dominio incluido'], popular: false, accent: 'rose' },
+  { name: 'Landing Performance', price: '$3,800', desc: 'Ideal para campañas y emprendedores', renewal: '$1,840', delivery: '7 días', features: ['Hosting y Dominio incluido', 'Diseño estratégico Landing Page', 'Desarrollo ultra rápido y a la medida', 'Responsive + WhatsApp CTA', 'Formulario de contacto', 'Google Analytics + eventos', 'SEO básico on-page', 'Certificado SSL'], popular: false, accent: 'cyan' as AccentKey },
+  { name: 'Web Corporativa', price: '$6,400', desc: 'Presencia profesional completa', renewal: '$2,450', delivery: '15 días', features: ['Hosting y Dominio incluido', 'Diseño personalizado', 'Desarrollo ultra rápido y a la medida', 'Hasta 6 páginas internas', 'Formulario + WhatsApp CTA', 'SEO técnico básico', 'Core Web Vitals optimizado', 'Certificado SSL'], popular: true, accent: 'violet' as AccentKey },
+  { name: 'Web SEO Performance', price: '$8,900', desc: 'Crece con Google orgánicamente', renewal: '$3,140', delivery: '20 días', features: ['Hosting y Dominio incluido', 'Arquitectura SEO completa', 'Desarrollo ultra rápido y a la medida', 'Hasta 10 páginas', 'Estrategia de palabras clave', 'Schema markup', 'Search Console integrado', 'Analytics con eventos conversión', 'Certificado SSL'], popular: false, accent: 'amber' as AccentKey },
+  { name: 'Headless Premium', price: '$10,600', desc: 'CMS Blog + Desarrollo a la medida', renewal: '$3,860', delivery: '25 días', features: ['WordPress como editor de contenido', 'Astro como frontend rápido', 'API de contenido', 'Blog autoadministrable', 'Capacitación incluida', 'SEO técnico avanzado', 'Seguridad mejorada', 'Hosting y Dominio incluido'], popular: false, accent: 'rose' as AccentKey },
 ];
+
+const plansWithColors = plans.map((plan) => ({
+  ...plan,
+  colors: accentColors[plan.accent],
+  cardClass: plan.popular
+    ? 'bg-gradient-to-br from-violet-600/20 via-purple-600/20 to-pink-600/20 text-white ring-2 ring-violet-400/50 shadow-2xl shadow-violet-500/20 scale-105 border border-violet-500/30'
+    : 'bg-dark-800/80 backdrop-blur-sm text-white border ' + accentColors[plan.accent].border,
+  btnClass: plan.popular
+    ? 'bg-gradient-to-r from-violet-500 to-pink-500 border-transparent text-white hover:opacity-90 shadow-lg shadow-violet-500/25'
+    : accentColors[plan.accent].btn,
+}));
 ---
 
 <section id="paquetes" class="relative bg-dark-900 py-24 overflow-hidden">
@@ -26,36 +46,27 @@ const plans = [
       <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Todos los planes incluyen hosting, dominio y certificado SSL. Precios + IVA.</p>
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" data-animate>
-      {plans.map((plan) => {
-        const accentColors: Record<string, { border: string; bg: string; check: string; badge: string; btn: string; btnHover: string; glow: string }> = {
-          cyan: { border: 'border-cyan-500/30', bg: 'bg-cyan-500/10', check: 'text-cyan-400', badge: 'bg-cyan-500/20 text-cyan-300', btn: 'border-cyan-500 text-cyan-400', btnHover: 'hover:bg-cyan-500 hover:text-white', glow: 'bg-cyan-500/5' },
-          violet: { border: 'border-violet-500/30', bg: 'bg-violet-500/10', check: 'text-violet-400', badge: 'bg-violet-500/20 text-violet-300', btn: 'border-violet-500 text-violet-400', btnHover: 'hover:bg-violet-500 hover:text-white', glow: 'bg-violet-500/5' },
-          amber: { border: 'border-amber-500/30', bg: 'bg-amber-500/10', check: 'text-amber-400', badge: 'bg-amber-500/20 text-amber-300', btn: 'border-amber-500 text-amber-400', btnHover: 'hover:bg-amber-500 hover:text-white', glow: 'bg-amber-500/5' },
-          rose: { border: 'border-rose-500/30', bg: 'bg-rose-500/10', check: 'text-rose-400', badge: 'bg-rose-500/20 text-rose-300', btn: 'border-rose-500 text-rose-400', btnHover: 'hover:bg-rose-500 hover:text-white', glow: 'bg-rose-500/5' },
-        };
-        const c = accentColors[plan.accent];
-        return (
-          <div class={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${plan.popular ? 'bg-gradient-to-br from-violet-600/20 via-purple-600/20 to-pink-600/20 text-white ring-2 ring-violet-400/50 shadow-2xl shadow-violet-500/20 scale-105 border border-violet-500/30' : `bg-dark-800/80 backdrop-blur-sm text-white border ${c.border}`}`}>
-            {plan.popular && (<div class="absolute -top-4 left-1/2 -translate-x-1/2"><span class="bg-gradient-to-r from-violet-500 to-pink-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">Más Popular</span></div>)}
-            <div class={`inline-flex items-center gap-1.5 ${c.badge} text-xs font-medium px-3 py-1 rounded-full mb-4`}>
-              <span>{plan.delivery}</span>
-            </div>
-            <h3 class="text-lg font-bold mb-1 text-white">{plan.name}</h3>
-            <p class="text-xs mb-5 text-gray-400">{plan.desc}</p>
-            <div class="mb-2"><span class="text-3xl font-extrabold text-white">{plan.price}</span><span class="text-xs ml-1 text-gray-500">MXN + IVA</span></div>
-            <p class="text-[10px] text-gray-500 mb-5">Renovación anual: {plan.renewal} + IVA</p>
-            <ul class="space-y-2.5 mb-6">
-              {plan.features.map((f) => (
-                <li class="flex items-center gap-2.5 text-sm">
-                  <svg class={`w-4 h-4 flex-shrink-0 ${c.check}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-                  <span class="text-gray-300">{f}</span>
-                </li>
-              ))}
-            </ul>
-            <a href="/contacto" class={`block text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 ${plan.popular ? 'bg-gradient-to-r from-violet-500 to-pink-500 border-transparent text-white hover:opacity-90 shadow-lg shadow-violet-500/25' : `${c.btn} ${c.btnHover}`}`}>¡Quiero mi Web!</a>
+      {plansWithColors.map((plan) => (
+        <div class={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${plan.cardClass}`}>
+          {plan.popular && (<div class="absolute -top-4 left-1/2 -translate-x-1/2"><span class="bg-gradient-to-r from-violet-500 to-pink-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">Más Popular</span></div>)}
+          <div class={`inline-flex items-center gap-1.5 ${plan.colors.badge} text-xs font-medium px-3 py-1 rounded-full mb-4`}>
+            <span>{plan.delivery}</span>
           </div>
-        );
-      })}
+          <h3 class="text-lg font-bold mb-1 text-white">{plan.name}</h3>
+          <p class="text-xs mb-5 text-gray-400">{plan.desc}</p>
+          <div class="mb-2"><span class="text-3xl font-extrabold text-white">{plan.price}</span><span class="text-xs ml-1 text-gray-500">MXN + IVA</span></div>
+          <p class="text-[10px] text-gray-500 mb-5">Renovación anual: {plan.renewal} + IVA</p>
+          <ul class="space-y-2.5 mb-6">
+            {plan.features.map((f) => (
+              <li class="flex items-center gap-2.5 text-sm">
+                <svg class={`w-4 h-4 flex-shrink-0 ${plan.colors.check}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                <span class="text-gray-300">{f}</span>
+              </li>
+            ))}
+          </ul>
+          <a href="/contacto" class={`block text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 ${plan.btnClass}`}>¡Quiero mi Web!</a>
+        </div>
+      ))}
     </div>
   </div>
 </section>
