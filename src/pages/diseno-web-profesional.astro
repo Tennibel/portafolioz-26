@@ -42,52 +42,59 @@ const serviceIncludes = [
 // Planes de precios
 const plans = [
   {
-    name: 'Emprendedor',
-    price: '$6,900',
-    desc: 'Ideal para comenzar',
+    name: 'Landing Performance',
+    price: '$3,800',
+    desc: 'Ideal para campañas y emprendedores',
     features: [
-      'Dominio .com incluido',
-      'Hosting anual incluido',
-      'Landing Page (1 sección)',
+      'Hosting y Dominio incluido',
+      'Diseño estratégico Landing Page',
+      'Desarrollo ultra rápido y a la medida',
+      'Responsive + WhatsApp CTA',
       'Formulario de contacto',
-      '3 cuentas de correo',
-      '5GB de almacenamiento',
+      'Google Analytics + eventos',
+      'SEO básico on-page',
       'Certificado SSL',
     ],
     popular: false,
+    delivery: '7 días',
+    renewal: '$1,840',
   },
   {
-    name: 'Negocio Local',
-    price: '$7,900',
-    desc: 'Para negocios establecidos',
+    name: 'Web Corporativa',
+    price: '$6,400',
+    desc: 'Presencia profesional completa',
     features: [
-      'Dominio .com incluido',
-      'Hosting anual incluido',
-      '4 secciones web',
-      'Formulario de contacto',
-      '6 cuentas de correo',
-      '10GB de almacenamiento',
+      'Hosting y Dominio incluido',
+      'Diseño personalizado',
+      'Desarrollo ultra rápido y a la medida',
+      'Hasta 6 páginas internas',
+      'Formulario + WhatsApp CTA',
+      'SEO técnico básico',
+      'Core Web Vitals optimizado',
       'Certificado SSL',
-      'SEO básico',
-    ],
-    popular: false,
-  },
-  {
-    name: 'PYME',
-    price: '$8,900',
-    desc: 'Solución completa',
-    features: [
-      'Dominio .com incluido',
-      'Hosting anual incluido',
-      '6 secciones web',
-      'Formulario de contacto',
-      'Correos ilimitados',
-      '32GB de almacenamiento',
-      'Certificado SSL',
-      'SEO avanzado',
-      'Banco de imágenes',
     ],
     popular: true,
+    delivery: '15 días',
+    renewal: '$2,450',
+  },
+  {
+    name: 'Web SEO Performance',
+    price: '$8,900',
+    desc: 'Crece con Google orgánicamente',
+    features: [
+      'Hosting y Dominio incluido',
+      'Arquitectura SEO completa',
+      'Desarrollo ultra rápido y a la medida',
+      'Hasta 10 páginas',
+      'Estrategia de palabras clave',
+      'Schema markup',
+      'Search Console integrado',
+      'Analytics con eventos conversión',
+      'Certificado SSL',
+    ],
+    popular: false,
+    delivery: '20 días',
+    renewal: '$3,140',
   },
 ];
 
@@ -199,18 +206,22 @@ const faqs = [
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
           Elige el plan ideal para tu <span class="gradient-text">negocio</span>
         </h2>
-        <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Todos los precios son pago único + IVA. Incluyen dominio, hosting y certificado SSL.</p>
+        <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Precios + IVA. Todos incluyen hosting, dominio y certificado SSL.</p>
       </div>
       <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto" data-animate>
         {plans.map((plan) => (
           <div class={`relative rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 ${plan.popular ? 'bg-gradient-to-br from-primary-600 via-accent-600 to-pink-600 text-white ring-2 ring-accent-400 shadow-2xl scale-105' : 'bg-gray-50 text-gray-900 border border-gray-200'}`}>
             {plan.popular && (<div class="absolute -top-4 left-1/2 -translate-x-1/2"><span class="bg-cyan-400 text-dark-900 text-xs font-bold px-4 py-1.5 rounded-full">Más Popular</span></div>)}
+            <div class={`inline-flex items-center text-xs font-medium px-3 py-1 rounded-full mb-4 ${plan.popular ? 'bg-white/20 text-white' : 'bg-accent-500/10 text-accent-600'}`}>
+              Entrega: {plan.delivery}
+            </div>
             <h3 class="text-xl font-bold mb-1">{plan.name}</h3>
             <p class={`text-sm mb-5 ${plan.popular ? 'text-white/60' : 'text-gray-500'}`}>{plan.desc}</p>
-            <div class="mb-6">
+            <div class="mb-2">
               <span class="text-4xl font-extrabold">{plan.price}</span>
               <span class={`text-sm ml-1 ${plan.popular ? 'text-white/50' : 'text-gray-400'}`}>MXN + IVA</span>
             </div>
+            <p class={`text-xs mb-6 ${plan.popular ? 'text-white/40' : 'text-gray-400'}`}>Renovación anual: {plan.renewal} + IVA</p>
             <ul class="space-y-3 mb-8">
               {plan.features.map((f) => (
                 <li class="flex items-center gap-2.5 text-sm">

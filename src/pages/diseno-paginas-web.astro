@@ -21,25 +21,31 @@ const services = [
 
 const planes = [
   {
-    name: 'Emprendedor',
-    price: '$6,900',
-    desc: 'Para convertir tu idea en realidad.',
-    features: ['Diseno Landing Page', 'Dominio y Hosting Anual', '5 GB de capacidad', 'Formulario de Contacto', '3 cuentas de Correo Electronico'],
+    name: 'Landing Performance',
+    price: '$3,800',
+    desc: 'Ideal para campanas y emprendedores.',
+    features: ['Hosting y Dominio incluido', 'Diseno estrategico Landing Page', 'Desarrollo ultra rapido y a la medida', 'Responsive + WhatsApp CTA', 'Formulario de contacto', 'Google Analytics + eventos', 'SEO basico on-page', 'Certificado SSL'],
     popular: false,
+    delivery: '7 dias',
+    renewal: '$1,840',
   },
   {
-    name: 'Negocio Local',
-    price: '$7,800',
-    desc: 'Digitaliza tu negocio y crece.',
-    features: ['4 secciones web, formulario y mas', 'Dominio y Hosting Anual', '10 GB de capacidad', 'Formulario de Contacto', '6 cuentas de Correo Electronico'],
-    popular: false,
-  },
-  {
-    name: 'Escala tu Negocio',
-    price: '$8,900',
-    desc: 'Revoluciona tu negocio y vende mas.',
-    features: ['6 Secciones web, formulario y mas', 'Dominio y Hospedaje anual', 'Formulario de Contacto', 'Correos Electronicos Ilimitados', '32 GB de capacidad'],
+    name: 'Web Corporativa',
+    price: '$6,400',
+    desc: 'Presencia profesional completa.',
+    features: ['Hosting y Dominio incluido', 'Diseno personalizado', 'Desarrollo ultra rapido y a la medida', 'Hasta 6 paginas internas', 'Formulario + WhatsApp CTA', 'SEO tecnico basico', 'Core Web Vitals optimizado', 'Certificado SSL'],
     popular: true,
+    delivery: '15 dias',
+    renewal: '$2,450',
+  },
+  {
+    name: 'Web SEO Performance',
+    price: '$8,900',
+    desc: 'Crece con Google organicamente.',
+    features: ['Hosting y Dominio incluido', 'Arquitectura SEO completa', 'Desarrollo ultra rapido y a la medida', 'Hasta 10 paginas', 'Estrategia de palabras clave', 'Schema markup', 'Search Console integrado', 'Analytics con eventos conversion', 'Certificado SSL'],
+    popular: false,
+    delivery: '20 dias',
+    renewal: '$3,140',
   },
 ];
 
@@ -54,7 +60,7 @@ const faqs = [
   { q: 'Que necesito para tener mi sitio web?', a: 'Necesitamos que nos compartas toda la informacion general y final recopilada para el contenido: Secciones, textos, fotografias y graficos.' },
   { q: 'Como se paga el diseno web?', a: 'Un 50% al iniciar el proyecto y despues de nuestra primera reunion y el otro 50% cuando entreguemos tu sitio web.' },
   { q: 'Cuanto tiempo tarda el desarrollo?', a: 'Una vez tengamos todo lo necesario, son alrededor de 15/20 dias. Entregamos un avance del proyecto 8 dias despues del arranque.' },
-  { q: 'Cuando tengo que pagar de nuevo?', a: 'Renovamos nuestros servicios de mantenimiento anualmente, despues de un ano de servicios te enviaremos el costo de la renovacion de acuerdo a tu paquete inicial. Emprendedor: $1,640 + IVA. Negocio local: $1,950. PYME: $2,460 + IVA.' },
+  { q: 'Cuando tengo que pagar de nuevo?', a: 'Renovamos nuestros servicios de mantenimiento anualmente. Landing Performance: $1,840 + IVA. Web Corporativa: $2,450 + IVA. Web SEO Performance: $3,140 + IVA. Incluye hosting, dominio y soporte.' },
   { q: 'Si quiero cambiar el contenido, tiene un costo adicional?', a: 'Si, de acuerdo al tipo de contenido a cambiar o agregar y la recurrencia hacemos planes y costos a la medida de cada usuario.' },
   { q: 'Como me puedes ayudar a que mi sitio tenga el mejor contenido?', a: 'Nosotros te ayudamos a estructurar la informacion de tu sitio web, pero si necesitas ayuda de redaccion, diseno o fotografia contamos con profesionales que te pueden ayudar a que tu sitio web sea el mejor.' },
 ];
@@ -122,7 +128,7 @@ const faqs = [
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16" data-animate>
         <h2 class="text-3xl sm:text-4xl font-bold text-white">Escoge tu <span class="gradient-text">plan ideal</span></h2>
-        <p class="text-white/60 mt-4">Un solo pago. Sin sorpresas.</p>
+        <p class="text-white/60 mt-4">Precios + IVA. Todos incluyen hosting, dominio y SSL.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
         {planes.map((plan) => (
@@ -132,13 +138,16 @@ const faqs = [
                 Recomendado
               </div>
             )}
+            <div class={`inline-flex items-center text-xs font-medium px-3 py-1 rounded-full mb-4 ${plan.popular ? 'bg-white/20 text-white' : 'bg-cyan-500/20 text-cyan-300'}`}>
+              Entrega: {plan.delivery}
+            </div>
             <h3 class={`text-xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-white'}`}>{plan.name}</h3>
             <p class={`text-sm mb-4 ${plan.popular ? 'text-white/70' : 'text-white/50'}`}>{plan.desc}</p>
-            <div class="mb-6">
+            <div class="mb-2">
               <span class={`text-4xl font-bold ${plan.popular ? 'text-white' : 'gradient-text'}`}>{plan.price}</span>
-              <span class={`text-sm ${plan.popular ? 'text-white/60' : 'text-white/40'}`}> + IVA</span>
-              <p class={`text-xs mt-1 ${plan.popular ? 'text-white/50' : 'text-white/30'}`}>UN SOLO PAGO</p>
+              <span class={`text-sm ${plan.popular ? 'text-white/60' : 'text-white/40'}`}> MXN + IVA</span>
             </div>
+            <p class={`text-xs mb-6 ${plan.popular ? 'text-white/40' : 'text-white/30'}`}>Renovacion anual: {plan.renewal} + IVA</p>
             <ul class="space-y-3 mb-8">
               {plan.features.map((f) => (
                 <li class={`flex items-start gap-2 text-sm ${plan.popular ? 'text-white/90' : 'text-white/70'}`}>
