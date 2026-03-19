@@ -1,0 +1,539 @@
+---
+/**
+ * paquetes-digitales.astro - Comparador visual de todos los servicios digitales
+ *
+ * Secciones:
+ * 1. Hero (espectacular con orbes animados)
+ * 2. 3 Pilares Digitales (tarjetas interactivas grandes)
+ * 3. Todos los Planes de un Vistazo (grid visual por categoría)
+ * 4. Combos (combina y ahorra)
+ * 5. Por qué combinar (beneficios)
+ * 6. CTA Final (dramático)
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+const categories = [
+  {
+    icon: '🌐',
+    name: 'Web Sales Machine',
+    desc: 'Diseño web profesional con tecnología Astro. Landing, corporativo, SEO y headless. Hosting, dominio y SSL incluidos.',
+    price: '4 planes desde $3,800 MXN (pago único)',
+    link: '/web-sales-machine',
+    plans: 4,
+    gradient: 'from-indigo-500 to-cyan-500',
+    ring: 'ring-indigo-400/50',
+    shadow: 'shadow-indigo-500/25',
+    badge: 'bg-indigo-500/20 text-indigo-300',
+    btnGradient: 'from-indigo-500 to-cyan-500',
+  },
+  {
+    icon: '📈',
+    name: 'Growth Marketing',
+    desc: 'Gestión profesional de Google Ads y Meta Ads. Campañas que generan clientes, no likes. Dashboard en tiempo real.',
+    price: '3 planes desde $4,500/mes',
+    link: '/growth-marketing',
+    plans: 3,
+    gradient: 'from-orange-500 to-amber-500',
+    ring: 'ring-orange-400/50',
+    shadow: 'shadow-orange-500/25',
+    badge: 'bg-orange-500/20 text-orange-300',
+    btnGradient: 'from-orange-500 to-amber-500',
+  },
+  {
+    icon: '🤖',
+    name: 'LeadBoost Z',
+    desc: 'Automatización de ventas con IA. Chatbot, CRM, embudos y WhatsApp automatizado. Tu equipo de ventas digital 24/7.',
+    price: '3 planes desde $6,900/mes',
+    link: '/leadboost-z',
+    plans: 3,
+    gradient: 'from-emerald-500 to-cyan-500',
+    ring: 'ring-emerald-400/50',
+    shadow: 'shadow-emerald-500/25',
+    badge: 'bg-emerald-500/20 text-emerald-300',
+    btnGradient: 'from-emerald-500 to-cyan-500',
+  },
+];
+
+const allPlans = [
+  {
+    category: 'Web Sales Machine',
+    color: 'indigo',
+    gradient: 'from-indigo-500 to-cyan-500',
+    border: 'border-indigo-500/30',
+    check: 'text-indigo-400',
+    badge: 'bg-indigo-500/20 text-indigo-300',
+    plans: [
+      { name: 'Landing Performance', price: '$3,800', unit: 'pago único', highlight: '1 página de alta conversión', popular: false },
+      { name: 'Web Corporativa', price: '$6,400', unit: 'pago único', highlight: 'Hasta 6 páginas', popular: true, tag: 'POPULAR' },
+      { name: 'Web SEO Performance', price: '$8,900', unit: 'pago único', highlight: 'Posiciónate en Google', popular: false },
+      { name: 'Headless Premium', price: '$10,600', unit: 'pago único', highlight: 'Blog + CMS WordPress', popular: false },
+    ],
+  },
+  {
+    category: 'Growth Marketing',
+    color: 'orange',
+    gradient: 'from-orange-500 to-amber-500',
+    border: 'border-orange-500/30',
+    check: 'text-orange-400',
+    badge: 'bg-orange-500/20 text-orange-300',
+    plans: [
+      { name: 'Google Ads', price: '$4,500', unit: '/mes', highlight: 'Aparece cuando te buscan', popular: false },
+      { name: 'Meta Ads', price: '$4,500', unit: '/mes', highlight: 'Facebook + Instagram Ads', popular: false },
+      { name: 'Paquete Integral', price: '$7,500', unit: '/mes', highlight: 'Google + Meta + Dashboard', popular: true, tag: 'RECOMENDADO' },
+    ],
+  },
+  {
+    category: 'LeadBoost Z',
+    color: 'emerald',
+    gradient: 'from-emerald-500 to-cyan-500',
+    border: 'border-emerald-500/30',
+    check: 'text-emerald-400',
+    badge: 'bg-emerald-500/20 text-emerald-300',
+    plans: [
+      { name: 'Starter Automation', price: '$6,900', unit: '/mes', highlight: 'Empieza a automatizar', popular: false },
+      { name: 'Funnel Automation', price: '$8,600', unit: '/mes', highlight: 'Escala conversiones', popular: true, tag: 'POPULAR' },
+      { name: 'AI Sales System', price: '$12,900', unit: '/mes', highlight: 'IA para dominar tu mercado', popular: false },
+    ],
+  },
+];
+
+const combos = [
+  {
+    name: 'Web + Ads',
+    desc: 'Sitio web corporativo + Campaña Google Ads',
+    price: '$10,400/mes (primer mes)',
+    savings: 'Ahorra $500',
+    gradient: 'from-indigo-500 via-violet-500 to-orange-500',
+    border: 'border-violet-500/30',
+    ring: 'ring-violet-400/30',
+  },
+  {
+    name: 'Web + LeadBoost',
+    desc: 'Sitio web SEO + LeadBoost Starter',
+    price: '$15,300 (primer mes)',
+    savings: 'Ahorra $500',
+    gradient: 'from-indigo-500 via-cyan-500 to-emerald-500',
+    border: 'border-cyan-500/30',
+    ring: 'ring-cyan-400/30',
+  },
+  {
+    name: 'Full Stack Digital',
+    desc: 'Web + Ads + LeadBoost = Todo el ecosistema digital',
+    price: 'Cotización personalizada',
+    savings: 'Máximo ahorro',
+    gradient: 'from-amber-400 via-orange-500 to-rose-500',
+    border: 'border-amber-500/40',
+    ring: 'ring-amber-400/50',
+    featured: true,
+  },
+];
+
+const benefits = [
+  {
+    icon: '🔗',
+    title: 'Ecosistema Integrado',
+    desc: 'Tus servicios trabajan juntos: el sitio web captura, los ads atraen y la automatización convierte. Un flujo sin fricción.',
+  },
+  {
+    icon: '💰',
+    title: 'Descuentos Exclusivos',
+    desc: 'Al combinar servicios obtienes precios especiales que no encontrarás contratando por separado.',
+  },
+  {
+    icon: '📊',
+    title: 'Dashboard Unificado',
+    desc: 'Un solo punto de contacto y reportes consolidados. Ve todo el rendimiento de tu inversión digital en un lugar.',
+  },
+  {
+    icon: '🚀',
+    title: 'Resultados Más Rápidos',
+    desc: 'La sinergia entre web, marketing y automatización acelera los resultados. Más leads en menos tiempo.',
+  },
+];
+---
+
+<Layout title="Paquetes Digitales | Web + Marketing + Automatización | Portafolio Z" description="Compara todos los paquetes digitales de Portafolio Z: diseño web desde $3,800, marketing desde $4,500/mes, automatización desde $6,900/mes.">
+  <Navbar />
+
+  <!-- SECCION 1: Hero Espectacular -->
+  <section class="relative pt-36 pb-28 overflow-hidden min-h-[90vh] flex items-center">
+    <!-- Multi-layer gradient background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(99,102,241,0.4),transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(6,182,212,0.3),transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.15),transparent_60%)]"></div>
+
+    <!-- Animated floating orbs -->
+    <div class="hero-orb absolute top-20 left-[10%] w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl"></div>
+    <div class="hero-orb absolute top-40 right-[15%] w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl" style="animation-delay: -2s;"></div>
+    <div class="hero-orb absolute bottom-20 left-[30%] w-72 h-72 bg-emerald-500/15 rounded-full blur-3xl" style="animation-delay: -4s;"></div>
+    <div class="hero-orb absolute bottom-40 right-[5%] w-64 h-64 bg-amber-500/15 rounded-full blur-3xl" style="animation-delay: -6s;"></div>
+    <div class="hero-orb absolute top-60 left-[50%] w-48 h-48 bg-pink-500/10 rounded-full blur-3xl" style="animation-delay: -3s;"></div>
+
+    <!-- Grid pattern overlay -->
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;1&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <nav class="flex justify-center items-center gap-2 text-sm text-white/50 mb-8">
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span class="text-white/80">Paquetes Digitales</span>
+      </nav>
+
+      <!-- Animated floating badges -->
+      <div class="flex flex-wrap justify-center gap-3 mb-10">
+        <span class="hero-badge inline-flex items-center gap-2 bg-indigo-500/20 backdrop-blur-md border border-indigo-400/30 text-indigo-200 text-sm font-medium px-4 py-2 rounded-full">
+          🌐 Diseño Web
+        </span>
+        <span class="hero-badge inline-flex items-center gap-2 bg-orange-500/20 backdrop-blur-md border border-orange-400/30 text-orange-200 text-sm font-medium px-4 py-2 rounded-full" style="animation-delay: 0.5s;">
+          📈 Marketing Digital
+        </span>
+        <span class="hero-badge inline-flex items-center gap-2 bg-emerald-500/20 backdrop-blur-md border border-emerald-400/30 text-emerald-200 text-sm font-medium px-4 py-2 rounded-full" style="animation-delay: 1s;">
+          🤖 Automatización IA
+        </span>
+      </div>
+
+      <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-8 leading-tight">
+        Todos los Paquetes Digitales<br />
+        en <span class="hero-gradient-text">Un Solo Lugar</span>
+      </h1>
+      <p class="text-xl sm:text-2xl text-white/70 max-w-4xl mx-auto mb-12 leading-relaxed">
+        Diseño web, marketing digital y automatización de ventas.<br class="hidden sm:block" />
+        <strong class="text-white/90">Compara nuestros servicios y elige el que necesitas.</strong> Combínalos para máximo impacto.
+      </p>
+      <a href="#pilares" class="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 text-white font-semibold px-10 py-5 rounded-full text-lg hover:bg-white/20 transition-all hover:scale-105 shadow-2xl shadow-indigo-500/20 group">
+        Explorar Paquetes
+        <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- SECCION 2: 3 Pilares Digitales -->
+  <section id="pilares" class="relative py-24 bg-white overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-emerald-500 to-amber-500"></div>
+    <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-100/50 rounded-full blur-3xl -translate-y-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-emerald-100/50 rounded-full blur-3xl translate-y-1/2"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-indigo-500 tracking-wider uppercase mb-3">Servicios</p>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
+          Nuestros 3 <span class="gradient-text">Pilares Digitales</span>
+        </h2>
+      </div>
+      <p class="text-gray-600 text-center max-w-3xl mx-auto mb-16 text-lg" data-animate>
+        Cada pilar resuelve un problema clave de tu negocio. Juntos, forman un ecosistema digital imparable.
+      </p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {categories.map((cat) => (
+          <a href={cat.link} class={`pilar-card group relative rounded-3xl p-10 bg-white border border-gray-100 shadow-lg hover:shadow-2xl hover:${cat.shadow} transition-all duration-500 hover:-translate-y-3 hover:ring-2 ${cat.ring} overflow-hidden`} data-animate>
+            <!-- Top gradient accent bar -->
+            <div class={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${cat.gradient}`}></div>
+            <!-- Hover gradient overlay -->
+            <div class={`absolute inset-0 bg-gradient-to-br ${cat.gradient} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500`}></div>
+
+            <div class="relative z-10">
+              <div class={`w-20 h-20 rounded-2xl bg-gradient-to-br ${cat.gradient} flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg ${cat.shadow}`}>
+                {cat.icon}
+              </div>
+              <span class={`inline-block ${cat.badge} text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wider`}>
+                {cat.plans} planes disponibles
+              </span>
+              <h3 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-800">{cat.name}</h3>
+              <p class="text-gray-600 mb-6 leading-relaxed">{cat.desc}</p>
+              <div class={`inline-flex items-center gap-2 text-sm font-bold bg-gradient-to-r ${cat.gradient} bg-clip-text text-transparent mb-6`}>
+                {cat.price}
+              </div>
+              <div class={`flex items-center gap-2 font-semibold bg-gradient-to-r ${cat.gradient} bg-clip-text text-transparent group-hover:gap-3 transition-all`}>
+                Ver Planes
+                <svg class="w-5 h-5 text-indigo-500 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 3: Todos los Planes de un Vistazo -->
+  <section class="relative bg-dark-900 py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(99,102,241,0.15),transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(6,182,212,0.1),transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center_left,rgba(16,185,129,0.08),transparent_50%)]"></div>
+    <div class="absolute top-10 left-1/4 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-cyan-400 font-medium text-sm uppercase tracking-widest mb-3">Comparador</p>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
+          Todos los Planes de un <span class="gradient-text">Vistazo</span>
+        </h2>
+      </div>
+      <p class="text-gray-400 text-center max-w-3xl mx-auto mb-16 text-lg" data-animate>
+        10 planes organizados en 3 categorías. Encuentra el ideal para tu negocio.
+      </p>
+
+      {allPlans.map((group) => (
+        <div class="mb-16 last:mb-0" data-animate>
+          <!-- Category header -->
+          <div class="flex items-center gap-4 mb-8">
+            <div class={`h-1 flex-1 bg-gradient-to-r ${group.gradient} rounded-full opacity-30`}></div>
+            <h3 class={`text-xl font-bold bg-gradient-to-r ${group.gradient} bg-clip-text text-transparent whitespace-nowrap`}>
+              {group.category}
+            </h3>
+            <div class={`h-1 flex-1 bg-gradient-to-r ${group.gradient} rounded-full opacity-30`}></div>
+          </div>
+
+          <div class={`grid grid-cols-1 sm:grid-cols-2 ${group.plans.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-5`}>
+            {group.plans.map((plan) => (
+              <div class={`relative rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
+                plan.popular
+                  ? `bg-gradient-to-br ${group.gradient.replace('500', '600/20').replace('500', '600/20')} ring-2 ring-${group.color}-400/50 shadow-2xl shadow-${group.color}-500/20 border border-${group.color}-500/30`
+                  : `bg-dark-800/80 backdrop-blur-sm border ${group.border}`
+              }`}>
+                {plan.popular && plan.tag && (
+                  <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span class={`bg-gradient-to-r ${group.gradient} text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg uppercase tracking-wider`}>
+                      {plan.tag}
+                    </span>
+                  </div>
+                )}
+                <h4 class="text-lg font-bold text-white mb-2">{plan.name}</h4>
+                <p class={`text-sm mb-4 ${group.check}`}>{plan.highlight}</p>
+                <div class="mb-4">
+                  <span class="text-2xl font-extrabold text-white">{plan.price}</span>
+                  <span class="text-xs ml-1 text-gray-500">{plan.unit} + IVA</span>
+                </div>
+                <a href="/contacto" class={`block text-center font-semibold py-2.5 px-4 rounded-full transition-all text-sm border-2 ${
+                  plan.popular
+                    ? `bg-gradient-to-r ${group.gradient} border-transparent text-white hover:opacity-90 shadow-lg`
+                    : `border-${group.color}-500/50 text-${group.color}-400 hover:bg-${group.color}-500 hover:text-white`
+                }`}>
+                  Cotizar
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- SECCION 4: Combina y Ahorra -->
+  <section class="relative py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(251,191,36,0.08),transparent_60%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(244,63,94,0.06),transparent_60%)]"></div>
+    <div class="hero-orb absolute top-20 right-[10%] w-72 h-72 bg-amber-500/10 rounded-full blur-3xl"></div>
+    <div class="hero-orb absolute bottom-20 left-[10%] w-80 h-80 bg-rose-500/10 rounded-full blur-3xl" style="animation-delay: -3s;"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-amber-400 font-medium text-sm uppercase tracking-widest mb-3">Paquetes Combinados</p>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
+          Combina y <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Ahorra</span>
+        </h2>
+      </div>
+      <p class="text-gray-400 text-center max-w-3xl mx-auto mb-16 text-lg" data-animate>
+        Potencia tu negocio combinando servicios. Descuentos exclusivos en paquetes combinados.
+      </p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {combos.map((combo) => (
+          <div class={`combo-card group relative rounded-3xl p-8 border ${combo.border} bg-white/[0.03] backdrop-blur-md transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl overflow-hidden ${combo.featured ? `ring-2 ${combo.ring} scale-105` : `hover:ring-1 ${combo.ring}`}`} data-animate>
+            <!-- Top gradient line -->
+            <div class={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${combo.gradient}`}></div>
+            <!-- Background glow on hover -->
+            <div class={`absolute inset-0 bg-gradient-to-br ${combo.gradient} opacity-0 group-hover:opacity-[0.06] transition-opacity duration-500`}></div>
+
+            {combo.featured && (
+              <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span class="bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-lg shadow-amber-500/30 uppercase tracking-wider combo-pulse">
+                  Mejor Valor
+                </span>
+              </div>
+            )}
+
+            <div class="relative z-10">
+              <!-- Savings badge -->
+              <div class={`inline-flex items-center gap-1.5 bg-gradient-to-r ${combo.gradient} bg-clip-text text-transparent text-xs font-bold px-3 py-1 rounded-full border ${combo.border} mb-5`}>
+                <span>💎</span> {combo.savings}
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3">{combo.name}</h3>
+              <p class="text-gray-400 mb-6 leading-relaxed">{combo.desc}</p>
+              <div class="mb-6">
+                <span class={`text-xl font-extrabold ${combo.featured ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400' : 'text-white'}`}>
+                  {combo.price}
+                </span>
+                {!combo.featured && <span class="text-xs ml-1 text-gray-500">+ IVA</span>}
+              </div>
+              <a href="/contacto" class={`block text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 ${
+                combo.featured
+                  ? 'bg-gradient-to-r from-amber-400 to-orange-500 border-transparent text-white hover:opacity-90 shadow-lg shadow-amber-500/25'
+                  : `border-white/20 text-white hover:bg-white/10`
+              }`}>
+                Cotizar Paquete
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="text-center mt-12" data-animate>
+        <a href="/contacto" class="inline-flex items-center gap-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white font-bold px-10 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105 shadow-xl shadow-amber-500/25">
+          Cotizar Paquete Personalizado
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 5: Por qué Combinar -->
+  <section class="relative py-20 bg-dark-900 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.08),transparent_60%)]"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-cyan-400 font-medium text-sm uppercase tracking-widest mb-3">Ventajas</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">
+          ¿Por Qué <span class="gradient-text">Combinar Servicios</span>?
+        </h2>
+      </div>
+      <p class="text-gray-400 text-center max-w-3xl mx-auto mb-16" data-animate>
+        La magia está en la integración. Cada servicio potencia a los demás.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {benefits.map((b) => (
+          <div class="benefit-card group bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-7 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-indigo-500/10" data-animate>
+            <div class="text-4xl mb-5 group-hover:scale-110 transition-transform duration-300">{b.icon}</div>
+            <h3 class="text-lg font-bold text-white mb-3">{b.title}</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">{b.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 6: CTA Final Dramático -->
+  <section class="relative py-28 overflow-hidden">
+    <!-- Multi-layer dramatic gradient -->
+    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600"></div>
+    <div class="absolute inset-0 bg-gradient-to-tr from-cyan-600/30 via-transparent to-amber-500/20"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+
+    <!-- Animated background elements -->
+    <div class="hero-orb absolute top-0 left-[10%] w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+    <div class="hero-orb absolute bottom-0 right-[10%] w-80 h-80 bg-cyan-400/10 rounded-full blur-3xl" style="animation-delay: -4s;"></div>
+    <div class="hero-orb absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-500/5 rounded-full blur-3xl" style="animation-delay: -2s;"></div>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center" data-animate>
+      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+        ¿Listo para transformar<br />tu <span class="text-cyan-300">negocio</span>?
+      </h2>
+      <p class="text-xl text-white/80 mb-10 max-w-2xl mx-auto leading-relaxed">
+        Elige un servicio o combínalos todos. Estamos aquí para ayudarte a crecer.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <a href="/contacto" class="bg-white text-indigo-600 font-bold px-10 py-5 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-2xl shadow-black/20">
+          Cotizar Ahora
+        </a>
+        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white/40 text-white font-semibold px-10 py-5 rounded-full text-lg hover:bg-white/10 transition-all backdrop-blur-sm">
+          WhatsApp
+        </a>
+      </div>
+      <p class="text-white/50 text-sm">
+        +500 proyectos &middot; 12+ años de experiencia &middot; Soporte 365 días
+      </p>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>
+
+<style>
+  /* Animated floating orbs */
+  .hero-orb {
+    animation: floatOrb 8s ease-in-out infinite;
+  }
+  @keyframes floatOrb {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  /* Hero gradient text animation */
+  .hero-gradient-text {
+    background: linear-gradient(90deg, #818cf8, #22d3ee, #10b981, #f59e0b, #818cf8);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 6s ease-in-out infinite;
+  }
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Hero badges floating animation */
+  .hero-badge {
+    animation: floatBadge 4s ease-in-out infinite;
+  }
+  @keyframes floatBadge {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* Combo pulse effect */
+  .combo-pulse {
+    animation: comboPulse 2s ease-in-out infinite;
+  }
+  @keyframes comboPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); }
+    50% { box-shadow: 0 0 20px 4px rgba(251, 191, 36, 0.15); }
+  }
+</style>
+
+<script>
+function initPaquetesAnimations() {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+  document.querySelectorAll('[data-animate]').forEach((el) => {
+    el.classList.add('animate-ready');
+    observer.observe(el);
+  });
+}
+
+// Add animation classes
+const style = document.createElement('style');
+style.textContent = `
+  .animate-ready {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .animate-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+`;
+document.head.appendChild(style);
+
+initPaquetesAnimations();
+document.addEventListener('astro:page-load', initPaquetesAnimations);
+</script>
