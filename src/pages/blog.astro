@@ -1,139 +1,310 @@
 ---
 /**
- * blog.astro - Página de listado de artículos (mock)
+ * blog.astro - Página de listado de artículos
  *
- * Navegación:
- * - Las cards de `BlogPreview` apuntan a `#post-{id}`
- * - Secciones internas con `scroll-mt-*` para compensar la navbar fija
+ * Se alimenta del WP REST API. Fallback a posts mock si la API no responde.
  */
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppWidget from '../components/WhatsAppWidget.astro';
 
-const posts = [
-  {
-    id: 'agencia-seo',
-    title: '¿Cuándo es necesaria una agencia de SEO en México?',
-    category: 'SEO',
-    date: '15 Mar 2025',
-    color: 'from-cyan-500 to-primary-500',
-    excerpt: 'Descubre en qué momento tu negocio necesita ayuda profesional para posicionarse en buscadores.',
-    body: [
-      'Si tu sitio ya tiene tráfico pero no convierte, puede ser que el SEO no esté atacando las palabras clave correctas.',
-      'Una agencia suele ayudar cuando necesitas estrategia, auditoría técnica y contenido orientado a intención de búsqueda.',
-      'La clave es medir resultados con KPIs claros (ranking, tráfico orgánico y conversiones) y ajustar el plan mes a mes.',
-    ],
-  },
-  {
-    id: 'seguridad-sitio',
-    title: '¿Cómo mejorar la seguridad de un sitio web?',
-    category: 'Seguridad',
-    date: '10 Mar 2025',
-    color: 'from-accent-500 to-pink-500',
-    excerpt: 'Consejos esenciales de seguridad web que todo dueño de negocio debe conocer.',
-    body: [
-      'Implementa `HTTPS` y configura correctamente cabeceras de seguridad (HSTS, Content-Security-Policy, etc.).',
-      'Mantén plugins/SDKs actualizados y realiza revisiones periódicas de vulnerabilidades.',
-      'Usa backups automáticos y un plan de recuperación para reducir el impacto de un incidente.',
-    ],
-  },
-  {
-    id: 'marketing-autos-lujo',
-    title: 'Marketing de autos de lujo: estrategias para clientes exigentes',
-    category: 'Marketing',
-    date: '05 Mar 2025',
-    color: 'from-coral-500 to-amber-500',
-    excerpt: 'Estrategias adaptadas para satisfacer la exigente clientela del mercado automotriz de lujo.',
-    body: [
-      'Enfócate en experiencia y percepción de marca: el contenido debe sentirse premium.',
-      'Segmenta por intención (financiamiento, interés por modelos específicos, pruebas de manejo).',
-      'Mide resultados por etapas del embudo y optimiza con campañas dirigidas a calidad de leads.',
-    ],
-  },
-];
+interface WPPost {
+  id: number;
+  title: { rendered: string };
+  excerpt: { rendered: string };
+  content: { rendered: string };
+  date: string;
+  slug: string;
+  link: string;
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{ source_url: string; alt_text: string }>;
+    'wp:term'?: Array<Array<{ name: string }>>;
+    author?: Array<{ name: string; avatar_urls?: Record<string, string> }>;
+  };
+}
+
+const WP_API_URL = import.meta.env.WP_API_URL || '';
+
+let posts: Array<{
+  id: string;
+  title: string;
+  excerpt: string;
+  body: string[];
+  category: string;
+  date: string;
+  slug: string;
+  image: string;
+  author: string;
+}> = [];
+
+if (WP_API_URL) {
+  try {
+    const res = await fetch(`${WP_API_URL}/wp-json/wp/v2/posts?per_page=12&_embed&orderby=date&order=desc`, {
+      headers: { 'Accept': 'application/json' },
+    });
+    if (res.ok) {
+      const wpPosts: WPPost[] = await res.json();
+      posts = wpPosts.map((p) => ({
+        id: p.slug,
+        title: p.title.rendered.replace(/<[^>]*>/g, ''),
+        excerpt: p.excerpt.rendered.replace(/<[^>]*>/g, '').trim(),
+        body: [],
+        category: p._embedded?.['wp:term']?.[0]?.[0]?.name || 'Blog',
+        date: new Date(p.date).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }),
+        slug: p.slug,
+        image: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+        author: p._embedded?.author?.[0]?.name || 'Portafolio Z',
+      }));
+    }
+  } catch (e) {
+    // Fallback silencioso
+  }
+}
+
+// Fallback mock data
+if (posts.length === 0) {
+  posts = [
+    {
+      id: 'agencia-seo',
+      title: '¿Cuándo es necesaria una agencia de SEO en México?',
+      category: 'SEO',
+      date: '15 Mar 2025',
+      excerpt: 'Descubre en qué momento tu negocio necesita ayuda profesional para posicionarse en buscadores y atraer tráfico orgánico de calidad.',
+      body: [
+        'Si tu sitio ya tiene tráfico pero no convierte, puede ser que el SEO no esté atacando las palabras clave correctas.',
+        'Una agencia suele ayudar cuando necesitas estrategia, auditoría técnica y contenido orientado a intención de búsqueda.',
+        'La clave es medir resultados con KPIs claros (ranking, tráfico orgánico y conversiones) y ajustar el plan mes a mes.',
+      ],
+      slug: 'agencia-seo',
+      image: '',
+      author: 'Portafolio Z',
+    },
+    {
+      id: 'seguridad-sitio',
+      title: '¿Cómo mejorar la seguridad de un sitio web?',
+      category: 'Seguridad',
+      date: '10 Mar 2025',
+      excerpt: 'Consejos esenciales de seguridad web que todo dueño de negocio debe conocer para proteger su inversión digital.',
+      body: [
+        'Implementa HTTPS y configura correctamente cabeceras de seguridad (HSTS, Content-Security-Policy, etc.).',
+        'Mantén plugins/SDKs actualizados y realiza revisiones periódicas de vulnerabilidades.',
+        'Usa backups automáticos y un plan de recuperación para reducir el impacto de un incidente.',
+      ],
+      slug: 'seguridad-sitio',
+      image: '',
+      author: 'Portafolio Z',
+    },
+    {
+      id: 'marketing-autos-lujo',
+      title: 'Marketing de autos de lujo: estrategias para clientes exigentes',
+      category: 'Marketing',
+      date: '05 Mar 2025',
+      excerpt: 'Estrategias adaptadas para satisfacer la exigente clientela del mercado automotriz premium y generar leads de alto valor.',
+      body: [
+        'Enfócate en experiencia y percepción de marca: el contenido debe sentirse premium.',
+        'Segmenta por intención (financiamiento, interés por modelos específicos, pruebas de manejo).',
+        'Mide resultados por etapas del embudo y optimiza con campañas dirigidas a calidad de leads.',
+      ],
+      slug: 'marketing-autos-lujo',
+      image: '',
+      author: 'Portafolio Z',
+    },
+  ];
+}
+
+const categoryColors: Record<string, string> = {
+  'SEO': 'from-cyan-500 to-blue-500',
+  'Seguridad': 'from-violet-500 to-purple-500',
+  'Marketing': 'from-amber-500 to-orange-500',
+  'Blog': 'from-pink-500 to-rose-500',
+  'Diseño': 'from-emerald-500 to-cyan-500',
+  'Tecnología': 'from-indigo-500 to-violet-500',
+};
+
+function getGradient(category: string): string {
+  return categoryColors[category] || 'from-primary-500 to-accent-500';
+}
+
+const featured = posts[0];
+const rest = posts.slice(1);
+const categories = [...new Set(posts.map(p => p.category))];
 ---
 
-<Layout title="Blog" description="Artículos para emprendedores: SEO, seguridad y marketing digital.">
+<Layout title="Blog | Portafolio Z" description="Artículos sobre diseño web, SEO, marketing digital y tecnología para emprendedores y negocios en México.">
   <Navbar />
 
   <!-- HERO -->
-  <section class="relative pt-32 pb-20 overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-dark-900 via-purple-950/60 to-dark-900"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15),transparent_60%)]"></div>
-    <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-10 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+  <section class="relative pt-32 pb-16 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-dark-900 via-purple-950/40 to-dark-900"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.15),transparent_60%)]"></div>
+    <div class="absolute top-20 right-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <nav class="flex justify-center gap-2 text-sm text-white/60 mb-6" data-animate>
+      <nav class="flex gap-2 text-sm text-white/60 mb-6" data-animate>
         <a href="/" class="hover:text-white transition-colors">Inicio</a>
         <span>/</span>
         <span class="text-white">Blog</span>
       </nav>
 
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6" data-animate>
-        Blog para <span class="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">emprendedores</span>
-      </h1>
-      <p class="text-xl text-white/60 max-w-2xl mx-auto" data-animate>
-        Ideas prácticas para mejorar tu presencia en línea. Selecciona un artículo para leerlo aquí mismo.
-      </p>
+      <div class="max-w-3xl">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6" data-animate>
+          Blog para <span class="gradient-text">emprendedores</span>
+        </h1>
+        <p class="text-xl text-white/60" data-animate>
+          Ideas prácticas sobre diseño web, SEO, marketing digital y tecnología para hacer crecer tu negocio.
+        </p>
+      </div>
+
+      <!-- Category filters -->
+      <div class="flex flex-wrap gap-3 mt-8" data-animate>
+        <span class="bg-white/10 border border-white/20 text-white text-sm font-medium px-4 py-2 rounded-full">
+          Todos
+        </span>
+        {categories.map((cat) => (
+          <span class="bg-white/5 border border-white/10 text-white/60 text-sm font-medium px-4 py-2 rounded-full hover:bg-white/10 hover:text-white transition-all cursor-pointer">
+            {cat}
+          </span>
+        ))}
+      </div>
     </div>
   </section>
 
-  <!-- ENTRADAS -->
-  <section class="bg-white pb-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-3 gap-8 mb-16">
-        {posts.map((post) => (
-          <a
-            href={`/blog#post-${post.id}`}
-            class="group rounded-2xl overflow-hidden border border-gray-200/60 bg-white/80 backdrop-blur-sm hover:-translate-y-2 hover:shadow-xl hover:shadow-accent-500/10 transition-all duration-300"
-            aria-label={`Ir a: ${post.title}`}
-          >
-            <div class={`h-40 bg-gradient-to-br ${post.color} relative`}>
-              <div class="absolute top-4 left-4">
-                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-medium px-3 py-1 rounded-full border border-white/20">{post.category}</span>
+  <!-- FEATURED POST -->
+  {featured && (
+    <section class="bg-dark-900 pb-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-animate>
+        <a href={`#post-${featured.id}`} class="group block rounded-3xl overflow-hidden bg-dark-800/50 border border-white/10 hover:border-white/20 transition-all duration-300">
+          <div class="grid md:grid-cols-2">
+            <!-- Image -->
+            <div class="relative h-64 md:h-auto md:min-h-[360px] overflow-hidden">
+              {featured.image ? (
+                <img src={featured.image} alt={featured.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+              ) : (
+                <div class={`w-full h-full bg-gradient-to-br ${getGradient(featured.category)}`}>
+                  <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.15),transparent_60%)]"></div>
+                  <div class="absolute bottom-6 left-6">
+                    <span class="text-6xl opacity-20">📝</span>
+                  </div>
+                </div>
+              )}
+              <div class="absolute top-5 left-5">
+                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 uppercase tracking-wider">
+                  Destacado
+                </span>
               </div>
             </div>
-            <div class="p-6">
-              <time class="text-gray-400 text-xs">{post.date}</time>
-              <h2 class="text-base font-bold text-gray-900 mt-2 mb-3 group-hover:text-accent-600 transition-colors">
-                {post.title}
+            <!-- Content -->
+            <div class="p-8 md:p-10 flex flex-col justify-center">
+              <div class="flex items-center gap-3 mb-4">
+                <span class={`bg-gradient-to-r ${getGradient(featured.category)} text-white text-xs font-bold px-3 py-1 rounded-full`}>
+                  {featured.category}
+                </span>
+                <time class="text-white/40 text-sm">{featured.date}</time>
+              </div>
+              <h2 class="text-2xl md:text-3xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">
+                {featured.title}
               </h2>
-              <p class="text-gray-500 text-sm leading-relaxed">{post.excerpt}</p>
-              <div class="flex items-center gap-2 mt-4 text-accent-600 text-sm font-medium">
-                <span>Leer</span>
-                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
+              <p class="text-white/50 leading-relaxed mb-6">{featured.excerpt}</p>
+              <div class="flex items-center justify-between">
+                <span class="text-white/30 text-sm">{featured.author}</span>
+                <span class="flex items-center gap-2 text-cyan-400 text-sm font-medium group-hover:gap-3 transition-all">
+                  Leer artículo
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
               </div>
             </div>
-          </a>
-        ))}
+          </div>
+        </a>
       </div>
+    </section>
+  )}
 
-      <div class="space-y-10">
-        {posts.map((post) => (
-          <article id={`post-${post.id}`} class="scroll-mt-32 bg-white border border-gray-200/70 rounded-3xl p-7 md:p-9 shadow-sm">
-            <div class={`h-1.5 rounded-full bg-gradient-to-r ${post.color} mb-5`} />
-            <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-3 mb-4">
-              <div>
-                <div class="text-accent-600 text-xs font-semibold uppercase tracking-widest">{post.category}</div>
-                <h2 class="text-2xl font-bold text-gray-900 mt-2">{post.title}</h2>
+  <!-- ALL POSTS GRID -->
+  <section class="bg-dark-900 pb-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {rest.length > 0 && (
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" data-animate>
+          {rest.map((post) => (
+            <a
+              href={`#post-${post.id}`}
+              class="group rounded-2xl overflow-hidden bg-dark-800/50 border border-white/10 hover:border-white/20 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300"
+            >
+              <div class="relative h-52 overflow-hidden">
+                {post.image ? (
+                  <img src={post.image} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                ) : (
+                  <div class={`w-full h-full bg-gradient-to-br ${getGradient(post.category)} opacity-80`}>
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_60%)]"></div>
+                  </div>
+                )}
+                <div class="absolute inset-0 bg-gradient-to-t from-dark-900/80 via-transparent to-transparent"></div>
+                <div class="absolute top-4 left-4">
+                  <span class={`bg-gradient-to-r ${getGradient(post.category)} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg`}>
+                    {post.category}
+                  </span>
+                </div>
               </div>
-              <time class="text-gray-400 text-sm sm:text-right">{post.date}</time>
-            </div>
-            <p class="text-gray-600 text-sm leading-relaxed mb-4">{post.excerpt}</p>
-            <div class="space-y-3">
-              {post.body.map((p) => <p class="text-gray-700 text-sm leading-relaxed">{p}</p>)}
-            </div>
-            <div class="mt-6">
-              <a href="/#blog" class="inline-flex items-center gap-2 text-accent-600 hover:text-accent-500 text-sm font-medium transition-colors">
-                Volver a la sección Blog (Home)
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
+              <div class="p-6">
+                <div class="flex items-center gap-3 mb-3">
+                  <time class="text-white/40 text-xs">{post.date}</time>
+                  <span class="text-white/20">·</span>
+                  <span class="text-white/40 text-xs">{post.author}</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors line-clamp-2">
+                  {post.title}
+                </h3>
+                <p class="text-white/50 text-sm leading-relaxed line-clamp-2">
+                  {post.excerpt}
+                </p>
+                <div class="flex items-center gap-2 mt-5 text-cyan-400 text-sm font-medium">
+                  <span>Leer artículo</span>
+                  <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+
+      <!-- Full articles (for mock/fallback) -->
+      <div class="space-y-8">
+        {posts.filter(p => p.body.length > 0).map((post) => (
+          <article id={`post-${post.id}`} class="scroll-mt-32 bg-dark-800/50 border border-white/10 rounded-3xl overflow-hidden">
+            <!-- Article header -->
+            <div class={`h-2 bg-gradient-to-r ${getGradient(post.category)}`}></div>
+            <div class="p-7 md:p-10">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
+                <span class={`bg-gradient-to-r ${getGradient(post.category)} text-white text-xs font-bold px-3 py-1 rounded-full w-fit`}>
+                  {post.category}
+                </span>
+                <time class="text-white/40 text-sm">{post.date}</time>
+                <span class="text-white/20 hidden sm:inline">·</span>
+                <span class="text-white/40 text-sm">{post.author}</span>
+              </div>
+              <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">{post.title}</h2>
+              <p class="text-white/60 text-lg leading-relaxed mb-6">{post.excerpt}</p>
+              <div class="space-y-4 border-t border-white/10 pt-6">
+                {post.body.map((p) => (
+                  <p class="text-white/70 leading-relaxed">{p}</p>
+                ))}
+              </div>
+              <div class="mt-8 pt-6 border-t border-white/10 flex items-center justify-between">
+                <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false" class="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors">
+                  <svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                  Volver arriba
+                </a>
+                <a href="/contacto" class="inline-flex items-center gap-2 gradient-bg text-white text-sm font-semibold px-5 py-2 rounded-full hover:opacity-90 transition-all">
+                  ¿Necesitas ayuda?
+                </a>
+              </div>
             </div>
           </article>
         ))}
@@ -141,7 +312,24 @@ const posts = [
     </div>
   </section>
 
+  <!-- CTA -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-primary-600 via-accent-600 to-pink-600"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center" data-animate>
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">¿Listo para transformar tu presencia digital?</h2>
+      <p class="text-white/80 text-lg mb-8">Aplica lo que aprendes en el blog o déjanos hacerlo por ti.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/contacto" class="bg-white text-primary-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl">
+          Solicitar Cotización
+        </a>
+        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
   <Footer />
   <WhatsAppWidget />
 </Layout>
-
