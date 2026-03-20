@@ -1,0 +1,388 @@
+---
+/**
+ * escuelas.astro - Landing page: Páginas Web para Escuelas e Instituciones Educativas
+ *
+ * Secciones:
+ * 1. Hero (split layout con imagen)
+ * 2. Features (8 características con imagen)
+ * 3. Caso Real (antes/después)
+ * 4. Planes (3 columnas)
+ * 5. CTA Final
+ */
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import WhatsAppWidget from '../../components/WhatsAppWidget.astro';
+
+const features = [
+  {
+    icon: '🎓',
+    title: 'Información académica por nivel',
+    desc: 'Secciones dedicadas para preescolar, primaria, secundaria, preparatoria o universidad. Cada nivel con su plan de estudios, horarios y requisitos.',
+  },
+  {
+    icon: '📝',
+    title: 'Portal de inscripciones online',
+    desc: 'Formulario de pre-inscripción integrado que captura datos del alumno, genera un folio y envía confirmación automática por WhatsApp o email.',
+  },
+  {
+    icon: '👩‍🏫',
+    title: 'Sección de profesores y metodología',
+    desc: 'Presenta a tu equipo docente, certificaciones, metodología educativa y filosofía institucional para generar confianza en los padres.',
+  },
+  {
+    icon: '📸',
+    title: 'Galería de instalaciones y actividades',
+    desc: 'Galería optimizada con fotos de laboratorios, canchas, salones, eventos y actividades extracurriculares que muestran la vida escolar.',
+  },
+  {
+    icon: '📰',
+    title: 'Blog de noticias y eventos escolares',
+    desc: 'Publica comunicados, calendario de eventos, logros académicos y noticias relevantes. Mantén informada a tu comunidad escolar.',
+  },
+  {
+    icon: '👨‍👩‍👧',
+    title: 'Área de padres de familia',
+    desc: 'Sección exclusiva con información importante, calendario escolar, comunicados, reglamento y canales de contacto directo.',
+  },
+  {
+    icon: '📍',
+    title: 'SEO local: "colegio en [ciudad]"',
+    desc: 'Optimización para búsquedas locales como "colegio en Guadalajara", "primaria en CDMX" o "escuela bilingüe en Monterrey".',
+  },
+  {
+    icon: '🏫',
+    title: 'Schema markup educativo',
+    desc: 'Implementación de EducationalOrganization y School para que Google muestre información enriquecida de tu institución en los resultados.',
+  },
+];
+
+const planes = [
+  {
+    name: 'Web Corporativa',
+    price: '$6,400',
+    renewal: '$2,450',
+    delivery: '15 días',
+    desc: 'Portal informativo completo',
+    accent: 'blue',
+    popular: false,
+    features: [
+      'Hosting y Dominio incluido',
+      'Certificado SSL',
+      'Diseño personalizado multi-página (hasta 6 secciones)',
+      'Información por nivel educativo',
+      'Formulario de pre-inscripción',
+      'Galería de instalaciones',
+      'WhatsApp CTA en cada página',
+      'Google Analytics 4 + GTM',
+      'SEO básico on-page',
+      'Google Maps',
+      '2 rondas de revisiones',
+    ],
+  },
+  {
+    name: 'Web SEO Performance',
+    price: '$8,900',
+    renewal: '$3,140',
+    delivery: '20 días',
+    desc: 'Posiciónate en búsquedas locales',
+    accent: 'indigo',
+    popular: true,
+    features: [
+      'Todo lo del plan Corporativa más:',
+      'Arquitectura SEO completa',
+      'Hasta 10 páginas optimizadas',
+      'Keyword research educativo',
+      'Contenido SEO optimizado',
+      'Schema markup: EducationalOrganization',
+      'Google Search Console',
+      'Sitemap XML + robots.txt',
+      'Área de padres de familia',
+      'Blog de noticias básico',
+      'Velocidad score 95+',
+    ],
+  },
+  {
+    name: 'Headless Premium',
+    price: '$10,600',
+    renewal: '$3,860',
+    delivery: '25 días',
+    desc: 'Blog + portal autoadministrable',
+    accent: 'violet',
+    popular: false,
+    features: [
+      'Todo lo del plan SEO Performance más:',
+      'WordPress como CMS headless',
+      'Blog autoadministrable de noticias',
+      'Calendario de eventos editable',
+      'Panel de administración personalizado',
+      'API REST de contenido',
+      'Capacitación al personal',
+      'SEO técnico avanzado',
+      'Seguridad mejorada',
+      '3 rondas de revisiones',
+    ],
+  },
+];
+
+const accentColors: Record<string, { border: string; check: string; badge: string; btn: string }> = {
+  blue: { border: 'border-blue-500/30', check: 'text-blue-400', badge: 'bg-blue-500/20 text-blue-300', btn: 'border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white' },
+  indigo: { border: 'border-indigo-500/30', check: 'text-indigo-400', badge: 'bg-indigo-500/20 text-indigo-300', btn: 'border-indigo-500 text-indigo-400 hover:bg-indigo-500 hover:text-white' },
+  violet: { border: 'border-violet-500/30', check: 'text-violet-400', badge: 'bg-violet-500/20 text-violet-300', btn: 'border-violet-500 text-violet-400 hover:bg-violet-500 hover:text-white' },
+};
+
+const plansWithColors = planes.map((plan) => ({
+  ...plan,
+  colors: accentColors[plan.accent],
+  cardClass: plan.popular
+    ? 'bg-gradient-to-br from-indigo-600/20 via-blue-600/20 to-cyan-600/20 text-white ring-2 ring-indigo-400/50 shadow-2xl shadow-indigo-500/20 scale-105 border border-indigo-500/30'
+    : 'bg-dark-800/80 backdrop-blur-sm text-white border ' + accentColors[plan.accent].border,
+  btnClass: plan.popular
+    ? 'bg-gradient-to-r from-blue-500 to-indigo-500 border-transparent text-white hover:opacity-90 shadow-lg shadow-indigo-500/25'
+    : accentColors[plan.accent].btn,
+}));
+---
+
+<Layout title="Páginas Web para Escuelas y Colegios | Portafolio Z" description="Diseño web para instituciones educativas. Portal de inscripciones, información académica y blog. Desde $6,400 MXN.">
+  <Navbar />
+
+  <!-- SECCION 1: Hero (split layout) -->
+  <section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-500"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-indigo-400/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex items-center gap-2 text-sm text-white/60 mb-6" data-animate>
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span>Sectores</span>
+        <span>/</span>
+        <span class="text-white">Escuelas</span>
+      </nav>
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div data-animate>
+          <h1 class="text-4xl sm:text-5xl lg:text-5xl font-bold text-white mb-6">
+            Páginas Web para Escuelas que <span class="text-indigo-200">Atraen Inscripciones</span>
+          </h1>
+          <p class="text-xl text-white/80 mb-8">
+            Un portal educativo que transmite confianza, informa a los padres y automatiza el proceso de inscripción.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 mb-8">
+            <button data-open-cotizador class="bg-white text-blue-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl cursor-pointer">
+              Cotiza Tu Portal Educativo
+            </button>
+            <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all text-center">
+              Hablar por WhatsApp
+            </a>
+          </div>
+          <div class="flex flex-wrap gap-6 text-white/70 text-sm">
+            <span class="flex items-center gap-2">Desde <span class="text-indigo-200 font-bold">$6,400 MXN</span></span>
+            <span class="hidden sm:block">|</span>
+            <span class="flex items-center gap-2"><span class="text-indigo-200 font-bold">15 días</span> de entrega</span>
+            <span class="hidden sm:block">|</span>
+            <span class="flex items-center gap-2">Portal <span class="text-indigo-200 font-bold">100% a la medida</span></span>
+          </div>
+        </div>
+        <div data-animate>
+          <div class="relative bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+            <img src="/img/sectores/escuelas-hero.webp" alt="Portal web para escuelas e instituciones educativas" class="rounded-2xl w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+            <span class="absolute text-white/40 text-sm">Imagen: Portal web para escuelas e instituciones educativas</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 2: Features (8 características con imagen) -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-blue-500 tracking-wider uppercase mb-3">Funcionalidades</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
+          Todo lo que tu <span class="gradient-text">portal educativo</span> necesita
+        </h2>
+      </div>
+      <p class="text-gray-600 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Diseñamos portales web pensados para instituciones educativas: desde la captación de alumnos hasta la comunicación con padres de familia.
+      </p>
+      <div class="grid lg:grid-cols-2 gap-12 items-start">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {features.map((f) => (
+            <div class="p-5 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-lg transition-all group" data-animate>
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                {f.icon}
+              </div>
+              <h3 class="text-base font-bold text-gray-900 mb-2">{f.title}</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+        <div class="space-y-6" data-animate>
+          <div class="relative bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+            <img src="/img/sectores/escuelas-portal.webp" alt="Portal de inscripciones online para escuelas" class="rounded-2xl w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+            <span class="absolute text-white/40 text-sm">Imagen: Portal de inscripciones online para escuelas</span>
+          </div>
+          <div class="relative bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+            <img src="/img/sectores/escuelas-instalaciones.webp" alt="Galería de instalaciones escolares" class="rounded-2xl w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+            <span class="absolute text-white/40 text-sm">Imagen: Galería de instalaciones escolares</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 3: Caso Real -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-500"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl translate-y-1/2"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-indigo-200 tracking-wider uppercase mb-3">Caso real</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">
+          Academia de Inglés GDL: <span class="text-indigo-200">45 inscripciones/mes</span> con Landing + LeadBoost
+        </h2>
+      </div>
+      <p class="text-white/70 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Una academia de idiomas en Guadalajara transformó su proceso de captación de alumnos con una estrategia digital integral.
+      </p>
+      <div class="grid md:grid-cols-2 gap-8 mb-12">
+        <!-- Antes -->
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8" data-animate>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+              <span class="text-red-300 text-lg">✗</span>
+            </div>
+            <h3 class="text-xl font-bold text-white">Antes</h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              <span class="text-white/80">Inscripciones estancadas en 20/mes</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              <span class="text-white/80">Facebook Ads sin tracking</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              <span class="text-white/80">Proceso de inscripción 100% manual</span>
+            </li>
+          </ul>
+        </div>
+        <!-- Después -->
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8" data-animate>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+              <span class="text-green-300 text-lg">✓</span>
+            </div>
+            <h3 class="text-xl font-bold text-white">Después</h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              <span class="text-white/80">45 inscripciones mensuales en automático</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              <span class="text-white/80">Costo por inscripción -60%</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              <span class="text-white/80">ChatBot IA 24/7 atendiendo consultas</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Testimonio -->
+      <div class="max-w-3xl mx-auto text-center" data-animate>
+        <blockquote class="text-xl text-white/90 italic mb-4">
+          "El flujo automatizado de WhatsApp es mágico. Los papás reciben toda la info y agendan sin que intervengamos."
+        </blockquote>
+        <p class="text-indigo-200 font-semibold">— Lic. Andrea G.</p>
+        <p class="text-white/50 text-sm">Academia de Inglés, Guadalajara</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 4: Planes (3 columnas) -->
+  <section class="relative bg-dark-900 py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(59,130,246,0.15),transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(99,102,241,0.15),transparent_50%)]"></div>
+    <div class="absolute top-10 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-blue-400 font-medium text-sm uppercase tracking-widest mb-3">Paquetes para Escuelas</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Planes de Portal Web Educativo — Elige el Ideal para Tu <span class="gradient-text">Institución</span>
+        </h2>
+      </div>
+      <p class="text-gray-400 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Todos los planes incluyen: hosting y dominio el primer año, certificado SSL, diseño a la medida, responsive, WhatsApp CTA, Google Analytics y soporte post-lanzamiento.
+      </p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto" data-animate>
+        {plansWithColors.map((plan) => (
+          <div class={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${plan.cardClass}`}>
+            {plan.popular && (
+              <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">Recomendado</span>
+              </div>
+            )}
+            <div class={`inline-flex items-center gap-1.5 ${plan.colors.badge} text-xs font-medium px-3 py-1 rounded-full mb-4`}>
+              <span>{plan.delivery}</span>
+            </div>
+            <h3 class="text-lg font-bold mb-1 text-white">{plan.name}</h3>
+            <p class="text-xs mb-5 text-gray-400">{plan.desc}</p>
+            <div class="mb-2">
+              <span class="text-3xl font-extrabold text-white">{plan.price}</span>
+              <span class="text-xs ml-1 text-gray-500">MXN + IVA</span>
+            </div>
+            <p class="text-[10px] text-gray-500 mb-5">Renovación anual: {plan.renewal} + IVA</p>
+            <ul class="space-y-2.5 mb-6">
+              {plan.features.map((f) => (
+                <li class="flex items-start gap-2.5 text-sm">
+                  <svg class={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.colors.check}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <span class="text-gray-300">{f}</span>
+                </li>
+              ))}
+            </ul>
+            <button data-open-cotizador class={`w-full text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 cursor-pointer ${plan.btnClass}`}>
+              Cotizar Este Plan
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 5: CTA Final -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-500"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-indigo-400/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-animate>
+        El próximo ciclo escolar empieza con una <span class="text-indigo-200">buena página web</span>
+      </h2>
+      <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto" data-animate>
+        Dale a tu institución la presencia digital que merece. Un portal profesional que informe, genere confianza y automatice las inscripciones.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6" data-animate>
+        <button data-open-cotizador class="bg-white text-blue-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl cursor-pointer">
+          Cotiza Tu Portal Educativo
+        </button>
+        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Hablar por WhatsApp
+        </a>
+      </div>
+      <p class="text-white/50 text-sm" data-animate>Desde $6,400 MXN · Entrega en 15 días · Diseño 100% a la medida</p>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>

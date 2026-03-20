@@ -1,0 +1,391 @@
+---
+/**
+ * hoteles.astro - Landing page: Paginas Web para Hoteles
+ *
+ * Secciones:
+ * 1. Hero (split layout con imagen)
+ * 2. Features (con imagen)
+ * 3. Caso Real
+ * 4. Plans (3 columnas)
+ * 5. CTA Final
+ */
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import WhatsAppWidget from '../../components/WhatsAppWidget.astro';
+
+const features = [
+  {
+    icon: '📅',
+    title: 'Motor de reservaciones integrado',
+    desc: 'Conectamos tu sitio con un booking engine o integramos un sistema de reservaciones directo para que tus huéspedes reserven sin intermediarios.',
+  },
+  {
+    icon: '📸',
+    title: 'Galería profesional de habitaciones',
+    desc: 'Galería optimizada de habitaciones y áreas comunes con carga rápida, lightbox y formato WebP para una experiencia visual impecable.',
+  },
+  {
+    icon: '💰',
+    title: 'Tarifas y disponibilidad por temporada',
+    desc: 'Muestra tus tarifas actualizadas por temporada alta, baja y especial. Transparencia que genera confianza y reduce fricción.',
+  },
+  {
+    icon: '🏊',
+    title: 'Experiencias y amenidades',
+    desc: 'Sección dedicada a mostrar spa, alberca, restaurante, tours y todo lo que hace único a tu hotel. Vende la experiencia, no solo la habitación.',
+  },
+  {
+    icon: '🗺️',
+    title: 'Mapa interactivo con atracciones cercanas',
+    desc: 'Google Maps integrado con puntos de interés, restaurantes, playas y atracciones turísticas cerca de tu hotel.',
+  },
+  {
+    icon: '🌐',
+    title: 'Multiidioma: español e inglés',
+    desc: 'Sitio en español e inglés para captar turismo internacional. Cada idioma con su propia estructura SEO optimizada.',
+  },
+  {
+    icon: '🔍',
+    title: 'SEO turístico especializado',
+    desc: 'Posicionamiento para búsquedas como "hotel en [destino]", "hospedaje en [ciudad]", "hotel boutique [zona]" y más.',
+  },
+  {
+    icon: '🏷️',
+    title: 'Schema markup hotelero',
+    desc: 'Datos estructurados Hotel, LodgingBusiness y Offer para que Google muestre tus tarifas, estrellas y disponibilidad directo en los resultados.',
+  },
+];
+
+const planes = [
+  {
+    name: 'Web Corporativa',
+    price: '$6,400',
+    renewal: '$2,450',
+    delivery: '15 días',
+    desc: 'Hotel pequeño o B&B',
+    accent: 'violet',
+    popular: false,
+    features: [
+      'Hosting y Dominio incluido',
+      'Certificado SSL',
+      'Diseño personalizado multi-página',
+      'Galería de habitaciones',
+      'Responsive perfecto',
+      'WhatsApp CTA',
+      'Formulario de contacto',
+      'Google Analytics 4',
+      'SEO básico on-page',
+      'Google Maps',
+      '2 rondas de revisiones',
+    ],
+  },
+  {
+    name: 'Web SEO Performance',
+    price: '$8,900',
+    renewal: '$3,140',
+    delivery: '20 días',
+    desc: 'Posicionamiento turístico',
+    accent: 'amber',
+    popular: false,
+    features: [
+      'Todo lo del plan Corporativa más:',
+      'Arquitectura SEO turístico',
+      'Hasta 10 páginas optimizadas',
+      'Keyword research hotelero',
+      'Contenido SEO en español e inglés',
+      'Schema markup Hotel + Offer',
+      'Google Search Console',
+      'Sitemap XML + robots.txt',
+      'Mapa interactivo con atracciones',
+      'Velocidad score 95+',
+      '2 rondas de revisiones',
+    ],
+  },
+  {
+    name: 'Headless Premium',
+    price: '$10,600',
+    renewal: '$3,860',
+    delivery: '25 días',
+    desc: 'Blog + reservaciones directas',
+    accent: 'rose',
+    popular: true,
+    features: [
+      'Todo lo del plan SEO Performance más:',
+      'WordPress como CMS headless',
+      'Blog autoadministrable',
+      'Motor de reservaciones integrado',
+      'Multiidioma español/inglés',
+      'API REST de contenido',
+      'Panel de administración',
+      'SEO técnico avanzado',
+      'Seguridad mejorada',
+      '3 rondas de revisiones',
+    ],
+  },
+];
+
+const accentColors: Record<string, { border: string; check: string; badge: string; btn: string }> = {
+  violet: { border: 'border-violet-500/30', check: 'text-violet-400', badge: 'bg-violet-500/20 text-violet-300', btn: 'border-violet-500 text-violet-400 hover:bg-violet-500 hover:text-white' },
+  amber: { border: 'border-amber-500/30', check: 'text-amber-400', badge: 'bg-amber-500/20 text-amber-300', btn: 'border-amber-500 text-amber-400 hover:bg-amber-500 hover:text-white' },
+  rose: { border: 'border-rose-500/30', check: 'text-rose-400', badge: 'bg-rose-500/20 text-rose-300', btn: 'border-rose-500 text-rose-400 hover:bg-rose-500 hover:text-white' },
+};
+
+const plansWithColors = planes.map((plan) => ({
+  ...plan,
+  colors: accentColors[plan.accent],
+  cardClass: plan.popular
+    ? 'bg-gradient-to-br from-violet-600/20 via-purple-600/20 to-pink-600/20 text-white ring-2 ring-violet-400/50 shadow-2xl shadow-violet-500/20 scale-105 border border-violet-500/30'
+    : 'bg-dark-800/80 backdrop-blur-sm text-white border ' + accentColors[plan.accent].border,
+  btnClass: plan.popular
+    ? 'bg-gradient-to-r from-violet-500 to-pink-500 border-transparent text-white hover:opacity-90 shadow-lg shadow-violet-500/25'
+    : accentColors[plan.accent].btn,
+}));
+---
+
+<Layout title="Páginas Web para Hoteles y Hospedaje | Portafolio Z" description="Diseño web para hoteles con motor de reservaciones, galería profesional y SEO turístico. Desde $6,400 MXN.">
+  <Navbar />
+
+  <!-- SECCION 1: Hero (split layout) -->
+  <section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-pink-400/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-violet-400/20 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex items-center gap-2 text-sm text-white/60 mb-6" data-animate>
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span>Sectores</span>
+        <span>/</span>
+        <span class="text-white">Hoteles</span>
+      </nav>
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div data-animate>
+          <h1 class="text-4xl sm:text-5xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+            Páginas Web para Hoteles que <span class="text-pink-300">Aumentan Reservaciones Directas</span>
+          </h1>
+          <p class="text-xl text-white/80 mb-8 leading-relaxed">
+            Reduce tu dependencia de OTAs como Booking.com. Un sitio web propio que genera <strong class="text-white">reservaciones directas, sin comisiones.</strong>
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 mb-8">
+            <button data-open-cotizador class="bg-white text-violet-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl cursor-pointer">
+              Cotiza Tu Sitio Web
+            </button>
+            <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all text-center">
+              Hablar por WhatsApp
+            </a>
+          </div>
+          <div class="flex flex-wrap gap-6 text-white/70 text-sm">
+            <span class="flex items-center gap-2">Desde <span class="text-pink-300 font-bold">$6,400 MXN</span></span>
+            <span class="hidden sm:block">|</span>
+            <span class="flex items-center gap-2"><span class="text-pink-300 font-bold">15 días</span> de entrega</span>
+            <span class="hidden sm:block">|</span>
+            <span class="flex items-center gap-2"><span class="text-pink-300 font-bold">0%</span> comisiones</span>
+          </div>
+        </div>
+        <div data-animate>
+          <div class="relative bg-gradient-to-br from-violet-500/20 to-pink-500/20 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+            <img src="/img/sectores/hoteles-hero.webp" alt="Página web profesional para hotel" class="rounded-2xl w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+            <span class="absolute text-white/40 text-sm">Imagen: Página web profesional para hotel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 2: Features -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-violet-500 tracking-wider uppercase mb-3">Funcionalidades</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
+          Todo lo que Tu Hotel <span class="gradient-text">Necesita en la Web</span>
+        </h2>
+      </div>
+      <p class="text-gray-600 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Cada funcionalidad está pensada para reducir tu dependencia de OTAs, aumentar reservaciones directas y posicionar tu hotel en Google.
+      </p>
+
+      <div class="grid lg:grid-cols-2 gap-12 items-start mb-16">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {features.map((f) => (
+            <div class="p-5 rounded-xl bg-gray-50 border border-gray-100 hover:shadow-lg transition-all group" data-animate>
+              <div class="text-2xl mb-3 group-hover:scale-110 transition-transform inline-block">{f.icon}</div>
+              <h3 class="text-base font-bold text-gray-900 mb-1">{f.title}</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+        <div class="space-y-6 lg:sticky lg:top-24" data-animate>
+          <div class="relative bg-gradient-to-br from-violet-500/20 to-pink-500/20 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+            <img src="/img/sectores/hoteles-habitacion.webp" alt="Galería de habitaciones de hotel" class="rounded-2xl w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+            <span class="absolute text-white/40 text-sm">Imagen: Galería de habitaciones de hotel</span>
+          </div>
+          <div class="relative bg-gradient-to-br from-violet-500/20 to-pink-500/20 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+            <img src="/img/sectores/hoteles-amenidades.webp" alt="Amenidades y experiencias del hotel" class="rounded-2xl w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+            <span class="absolute text-white/40 text-sm">Imagen: Amenidades y experiencias del hotel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 3: Caso Real -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl translate-y-1/2"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-pink-300 tracking-wider uppercase mb-3">Caso Real</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">
+          Hotel Boutique Mérida: <span class="text-pink-300">+150% Reservaciones Directas</span>
+        </h2>
+      </div>
+      <p class="text-white/70 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Cómo transformamos la presencia digital de un hotel boutique en Mérida con el plan Headless Premium.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-8 mb-12" data-animate>
+        <!-- Before -->
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+              <span class="text-red-300 text-lg">&#10007;</span>
+            </div>
+            <h3 class="text-xl font-bold text-white">Antes</h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span class="text-red-400 mt-1">&#8226;</span>
+              <span class="text-white/80">WordPress antiguo, lento y sin optimizar para móviles</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-red-400 mt-1">&#8226;</span>
+              <span class="text-white/80">60% de reservaciones a través de OTAs con comisiones altas</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-red-400 mt-1">&#8226;</span>
+              <span class="text-white/80">Comisiones elevadas que reducían el margen de ganancia</span>
+            </li>
+          </ul>
+        </div>
+        <!-- After -->
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+              <span class="text-green-300 text-lg">&#10003;</span>
+            </div>
+            <h3 class="text-xl font-bold text-white">Después</h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span class="text-green-400 mt-1">&#8226;</span>
+              <span class="text-white/80"><strong class="text-white">+150%</strong> reservaciones directas desde el sitio web</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-green-400 mt-1">&#8226;</span>
+              <span class="text-white/80">Blog con <strong class="text-white">4,000 visitas/mes</strong> de tráfico orgánico</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-green-400 mt-1">&#8226;</span>
+              <span class="text-white/80">Comisiones a OTAs reducidas en un <strong class="text-white">40%</strong></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Quote -->
+      <div class="max-w-3xl mx-auto" data-animate>
+        <blockquote class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 text-center">
+          <svg class="w-10 h-10 text-pink-300/50 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" /></svg>
+          <p class="text-white/90 text-lg italic mb-4 leading-relaxed">
+            "El blog en WordPress + la velocidad de Astro nos dio lo mejor de dos mundos."
+          </p>
+          <cite class="text-pink-300 font-semibold not-italic">— Arq. Patricia V., Hotel Boutique Mérida</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 4: Plans -->
+  <section class="relative bg-dark-900 py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.15),transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.15),transparent_50%)]"></div>
+    <div class="absolute top-10 left-1/4 w-64 h-64 bg-violet-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-pink-400 font-medium text-sm uppercase tracking-widest mb-3">Planes para Hoteles</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Elige el Plan Ideal para Tu <span class="gradient-text">Hotel</span>
+        </h2>
+      </div>
+      <p class="text-gray-400 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Todos los planes incluyen: hosting y dominio el primer año, certificado SSL, diseño a la medida, responsive, WhatsApp CTA, Google Analytics y soporte post-lanzamiento.
+      </p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto" data-animate>
+        {plansWithColors.map((plan) => (
+          <div class={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${plan.cardClass}`}>
+            {plan.popular && (
+              <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span class="bg-gradient-to-r from-violet-500 to-pink-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">Recomendado</span>
+              </div>
+            )}
+            <div class={`inline-flex items-center gap-1.5 ${plan.colors.badge} text-xs font-medium px-3 py-1 rounded-full mb-4`}>
+              <span>{plan.delivery}</span>
+            </div>
+            <h3 class="text-lg font-bold mb-1 text-white">{plan.name}</h3>
+            <p class="text-xs mb-5 text-gray-400">{plan.desc}</p>
+            <div class="mb-2">
+              <span class="text-3xl font-extrabold text-white">{plan.price}</span>
+              <span class="text-xs ml-1 text-gray-500">MXN + IVA</span>
+            </div>
+            <p class="text-[10px] text-gray-500 mb-5">Renovación anual: {plan.renewal} + IVA</p>
+            <ul class="space-y-2.5 mb-6">
+              {plan.features.map((f) => (
+                <li class="flex items-start gap-2.5 text-sm">
+                  <svg class={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.colors.check}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <span class="text-gray-300">{f}</span>
+                </li>
+              ))}
+            </ul>
+            <button data-open-cotizador class={`w-full text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 cursor-pointer ${plan.btnClass}`}>
+              Cotizar Ahora
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 5: CTA Final -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-pink-400/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-animate>
+        Deja de pagar comisiones. Genera <span class="text-pink-300">reservaciones directas.</span>
+      </h2>
+      <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto" data-animate>
+        Tu hotel merece un sitio web que trabaje para ti, no para las OTAs. Cotiza hoy y empieza a recibir reservaciones directas sin intermediarios.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6" data-animate>
+        <button data-open-cotizador class="bg-white text-violet-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl cursor-pointer">
+          Cotiza Tu Sitio Web Ahora
+        </button>
+        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Hablar por WhatsApp
+        </a>
+      </div>
+      <p class="text-white/50 text-sm" data-animate>Desde $6,400 MXN · Entrega en 15 días · Sin comisiones por reservación</p>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>

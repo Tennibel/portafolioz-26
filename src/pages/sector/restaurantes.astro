@@ -1,0 +1,409 @@
+---
+/**
+ * sector/restaurantes.astro - Landing page: Sitios Web para Restaurantes
+ *
+ * Secciones:
+ * 1. Hero (split layout con imagen)
+ * 2. Features (con imagen)
+ * 3. Caso Real
+ * 4. Plans (3 columnas)
+ * 5. CTA Final
+ */
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import WhatsAppWidget from '../../components/WhatsAppWidget.astro';
+
+const features = [
+  {
+    icon: '🍽️',
+    title: 'Menu digital responsive',
+    desc: 'Con fotos profesionales, descripciones apetitosas y precios actualizados. Tus clientes ven el menu completo desde su celular antes de llegar.',
+  },
+  {
+    icon: '📅',
+    title: 'Sistema de reservaciones online',
+    desc: 'Formulario de reservaciones integrado que te notifica por WhatsApp y email. Sin comisiones de terceros.',
+  },
+  {
+    icon: '📸',
+    title: 'Galeria de platillos y ambiente',
+    desc: 'Galeria optimizada con carga rapida que muestra tus mejores platillos y el ambiente unico de tu restaurante.',
+  },
+  {
+    icon: '🎉',
+    title: 'Seccion de eventos y catering',
+    desc: 'Pagina dedicada para eventos privados, catering corporativo y celebraciones especiales con formulario de cotizacion.',
+  },
+  {
+    icon: '🛵',
+    title: 'Integracion con apps de delivery',
+    desc: 'Enlaces directos a UberEats, Rappi y DiDi Food para que tus clientes ordenen desde tu sitio web sin buscar en las apps.',
+  },
+  {
+    icon: '📍',
+    title: 'SEO local optimizado',
+    desc: 'Posicionamiento para busquedas como "restaurante italiano en [colonia/ciudad]". Aparece cuando alguien busca donde comer cerca.',
+  },
+  {
+    icon: '🏷️',
+    title: 'Schema markup especializado',
+    desc: 'Datos estructurados Restaurant, Menu y FoodEstablishment para que Google muestre tu menu, horario y calificaciones en los resultados.',
+  },
+  {
+    icon: '🗺️',
+    title: 'Google Maps embedido',
+    desc: 'Mapa interactivo con tu direccion exacta, horario de servicio e indicaciones para llegar. Facilita que te encuentren.',
+  },
+];
+
+const planes = [
+  {
+    name: 'Landing Performance',
+    price: '$3,800',
+    renewal: '$1,840',
+    delivery: '7 dias',
+    desc: 'Presencia basica con menu',
+    accent: 'red',
+    popular: false,
+    features: [
+      'Hosting y Dominio incluido',
+      'Certificado SSL',
+      'Diseno de Landing Page de alta conversion',
+      'Menu digital con fotos y precios',
+      'Responsive (movil, tablet, desktop)',
+      'WhatsApp CTA',
+      'Formulario de contacto',
+      'Google Analytics 4',
+      'SEO basico on-page',
+      '1 ronda de revisiones',
+    ],
+  },
+  {
+    name: 'Web Corporativa',
+    price: '$6,400',
+    renewal: '$2,450',
+    delivery: '15 dias',
+    desc: 'Menu + reservaciones + galeria',
+    accent: 'orange',
+    popular: true,
+    features: [
+      'Hosting y Dominio incluido',
+      'Certificado SSL',
+      'Diseno multi-pagina (hasta 6 secciones)',
+      'Menu digital completo con categorias',
+      'Sistema de reservaciones online',
+      'Galeria de platillos y ambiente',
+      'Google Maps embedido',
+      'Integracion redes sociales',
+      'Google Analytics 4 + GTM',
+      'SEO local basico',
+      '2 rondas de revisiones',
+    ],
+  },
+  {
+    name: 'Web SEO Performance',
+    price: '$8,900',
+    renewal: '$3,140',
+    delivery: '20 dias',
+    desc: 'Domina Google en tu zona',
+    accent: 'amber',
+    popular: false,
+    features: [
+      'Todo lo de Web Corporativa mas:',
+      'Arquitectura SEO completa',
+      'Hasta 10 paginas optimizadas',
+      'Keyword research local',
+      'Schema markup: Restaurant, Menu',
+      'Google Search Console',
+      'Contenido SEO optimizado',
+      'Sitemap XML + robots.txt',
+      'Enlaces a UberEats, Rappi, DiDi Food',
+      'Seccion de eventos y catering',
+      'Velocidad score 95+',
+      '2 rondas de revisiones',
+    ],
+  },
+];
+
+const accentColors: Record<string, { border: string; check: string; badge: string; btn: string }> = {
+  red: { border: 'border-red-500/30', check: 'text-red-400', badge: 'bg-red-500/20 text-red-300', btn: 'border-red-500 text-red-400 hover:bg-red-500 hover:text-white' },
+  orange: { border: 'border-orange-500/30', check: 'text-orange-400', badge: 'bg-orange-500/20 text-orange-300', btn: 'border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-white' },
+  amber: { border: 'border-amber-500/30', check: 'text-amber-400', badge: 'bg-amber-500/20 text-amber-300', btn: 'border-amber-500 text-amber-400 hover:bg-amber-500 hover:text-white' },
+};
+
+const plansWithColors = planes.map((plan) => ({
+  ...plan,
+  colors: accentColors[plan.accent],
+  cardClass: plan.popular
+    ? 'bg-gradient-to-br from-orange-600/20 via-red-600/20 to-amber-600/20 text-white ring-2 ring-orange-400/50 shadow-2xl shadow-orange-500/20 scale-105 border border-orange-500/30'
+    : 'bg-dark-800/80 backdrop-blur-sm text-white border ' + accentColors[plan.accent].border,
+  btnClass: plan.popular
+    ? 'bg-gradient-to-r from-orange-500 to-red-500 border-transparent text-white hover:opacity-90 shadow-lg shadow-orange-500/25'
+    : accentColors[plan.accent].btn,
+}));
+---
+
+<Layout title="Sitios Web para Restaurantes | Menu Digital y Reservaciones | Portafolio Z" description="Diseno web para restaurantes con menu digital, reservaciones online y presencia en Google Maps. Desde $3,800 MXN.">
+  <Navbar />
+
+  <!-- SECCION 1: Hero (split layout) -->
+  <section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-red-600 via-red-500 to-orange-500"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-orange-400/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-red-400/20 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex items-center gap-2 text-sm text-white/60 mb-6" data-animate>
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span>Sectores</span>
+        <span>/</span>
+        <span class="text-white">Restaurantes</span>
+      </nav>
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div data-animate>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+            Sitios Web para Restaurantes que <span class="text-orange-300">Llenan Mesas</span>
+          </h1>
+          <p class="text-xl text-white/80 mb-8">
+            Un sitio web que muestra tu menu, toma reservaciones y aparece cuando alguien busca <strong class="text-white">"donde comer en [tu zona]"</strong>.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 mb-8">
+            <button data-open-cotizador class="bg-white text-red-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl cursor-pointer">
+              Cotiza Tu Sitio Web Gratis
+            </button>
+            <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all text-center">
+              Hablar por WhatsApp
+            </a>
+          </div>
+          <div class="flex flex-wrap gap-6 text-white/70 text-sm">
+            <span class="flex items-center gap-2">Desde <span class="text-orange-300 font-bold">$3,800 MXN</span></span>
+            <span class="hidden sm:block">|</span>
+            <span class="flex items-center gap-2"><span class="text-orange-300 font-bold">Menu digital</span> incluido</span>
+            <span class="hidden sm:block">|</span>
+            <span class="flex items-center gap-2"><span class="text-orange-300 font-bold">Reservaciones</span> online</span>
+          </div>
+        </div>
+        <div data-animate>
+          <div class="relative bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+            <img src="/img/sectores/restaurantes-hero.webp" alt="Sitio web para restaurante con menu digital y reservaciones" class="rounded-2xl w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+            <span class="absolute text-white/40 text-sm">Imagen: Sitio web para restaurante con menu digital y reservaciones</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 2: Features (con imagen) -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-red-500 tracking-wider uppercase mb-3">Funcionalidades</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
+          Todo lo que tu restaurante necesita en un <span class="gradient-text">sitio web</span>
+        </h2>
+      </div>
+      <p class="text-gray-600 text-center max-w-3xl mx-auto mb-16" data-animate>
+        No es solo una pagina bonita. Es una herramienta que muestra tu menu, toma reservaciones, te posiciona en Google y conecta con tus clientes las 24 horas.
+      </p>
+
+      <div class="grid lg:grid-cols-2 gap-12 items-start mb-16">
+        <div class="grid sm:grid-cols-2 gap-6">
+          {features.slice(0, 4).map((f) => (
+            <div class="p-6 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-xl transition-all group" data-animate>
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                {f.icon}
+              </div>
+              <h3 class="text-lg font-bold text-gray-900 mb-2">{f.title}</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+        <div data-animate>
+          <div class="relative bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+            <img src="/img/sectores/restaurantes-menu.webp" alt="Menu digital responsive para restaurante" class="rounded-2xl w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+            <span class="absolute text-white/40 text-sm">Imagen: Menu digital responsive para restaurante</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-12 items-start">
+        <div data-animate>
+          <div class="relative bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-2xl overflow-hidden aspect-video flex items-center justify-center">
+            <img src="/img/sectores/restaurantes-platillos.webp" alt="Galeria de platillos y ambiente del restaurante" class="rounded-2xl w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'" />
+            <span class="absolute text-white/40 text-sm">Imagen: Galeria de platillos y ambiente del restaurante</span>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-6">
+          {features.slice(4, 8).map((f) => (
+            <div class="p-6 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-xl transition-all group" data-animate>
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                {f.icon}
+              </div>
+              <h3 class="text-lg font-bold text-gray-900 mb-2">{f.title}</h3>
+              <p class="text-gray-600 text-sm leading-relaxed">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 3: Caso Real -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-red-600 via-red-500 to-orange-500"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl translate-y-1/2"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-orange-300 tracking-wider uppercase mb-3">Caso real</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">
+          Restaurante Roma CDMX: de 0 a <span class="text-orange-300">30 reservaciones/semana</span>
+        </h2>
+      </div>
+      <p class="text-white/70 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Con una Landing de $3,800 MXN, este restaurante en la Roma paso de depender solo de Instagram a llenar mesas todos los dias.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-8 mb-12">
+        <!-- Before -->
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8" data-animate>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-full bg-red-500/30 flex items-center justify-center">
+              <svg class="w-5 h-5 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </div>
+            <h3 class="text-xl font-bold text-white">Antes</h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              <span class="text-white/80">Solo Instagram. Cero presencia en Google.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              <span class="text-white/80">0 reservaciones por web.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              <span class="text-white/80">Dependencia total de boca en boca y redes sociales.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- After -->
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8" data-animate>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-full bg-green-500/30 flex items-center justify-center">
+              <svg class="w-5 h-5 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <h3 class="text-xl font-bold text-white">Despues</h3>
+          </div>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              <span class="text-white/80"><strong class="text-white">30 reservaciones/semana</strong> por web.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              <span class="text-white/80">Google Maps <strong class="text-white">+40% foot traffic</strong>.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              <span class="text-white/80">WhatsApp <strong class="text-white">15 mensajes/dia</strong>.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Quote -->
+      <div class="max-w-3xl mx-auto text-center" data-animate>
+        <blockquote class="text-xl sm:text-2xl text-white/90 italic font-medium mb-4">
+          "Con $3,800 tenemos una pagina que genera mas reservaciones que nuestro Instagram."
+        </blockquote>
+        <p class="text-orange-300 font-semibold">-- Chef Ana L.</p>
+        <p class="text-white/50 text-sm">Restaurante Roma, CDMX</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 4: Plans (3 columnas) -->
+  <section class="relative bg-dark-900 py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(239,68,68,0.15),transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(249,115,22,0.15),transparent_50%)]"></div>
+    <div class="absolute top-10 left-1/4 w-64 h-64 bg-red-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-orange-400 font-medium text-sm uppercase tracking-widest mb-3">Paquetes para Restaurantes</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Elige el Plan Ideal para Tu <span class="gradient-text">Restaurante</span>
+        </h2>
+      </div>
+      <p class="text-gray-400 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Todos los planes incluyen: hosting y dominio el primer ano, certificado SSL, diseno a la medida, responsive, WhatsApp CTA y Google Analytics.
+      </p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" data-animate>
+        {plansWithColors.map((plan) => (
+          <div class={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${plan.cardClass}`}>
+            {plan.popular && (
+              <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span class="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">Recomendado</span>
+              </div>
+            )}
+            <div class={`inline-flex items-center gap-1.5 ${plan.colors.badge} text-xs font-medium px-3 py-1 rounded-full mb-4`}>
+              <span>{plan.delivery}</span>
+            </div>
+            <h3 class="text-lg font-bold mb-1 text-white">{plan.name}</h3>
+            <p class="text-xs mb-5 text-gray-400">{plan.desc}</p>
+            <div class="mb-2">
+              <span class="text-3xl font-extrabold text-white">{plan.price}</span>
+              <span class="text-xs ml-1 text-gray-500">MXN + IVA</span>
+            </div>
+            <p class="text-[10px] text-gray-500 mb-5">Renovacion anual: {plan.renewal} + IVA</p>
+            <ul class="space-y-2.5 mb-6">
+              {plan.features.map((f) => (
+                <li class="flex items-start gap-2.5 text-sm">
+                  <svg class={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.colors.check}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <span class="text-gray-300">{f}</span>
+                </li>
+              ))}
+            </ul>
+            <button data-open-cotizador class={`w-full text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 cursor-pointer ${plan.btnClass}`}>
+              Cotizar Ahora
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 5: CTA Final -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-red-600 via-red-500 to-orange-500"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-orange-400/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-animate>
+        Tu restaurante merece mas que un <span class="text-orange-300">Instagram</span>
+      </h2>
+      <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto" data-animate>
+        Mientras tu competencia solo publica stories, tu podrias tener un sitio web que aparece en Google, muestra tu menu y toma reservaciones en automatico. Desde $3,800 MXN.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6" data-animate>
+        <button data-open-cotizador class="bg-white text-red-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl cursor-pointer">
+          Cotiza Tu Sitio Web Ahora
+        </button>
+        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Hablar por WhatsApp
+        </a>
+      </div>
+      <p class="text-white/50 text-sm" data-animate>Menu digital + Reservaciones online + SEO local</p>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>
