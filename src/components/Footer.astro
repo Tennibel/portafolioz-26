@@ -2,64 +2,116 @@
 const socialLinks = [
   { name: 'Facebook', href: 'https://facebook.com/portafolioz' },
   { name: 'Instagram', href: 'https://instagram.com/portafolio.z' },
+  { name: 'Twitter', href: 'https://x.com/PortafolioZ' },
   { name: 'TikTok', href: 'https://tiktok.com/@portafolioz' },
-  { name: 'X', href: 'https://x.com/PortafolioZ' },
 ];
 ---
 
-<footer class="bg-gradient-to-b from-dark-900 to-dark-800 pt-20 pb-8">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid md:grid-cols-3 gap-12 pb-12 border-b border-white/10">
+<footer class="relative bg-gradient-to-b from-indigo-950 via-[#1a0a3e] to-[#0f0628] pt-20 pb-8 overflow-hidden">
+  <!-- Subtle glow effects -->
+  <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/8 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-20 right-1/4 w-64 h-64 bg-purple-600/8 rounded-full blur-3xl"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-3 gap-12 lg:gap-16 pb-16">
+
       <!-- Col 1: CTA -->
       <div>
-        <span class="inline-block bg-white/10 text-white/60 text-xs font-medium px-3 py-1 rounded-full mb-4">¡HOLA!</span>
-        <h3 class="text-2xl md:text-3xl font-bold text-white mb-4">
-          Queremos <span class="gradient-text">ayudarte</span>
+        <p class="text-pink-500 font-semibold text-sm uppercase tracking-wider mb-4">¡HOLA! QUEREMOS AYUDARTE</p>
+        <h3 class="text-3xl md:text-4xl font-bold text-white mb-2 leading-tight">
+          Cuéntanos sobre
         </h3>
-        <p class="text-white/50 text-sm leading-relaxed mb-6">
-          Estamos listos para llevar tu negocio al siguiente nivel con una presencia web que convierte visitantes en clientes.
-        </p>
-        <a href="/consultoria-marketing-digital" class="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors">
-          Consultoria gratuita &rarr;
+        <h3 class="text-3xl md:text-4xl font-bold mb-8 leading-tight">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 italic">tu proyecto o negocio</span>
+        </h3>
+        <a href="/contacto" class="inline-flex items-center gap-2 text-pink-400 hover:text-pink-300 text-sm font-semibold uppercase tracking-wider transition-colors group">
+          ¿Suena bien? Contáctanos
+          <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
         </a>
       </div>
 
-      <!-- Col 2: Contact + Subscribe -->
+      <!-- Col 2: Contacto + Suscribete -->
       <div>
-        <span class="inline-block bg-white/10 text-white/60 text-xs font-medium px-3 py-1 rounded-full mb-4">Contáctanos</span>
-        <div class="space-y-2 mb-8">
-          <p class="text-white/60 text-sm">hola@portafolioz.com</p>
-          <p class="text-white/60 text-sm">55 6195 9724</p>
-          <p class="text-white/60 text-sm">56 4721 5472</p>
+        <div class="inline-flex items-center bg-indigo-800/50 border border-indigo-600/30 text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-6">
+          Contáctanos
+        </div>
+        <div class="space-y-4 mb-10">
+          <a href="mailto:hola@portafolioz.com" class="flex items-center gap-3 text-white/70 hover:text-white text-sm transition-colors group">
+            <span class="w-8 h-8 rounded-full bg-indigo-800/50 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-700/50 transition-colors">
+              <svg class="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            </span>
+            hola@portafolioz.com
+          </a>
+          <a href="tel:+525561959724" class="flex items-center gap-3 text-white/70 hover:text-white text-sm transition-colors group">
+            <span class="w-8 h-8 rounded-full bg-indigo-800/50 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-700/50 transition-colors">
+              <svg class="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+            </span>
+            55 6195 9724
+          </a>
+          <a href="tel:+525647215472" class="flex items-center gap-3 text-white/70 hover:text-white text-sm transition-colors group">
+            <span class="w-8 h-8 rounded-full bg-indigo-800/50 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-700/50 transition-colors">
+              <svg class="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+            </span>
+            56 4721 5472
+          </a>
         </div>
 
-        <span class="inline-block bg-white/10 text-white/60 text-xs font-medium px-3 py-1 rounded-full mb-4">Suscríbete</span>
-        <form class="flex gap-2">
+        <div class="inline-flex items-center bg-indigo-800/50 border border-indigo-600/30 text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-5">
+          Suscríbete
+        </div>
+        <form class="space-y-3">
           <input
-            id="footer-subscribe-email"
-            name="email"
-            type="email"
-            autocomplete="email"
-            placeholder="tu@email.com"
-            aria-label="Correo para suscripción"
-            class="flex-1 bg-transparent border-b border-white/20 text-white text-sm py-2 placeholder-white/30 outline-none focus:border-cyan-500 transition-colors"
+            type="text"
+            placeholder="Nombre"
+            class="w-full bg-transparent border-b border-white/15 text-white text-sm py-2.5 placeholder-white/30 outline-none focus:border-pink-500 transition-colors"
           />
-          <button type="submit" class="text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors">Enviar</button>
+          <div class="flex items-center gap-2">
+            <input
+              type="email"
+              placeholder="Email"
+              class="flex-1 bg-transparent border-b border-white/15 text-white text-sm py-2.5 placeholder-white/30 outline-none focus:border-pink-500 transition-colors"
+            />
+            <button type="submit" class="text-pink-400 hover:text-pink-300 transition-colors p-1">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </div>
         </form>
       </div>
 
-      <!-- Col 3: Address + Social -->
+      <!-- Col 3: Direccion + Siguenos -->
       <div>
-        <span class="inline-block bg-white/10 text-white/60 text-xs font-medium px-3 py-1 rounded-full mb-4">Dirección</span>
-        <p class="text-white/60 text-sm leading-relaxed mb-1">
-          Dr. José María Vértiz 84BIS, Doctores,
-        </p>
-        <p class="text-white/60 text-sm mb-1">Cuauhtémoc, 06720 CDMX</p>
-        <p class="text-white/60 text-sm mb-1">Lun - Vie: 8:00 am - 6:00 pm</p>
-        <p class="text-white/60 text-sm mb-8">Sáb: 9:00 am - 2:00 pm</p>
+        <div class="inline-flex items-center bg-indigo-800/50 border border-indigo-600/30 text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-6">
+          Dirección
+        </div>
+        <div class="space-y-4 mb-10">
+          <div class="flex items-start gap-3">
+            <span class="w-8 h-8 rounded-full bg-indigo-800/50 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            </span>
+            <p class="text-white/70 text-sm leading-relaxed">Dr. José María Vértiz 84BIS, Doctores, Cuauhtémoc, 06720 Ciudad de México, CDMX</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-indigo-800/50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </span>
+            <p class="text-white/70 text-sm">Lunes a Viernes 8:00 am - 6:00 pm</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-indigo-800/50 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </span>
+            <p class="text-white/70 text-sm">Sábado 9:00 am a 2:00 pm</p>
+          </div>
+        </div>
 
-        <span class="inline-block bg-white/10 text-white/60 text-xs font-medium px-3 py-1 rounded-full mb-4">Síguenos</span>
-        <div class="flex gap-4">
+        <div class="inline-flex items-center bg-indigo-800/50 border border-indigo-600/30 text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-5">
+          Síguenos
+        </div>
+        <div class="grid grid-cols-2 gap-3">
           {socialLinks.map((link) => (
             <a href={link.href} class="text-pink-400 hover:text-pink-300 text-sm font-medium transition-colors" target="_blank" rel="noopener">
               {link.name}
@@ -69,19 +121,22 @@ const socialLinks = [
       </div>
     </div>
 
+    <!-- Divider -->
+    <div class="border-t border-white/10"></div>
+
     <!-- Bottom footer -->
-    <div class="flex flex-col md:flex-row items-center justify-between pt-8 gap-4">
-      <div class="flex items-center gap-3">
+    <div class="flex flex-col md:flex-row items-center justify-between pt-8 gap-6">
+      <div class="flex items-center gap-2">
         <img src="/img/logo/logo-light.png" alt="Portafolio Z" class="h-12 w-auto" />
-        <span class="text-white/30 text-xs">~ Agencia de Diseño Web</span>
+        <span class="text-white/30 text-xs">Increíbles Sitios Web</span>
       </div>
-      <div class="flex flex-wrap gap-6 text-xs">
-        <a href="/aviso-de-privacidad" class="text-white/40 hover:text-white/70 transition-colors">Aviso de Privacidad</a>
-        <a href="/aviso-legal" class="text-white/40 hover:text-white/70 transition-colors">Aviso Legal</a>
-        <a href="/politica-de-cookies" class="text-white/40 hover:text-white/70 transition-colors">Política de Cookies</a>
+      <div class="flex flex-wrap justify-center gap-6 text-sm">
+        <a href="/aviso-de-privacidad" class="text-white/50 hover:text-white transition-colors">Aviso de Privacidad</a>
+        <a href="/aviso-legal" class="text-white/50 hover:text-white transition-colors">Aviso Legal</a>
+        <a href="/politica-de-cookies" class="text-white/50 hover:text-white transition-colors">Política de Cookies</a>
       </div>
-      <p class="text-white/30 text-xs">
-        &copy; 2026 Portafolio Z. Powered by Portafolio Z
+      <p class="text-white/40 text-xs">
+        Copyright &copy; 2026 | Powered by Portafolio Z
       </p>
     </div>
   </div>
