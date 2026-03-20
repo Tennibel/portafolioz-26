@@ -129,6 +129,13 @@ function getGradient(category: string): string {
 const featured = posts[0];
 const rest = posts.slice(1);
 const categories = [...new Set(posts.map(p => p.category))];
+
+// Group posts by category (excluding featured)
+const postsByCategory = categories.map((cat) => ({
+  category: cat,
+  gradient: getGradient(cat),
+  posts: rest.filter((p) => p.category === cat),
+})).filter((g) => g.posts.length > 0);
 ---
 
 <Layout title="Blog | Portafolio Z" description="Artículos sobre diseño web, SEO, marketing digital y tecnología para emprendedores y negocios en México.">
@@ -163,34 +170,34 @@ const categories = [...new Set(posts.map(p => p.category))];
   <!-- SEARCH & CATEGORIES -->
   <section class="bg-dark-900 pt-8 pb-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-animate>
-      <div class="bg-dark-800/60 border border-white/10 rounded-2xl p-6 md:p-8">
+      <div class="bg-gradient-to-r from-dark-800 to-dark-800/80 border border-white/15 rounded-2xl p-6 md:p-8 shadow-xl shadow-black/20">
         <div class="flex flex-col md:flex-row md:items-center gap-6">
           <!-- Search -->
           <div class="flex-1 relative">
-            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
               type="text"
               id="blog-search"
-              placeholder="Buscar artículos..."
-              class="w-full bg-dark-900/80 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white placeholder-white/30 text-sm focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all"
+              placeholder="Buscar artículos por título, tema o palabra clave..."
+              class="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-white/40 text-sm focus:outline-none focus:border-cyan-500/60 focus:ring-2 focus:ring-cyan-500/20 focus:bg-white/15 transition-all"
             />
           </div>
           <!-- Category filters -->
           <div class="flex flex-wrap gap-2">
-            <button class="blog-filter active bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 text-sm font-medium px-4 py-2 rounded-full cursor-pointer transition-all" data-category="all">
+            <button class="blog-filter active bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 text-sm font-medium px-4 py-2.5 rounded-full cursor-pointer transition-all" data-category="all">
               Todos
             </button>
             {categories.map((cat) => (
-              <button class="blog-filter bg-white/5 border border-white/10 text-white/60 text-sm font-medium px-4 py-2 rounded-full hover:bg-white/10 hover:text-white cursor-pointer transition-all" data-category={cat}>
+              <button class="blog-filter bg-white/5 border border-white/15 text-white/60 text-sm font-medium px-4 py-2.5 rounded-full hover:bg-white/10 hover:text-white hover:border-white/25 cursor-pointer transition-all" data-category={cat}>
                 {cat}
               </button>
             ))}
           </div>
         </div>
         <!-- Results count -->
-        <p class="text-white/30 text-xs mt-4" id="blog-results-count">{posts.length} artículos encontrados</p>
+        <p class="text-white/40 text-xs mt-4" id="blog-results-count">{posts.length} artículos encontrados</p>
       </div>
     </div>
   </section>
@@ -248,12 +255,19 @@ const categories = [...new Set(posts.map(p => p.category))];
     </section>
   )}
 
-  <!-- ALL POSTS GRID -->
-  <section class="bg-dark-900 pb-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {rest.length > 0 && (
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" data-animate>
-          {rest.map((post) => (
+  <!-- POSTS BY CATEGORY -->
+  {postsByCategory.map((group) => (
+    <section class="bg-dark-900 pb-16 blog-category-section" data-section-category={group.category}>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-4 mb-8" data-animate>
+          <div class={`h-8 w-1.5 rounded-full bg-gradient-to-b ${group.gradient}`}></div>
+          <div>
+            <h2 class="text-2xl font-bold text-white">{group.category}</h2>
+            <p class="text-white/40 text-sm">{group.posts.length} artículo{group.posts.length !== 1 ? 's' : ''}</p>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" data-animate>
+          {group.posts.map((post) => (
             <a
               href={`#post-${post.id}`}
               class="blog-card group rounded-2xl overflow-hidden bg-dark-800/50 border border-white/10 hover:border-white/20 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300"
@@ -297,7 +311,13 @@ const categories = [...new Set(posts.map(p => p.category))];
             </a>
           ))}
         </div>
-      )}
+      </div>
+    </section>
+  ))}
+
+  <!-- FULL ARTICLES -->
+  <section class="bg-dark-900 pb-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Full articles (for mock/fallback) -->
       <div class="space-y-8">
@@ -367,6 +387,7 @@ function initBlogFilters() {
   const filterBtns = document.querySelectorAll('.blog-filter');
   const cards = document.querySelectorAll('.blog-card');
   const articles = document.querySelectorAll('.blog-article');
+  const categorySections = document.querySelectorAll('.blog-category-section');
   const resultsCount = document.getElementById('blog-results-count');
   const featuredSection = document.getElementById('featured-section');
 
@@ -399,7 +420,16 @@ function initBlogFilters() {
       el.style.display = (matchesCat && matchesSearch) ? '' : 'none';
     });
 
-    // Hide featured section label if featured post is hidden
+    // Hide category sections if no visible cards inside
+    categorySections.forEach((section) => {
+      const el = section as HTMLElement;
+      const sectionCat = el.dataset.sectionCategory || '';
+      const matchesCat = activeCategory === 'all' || sectionCat === activeCategory;
+      const visibleCards = el.querySelectorAll('.blog-card:not([style*="display: none"])');
+      el.style.display = (matchesCat && visibleCards.length > 0) ? '' : 'none';
+    });
+
+    // Hide featured section if featured post is hidden
     if (featuredSection) {
       const featuredCard = featuredSection.querySelector('.blog-card') as HTMLElement;
       featuredSection.style.display = featuredCard && featuredCard.style.display !== 'none' ? '' : 'none';
