@@ -1,0 +1,403 @@
+---
+/**
+ * posicionamiento-web-seo.astro - Landing page: Posicionamiento Web SEO
+ *
+ * Secciones:
+ * 1. Hero
+ * 2. ¿Qué es el SEO? (infographic)
+ * 3. Proceso SEO (6 pasos timeline)
+ * 4. Planes SEO (3 cards)
+ * 5. Casos de Éxito
+ * 6. FAQ (details/summary)
+ * 7. CTA Final
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+const seoSteps = [
+  {
+    num: '01',
+    title: 'Auditoría SEO Completa',
+    desc: 'Auditoría técnica, de contenido, backlinks y competencia. Entregamos un informe ejecutivo con hallazgos y plan de acción.',
+    icon: '🔍',
+  },
+  {
+    num: '02',
+    title: 'Investigación de Palabras Clave',
+    desc: 'Keyword research con Ahrefs/SEMrush. Analizamos intención de búsqueda, long-tail keywords, mapa de keywords y nivel de competencia.',
+    icon: '🎯',
+  },
+  {
+    num: '03',
+    title: 'SEO Técnico',
+    desc: 'Optimización de velocidad, corrección de crawl errors, estructura de URLs, schema markup, sitemap XML, mobile-first y HTTPS.',
+    icon: '⚙️',
+  },
+  {
+    num: '04',
+    title: 'Optimización de Contenido',
+    desc: 'Meta titles/descriptions optimizados, contenido SEO, artículos de blog de 1,500-2,500 palabras, headers, internal linking e imágenes.',
+    icon: '✍️',
+  },
+  {
+    num: '05',
+    title: 'Link Building',
+    desc: 'Guest posting, directorios de calidad, ecosistema Portafolio Z, broken link building y análisis mensual de perfil de enlaces.',
+    icon: '🔗',
+  },
+  {
+    num: '06',
+    title: 'Reportes y Optimización Continua',
+    desc: 'Reporte mensual de posiciones, tráfico orgánico, conversiones, recomendaciones estratégicas y llamada mensual de seguimiento.',
+    icon: '📊',
+  },
+];
+
+const planes = [
+  {
+    name: 'SEO Starter',
+    price: '$4,900',
+    popular: false,
+    idealPara: 'Negocios locales, consultorios, tiendas pequeñas',
+    features: [
+      'Auditoría SEO inicial',
+      '15 keywords objetivo',
+      'Optimización técnica básica',
+      '3 páginas optimizadas/mes',
+      '1 artículo blog/mes (1,500 palabras)',
+      'Google Search Console',
+      'Reporte mensual',
+      'Soporte email + WhatsApp',
+    ],
+  },
+  {
+    name: 'SEO Growth',
+    price: '$7,900',
+    popular: true,
+    idealPara: 'PyMEs, agencias, clínicas, despachos',
+    features: [
+      'Todo de Starter más:',
+      '30 keywords objetivo',
+      '6 páginas optimizadas/mes',
+      '2 artículos/mes (2,000+ palabras)',
+      'Link building (5 enlaces/mes)',
+      'Schema markup avanzado',
+      'Análisis de competencia mensual',
+      'Reporte quincenal + llamada',
+    ],
+  },
+  {
+    name: 'SEO Authority',
+    price: '$12,500',
+    popular: false,
+    idealPara: 'Empresas medianas, franquicias, alta competencia',
+    features: [
+      'Todo de Growth más:',
+      '50+ keywords objetivo',
+      '10 páginas optimizadas/mes',
+      '4 artículos premium/mes',
+      'Link building agresivo (12 enlaces/mes)',
+      'Pillar + cluster strategy',
+      'SEO local avanzado',
+      'Featured snippets optimization',
+      'Reporte semanal + reunión quincenal',
+      'Consultor SEO dedicado',
+    ],
+  },
+];
+
+const casos = [
+  {
+    title: 'Despacho Legal Monterrey',
+    keyword: '"abogado laboral Monterrey"',
+    results: [
+      'De página 5 a posición #2',
+      '+340% tráfico orgánico',
+      '18 leads/mes sin ads',
+    ],
+    gradient: 'from-emerald-500 to-green-600',
+  },
+  {
+    title: 'Clínica Dental CDMX',
+    keyword: '"dentista en Doctores CDMX"',
+    results: [
+      '#1 en Google',
+      '+500% visibilidad orgánica',
+      '24 pacientes/mes desde Google',
+    ],
+    gradient: 'from-green-500 to-teal-600',
+  },
+  {
+    title: 'Hotel Boutique Mérida',
+    keyword: 'Posicionamiento turístico',
+    results: [
+      '4,000 visitas orgánicas/mes',
+      'Reservaciones directas +150%',
+      'Dependencia de OTAs -40%',
+    ],
+    gradient: 'from-teal-500 to-emerald-600',
+  },
+];
+
+const faqs = [
+  {
+    q: '¿En cuánto tiempo veo resultados?',
+    a: 'Los primeros movimientos en posiciones se ven entre 4 y 6 semanas. Para llegar a página 1 en keywords competidas, el rango típico es de 3 a 4 meses. El SEO es una inversión a mediano plazo con resultados acumulativos y sostenibles.',
+  },
+  {
+    q: '¿SEO o Google Ads?',
+    a: 'Se complementan perfectamente. Google Ads te da resultados inmediatos pero pagas por cada clic. El SEO es una inversión sostenible: una vez posicionado, el tráfico es gratuito. Lo ideal es combinar ambos: Ads para resultados inmediatos mientras el SEO madura.',
+  },
+  {
+    q: '¿Necesito un sitio nuevo para hacer SEO?',
+    a: 'No necesariamente. Podemos optimizar tu sitio actual. Sin embargo, si tu sitio es muy lento, no es responsive o tiene una arquitectura deficiente, puede convenir un rediseño con Astro para maximizar los resultados del SEO.',
+  },
+  {
+    q: '¿Qué pasa si dejo de pagar el servicio SEO?',
+    a: 'Los resultados no desaparecen de inmediato, pero sin mantenimiento continuo tus competidores eventualmente te superarán. Recomendamos un mínimo de 6 meses de servicio para consolidar posiciones y obtener un ROI significativo.',
+  },
+  {
+    q: '¿Garantizan la posición #1 en Google?',
+    a: 'Nadie puede garantizar la posición #1: Google usa más de 200 factores de ranking que cambian constantemente. Lo que sí garantizamos es un proceso profesional, mejoras medibles mes a mes y transparencia total en reportes y estrategia.',
+  },
+];
+---
+
+<Layout title="Posicionamiento Web SEO: Haz que Google Trabaje para Tu Negocio | Portafolio Z" description="El 92% de los clicks en Google van a los primeros 5 resultados. Nuestro servicio de SEO te posiciona donde tus clientes te buscan. Desde $4,900/mes.">
+  <Navbar />
+
+  <!-- SECCION 1: Hero -->
+  <section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-600 via-green-600 to-teal-500"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-emerald-400/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-green-400/20 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <nav class="flex justify-center items-center gap-2 text-sm text-white/60 mb-6">
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span>Servicios</span>
+        <span>/</span>
+        <span class="text-white">SEO</span>
+      </nav>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+        Posicionamiento Web SEO: Haz que Google Trabaje para <span class="text-emerald-300">Tu Negocio</span>
+      </h1>
+      <p class="text-xl text-white/80 max-w-3xl mx-auto mb-8">
+        El 92% de los clicks en Google van a los primeros 5 resultados. Si tu negocio no está ahí, <strong class="text-white">no existes.</strong> Nuestro servicio de SEO te posiciona donde tus clientes te buscan.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <a href="/contacto" class="bg-white text-emerald-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl">
+          Auditoría SEO Gratis
+        </a>
+        <a href="#casos" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Ver Resultados Reales
+        </a>
+      </div>
+      <div class="flex flex-wrap justify-center gap-6 text-white/70 text-sm">
+        <span class="flex items-center gap-2"><span class="text-emerald-300 font-bold">+85</span> sitios posicionados</span>
+        <span class="hidden sm:block">|</span>
+        <span class="flex items-center gap-2">Página 1 en <span class="text-emerald-300 font-bold">3-4 meses</span></span>
+        <span class="hidden sm:block">|</span>
+        <span class="flex items-center gap-2">ROI promedio <span class="text-emerald-300 font-bold">6x</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 2: ¿Qué es el SEO? -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-emerald-500 tracking-wider uppercase mb-3">Fundamentos</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
+          ¿Qué es el Posicionamiento SEO y por Qué Tu Negocio lo <span class="gradient-text">Necesita</span>?
+        </h2>
+      </div>
+      <p class="text-gray-600 text-center max-w-3xl mx-auto mb-16" data-animate>
+        SEO (Search Engine Optimization) es el proceso de optimizar tu sitio web para que aparezca en los primeros resultados de Google cuando tus clientes potenciales buscan tus productos o servicios.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="relative p-8 rounded-2xl bg-emerald-50 border border-emerald-100 text-center hover:shadow-xl transition-all group" data-animate>
+          <div class="text-5xl sm:text-6xl font-extrabold text-emerald-600 mb-4 group-hover:scale-110 transition-transform">75%</div>
+          <p class="text-gray-700 font-medium text-lg mb-2">de los usuarios</p>
+          <p class="text-gray-500 leading-relaxed">nunca pasa de la primera página de Google. Si no estás ahí, eres invisible.</p>
+        </div>
+        <div class="relative p-8 rounded-2xl bg-green-50 border border-green-100 text-center hover:shadow-xl transition-all group" data-animate>
+          <div class="text-5xl sm:text-6xl font-extrabold text-green-600 mb-4 group-hover:scale-110 transition-transform">5.3x</div>
+          <p class="text-gray-700 font-medium text-lg mb-2">más conversión</p>
+          <p class="text-gray-500 leading-relaxed">que el tráfico proveniente de redes sociales. El SEO atrae clientes con intención de compra.</p>
+        </div>
+        <div class="relative p-8 rounded-2xl bg-teal-50 border border-teal-100 text-center hover:shadow-xl transition-all group" data-animate>
+          <div class="text-5xl sm:text-6xl font-extrabold text-teal-600 mb-4 group-hover:scale-110 transition-transform">24/7</div>
+          <p class="text-gray-700 font-medium text-lg mb-2">los 365 días</p>
+          <p class="text-gray-500 leading-relaxed">genera leads sin pagar por click. Tu posicionamiento trabaja para ti incluso mientras duermes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 3: Proceso SEO (6 pasos timeline) -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-600 via-green-600 to-teal-500"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl translate-y-1/2"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-emerald-300 tracking-wider uppercase mb-3">Metodología</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">
+          Nuestro Proceso de <span class="text-emerald-300">Posicionamiento SEO</span>
+        </h2>
+      </div>
+      <p class="text-white/70 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Un proceso estructurado y transparente que ha posicionado más de 85 sitios web en la primera página de Google.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {seoSteps.map((step) => (
+          <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-all duration-300" data-animate>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/30 flex items-center justify-center text-2xl">
+                {step.icon}
+              </div>
+              <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider">Paso {step.num}</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">{step.title}</h3>
+            <p class="text-white/70 text-sm leading-relaxed">{step.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 4: Planes SEO (3 cards) -->
+  <section class="relative bg-dark-900 py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(16,185,129,0.15),transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
+    <div class="absolute top-10 left-1/4 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-emerald-400 font-medium text-sm uppercase tracking-widest mb-3">Planes SEO</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Planes de Posicionamiento SEO — Elige Tu <span class="gradient-text">Nivel de Crecimiento</span>
+        </h2>
+      </div>
+      <p class="text-gray-400 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Todos los planes incluyen: auditoría inicial, keyword research, optimización técnica, reportes de posiciones y soporte dedicado.
+      </p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" data-animate>
+        {planes.map((plan) => (
+          <div class={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${plan.popular ? 'bg-gradient-to-br from-emerald-600/20 via-green-600/20 to-teal-600/20 text-white ring-2 ring-emerald-400/50 shadow-2xl shadow-emerald-500/20 scale-105 border border-emerald-500/30' : 'bg-dark-800/80 backdrop-blur-sm text-white border border-emerald-500/20'}`}>
+            {plan.popular && (
+              <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">Más Popular</span>
+              </div>
+            )}
+            <h3 class="text-xl font-bold mb-1 text-white">{plan.name}</h3>
+            <div class="mb-2 mt-4">
+              <span class="text-3xl font-extrabold text-white">{plan.price}</span>
+              <span class="text-sm ml-1 text-gray-400">MXN/mes + IVA</span>
+            </div>
+            <p class="text-xs text-emerald-400 mb-5">Ideal para: {plan.idealPara}</p>
+            <ul class="space-y-2.5 mb-6">
+              {plan.features.map((f) => (
+                <li class="flex items-start gap-2.5 text-sm">
+                  <svg class={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.popular ? 'text-emerald-300' : 'text-emerald-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <span class="text-gray-300">{f}</span>
+                </li>
+              ))}
+            </ul>
+            <a href="/contacto" class={`block w-full text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 ${plan.popular ? 'bg-gradient-to-r from-emerald-500 to-teal-500 border-transparent text-white hover:opacity-90 shadow-lg shadow-emerald-500/25' : 'border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-white'}`}>
+              Comenzar Ahora
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 5: Casos de Éxito SEO -->
+  <section id="casos" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-sm font-semibold text-emerald-500 tracking-wider uppercase mb-3">Casos de éxito</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
+          Resultados Reales de <span class="gradient-text">Nuestros Clientes</span>
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {casos.map((caso) => (
+          <div class="relative rounded-2xl overflow-hidden hover:shadow-xl transition-all group" data-animate>
+            <div class={`bg-gradient-to-br ${caso.gradient} p-6 text-white`}>
+              <h3 class="text-xl font-bold mb-1">{caso.title}</h3>
+              <p class="text-white/80 text-sm">{caso.keyword}</p>
+            </div>
+            <div class="bg-gray-50 border border-gray-100 border-t-0 rounded-b-2xl p-6">
+              <ul class="space-y-3">
+                {caso.results.map((r) => (
+                  <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                    <span class="text-gray-700 font-medium">{r}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 6: FAQ -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-sm font-semibold text-emerald-500 tracking-wider uppercase mb-3">FAQ</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre <span class="gradient-text">SEO</span></h2>
+      </div>
+      <div class="space-y-4">
+        {faqs.map((faq) => (
+          <details class="bg-white rounded-xl border border-gray-200 overflow-hidden group" data-animate>
+            <summary class="w-full px-6 py-5 text-left flex justify-between items-center gap-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+              <span class="font-semibold text-gray-900">{faq.q}</span>
+              <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </summary>
+            <div class="px-6 pb-5">
+              <p class="text-gray-600 leading-relaxed">{faq.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 7: CTA Final -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-600 via-green-600 to-teal-500"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+        ¿Cuántos clientes estás perdiendo por no <span class="text-emerald-300">aparecer en Google</span>?
+      </h2>
+      <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+        Mientras lees esto, tus competidores están recibiendo los leads que podrían ser tuyos. Solicita tu auditoría SEO gratuita y descubre tu potencial de crecimiento.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+        <a href="/contacto" class="bg-white text-emerald-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl">
+          Auditoría SEO Gratis
+        </a>
+        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Hablar por WhatsApp
+        </a>
+      </div>
+      <p class="text-white/50 text-sm">+85 sitios posicionados · Página 1 en 3-4 meses · ROI promedio 6x</p>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>
