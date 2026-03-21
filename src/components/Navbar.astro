@@ -23,15 +23,19 @@ const megaMenu = {
       color: 'cyan',
       items: [
         { label: 'Web Sales Machine', desc: 'Sitios web que generan clientes', href: '/web-sales-machine', icon: '🚀' },
-        { label: 'Paquetes para Emprendedores', desc: 'Planes accesibles para iniciar', href: '/paquetes-para-emprendedores', icon: '💼' },
+        { label: 'Tienda en Línea', desc: 'E-commerce con WooCommerce o headless', href: '/tienda-en-linea-e-commerce', icon: '🛒' },
+        { label: 'Branding & Launch Kit', desc: 'Logo, identidad visual, manual de marca', href: '/branding-and-launch-kit', icon: '🎨' },
+        { label: 'Administrador de Contenidos', desc: 'Gestión de contenido web + blog', href: '/administrador-de-contenidos', icon: '📝' },
         { label: 'Cotizador Web', desc: 'Cotiza tu sitio en 2 minutos', href: '/cotizador', icon: '🧮' },
       ],
     },
     {
-      title: 'Marketing & Ads',
+      title: 'Marketing Digital',
       color: 'amber',
       items: [
         { label: 'Growth Marketing', desc: 'Google Ads + Meta Ads profesional', href: '/growth-marketing', icon: '📈' },
+        { label: 'Posicionamiento SEO', desc: 'Aparece en los primeros resultados', href: '/posicionamiento-web-seo', icon: '🔍' },
+        { label: 'Social Media', desc: 'Gestión de redes sociales', href: '/social-media-marketing', icon: '📱' },
         { label: 'LeadBoost Z', desc: 'Automatización de ventas con IA', href: '/leadboost-z', icon: '🤖' },
         { label: 'Consultoría Digital', desc: '30 min gratis de estrategia', href: '/consultoria-marketing-digital', icon: '💡' },
       ],
@@ -211,11 +215,25 @@ const columnsWithColors = megaMenu.columns.map((col) => ({
                 <p class="text-xs text-white/40">Sitios web que generan clientes</p>
               </div>
             </a>
-            <a href="/paquetes-para-emprendedores" class="flex items-center gap-3 py-2 px-4 rounded-xl hover:bg-white/10 transition-all">
-              <span class="text-lg">💼</span>
+            <a href="/tienda-en-linea-e-commerce" class="flex items-center gap-3 py-2 px-4 rounded-xl hover:bg-white/10 transition-all">
+              <span class="text-lg">🛒</span>
               <div>
-                <p class="text-sm font-semibold text-white">Paquetes para Emprendedores</p>
-                <p class="text-xs text-white/40">Planes accesibles para iniciar</p>
+                <p class="text-sm font-semibold text-white">Tienda en Línea</p>
+                <p class="text-xs text-white/40">E-commerce con WooCommerce o headless</p>
+              </div>
+            </a>
+            <a href="/branding-and-launch-kit" class="flex items-center gap-3 py-2 px-4 rounded-xl hover:bg-white/10 transition-all">
+              <span class="text-lg">🎨</span>
+              <div>
+                <p class="text-sm font-semibold text-white">Branding & Launch Kit</p>
+                <p class="text-xs text-white/40">Logo, identidad visual, manual de marca</p>
+              </div>
+            </a>
+            <a href="/administrador-de-contenidos" class="flex items-center gap-3 py-2 px-4 rounded-xl hover:bg-white/10 transition-all">
+              <span class="text-lg">📝</span>
+              <div>
+                <p class="text-sm font-semibold text-white">Administrador de Contenidos</p>
+                <p class="text-xs text-white/40">Gestión de contenido web + blog</p>
               </div>
             </a>
             <a href="/cotizador" class="flex items-center gap-3 py-2 px-4 rounded-xl hover:bg-white/10 transition-all">
@@ -226,14 +244,28 @@ const columnsWithColors = megaMenu.columns.map((col) => ({
               </div>
             </a>
           </div>
-          <!-- Marketing & Ads -->
+          <!-- Marketing Digital -->
           <div>
-            <p class="text-xs font-semibold uppercase tracking-widest text-amber-400 mb-2 px-4">Marketing & Ads</p>
+            <p class="text-xs font-semibold uppercase tracking-widest text-amber-400 mb-2 px-4">Marketing Digital</p>
             <a href="/growth-marketing" class="flex items-center gap-3 py-2 px-4 rounded-xl hover:bg-white/10 transition-all">
               <span class="text-lg">📈</span>
               <div>
                 <p class="text-sm font-semibold text-white">Growth Marketing</p>
                 <p class="text-xs text-white/40">Google Ads + Meta Ads profesional</p>
+              </div>
+            </a>
+            <a href="/posicionamiento-web-seo" class="flex items-center gap-3 py-2 px-4 rounded-xl hover:bg-white/10 transition-all">
+              <span class="text-lg">🔍</span>
+              <div>
+                <p class="text-sm font-semibold text-white">Posicionamiento SEO</p>
+                <p class="text-xs text-white/40">Aparece en los primeros resultados</p>
+              </div>
+            </a>
+            <a href="/social-media-marketing" class="flex items-center gap-3 py-2 px-4 rounded-xl hover:bg-white/10 transition-all">
+              <span class="text-lg">📱</span>
+              <div>
+                <p class="text-sm font-semibold text-white">Social Media</p>
+                <p class="text-xs text-white/40">Gestión de redes sociales</p>
               </div>
             </a>
             <a href="/leadboost-z" class="flex items-center gap-3 py-2 px-4 rounded-xl hover:bg-white/10 transition-all">

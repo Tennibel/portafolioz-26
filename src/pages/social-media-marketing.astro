@@ -1,0 +1,456 @@
+---
+/**
+ * social-media-marketing.astro - Landing page: Social Content System
+ *
+ * Secciones:
+ * 1. Hero
+ * 2. Problem (4 errors)
+ * 3. Services (4 areas)
+ * 4. Platforms (5)
+ * 5. Plans (3 cards)
+ * 6. Portfolio
+ * 7. FAQ (6 preguntas)
+ * 8. CTA Final
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+const errors = [
+  {
+    icon: '📅',
+    title: 'Publico cuando me acuerdo',
+    desc: 'Sin consistencia, el algoritmo te entierra. Si no publicas con frecuencia y estrategia, Instagram y Facebook reducen tu alcance hasta hacerte invisible.',
+    gradient: 'from-red-500 to-orange-500',
+  },
+  {
+    icon: '🎨',
+    title: 'Mis posts se ven bonitos pero nadie interactúa',
+    desc: 'El contenido relevante importa más que el bonito. De nada sirve un feed perfecto si no genera conversación, guardados ni compartidos.',
+    gradient: 'from-orange-500 to-amber-500',
+  },
+  {
+    icon: '👥',
+    title: 'Tengo muchos seguidores pero no vendo',
+    desc: 'Seguidores no es igual a clientes. Sin una estrategia de contenido orientada a conversión, tus seguidores solo son un número vanidoso.',
+    gradient: 'from-amber-500 to-yellow-500',
+  },
+  {
+    icon: '🤷',
+    title: 'Mi sobrino maneja las redes',
+    desc: '¿Tu sobrino entiende de algoritmos, métricas de engagement, copywriting persuasivo y estrategia de contenido? Tu marca merece profesionales.',
+    gradient: 'from-yellow-500 to-lime-500',
+  },
+];
+
+const services = [
+  {
+    icon: '🎯',
+    title: 'Estrategia de Contenido',
+    features: ['Auditoría de redes actuales', 'Pilares de contenido', 'Definición de tono y voz', 'Análisis de competencia', 'Hashtag research'],
+  },
+  {
+    icon: '✏️',
+    title: 'Creación de Contenido',
+    features: ['Diseño de posts profesionales', 'Copywriting persuasivo', 'Edición de video / reels', 'Plantillas de marca', 'Banco de contenido mensual'],
+  },
+  {
+    icon: '📆',
+    title: 'Calendario Editorial',
+    features: ['Calendario mensual planificado', 'Horarios óptimos de publicación', 'Fechas especiales y tendencias', 'Proceso de aprobación', 'Contenido reactivo'],
+  },
+  {
+    icon: '📊',
+    title: 'Reportes y Análisis',
+    features: ['Reporte mensual de métricas', 'Contenido top-performing', 'Recomendaciones de mejora', 'Benchmark vs competencia', 'Medición de ROI'],
+  },
+];
+
+const platforms = [
+  {
+    name: 'Instagram',
+    icon: '📸',
+    desc: 'Feed, Stories, Reels y carruseles diseñados para maximizar alcance y engagement con tu audiencia ideal.',
+    gradient: 'from-pink-500 to-purple-500',
+  },
+  {
+    name: 'Facebook',
+    icon: '👍',
+    desc: 'Publicaciones, eventos y gestión de comunidad para mantener activa tu presencia en la red social más grande del mundo.',
+    gradient: 'from-blue-500 to-blue-600',
+  },
+  {
+    name: 'LinkedIn',
+    icon: '💼',
+    desc: 'Contenido profesional y thought leadership para posicionar tu marca en el mundo B2B y atraer clientes corporativos.',
+    gradient: 'from-blue-600 to-cyan-500',
+  },
+  {
+    name: 'TikTok',
+    icon: '🎵',
+    desc: 'Videos cortos, tendencias y contenido viral para conectar con audiencias jóvenes y generar awareness masivo.',
+    gradient: 'from-purple-500 to-pink-500',
+  },
+  {
+    name: 'Google Business Profile',
+    icon: '📍',
+    desc: 'Publicaciones, reseñas y actualizaciones para mejorar tu visibilidad en búsquedas locales de Google Maps.',
+    gradient: 'from-green-500 to-emerald-500',
+  },
+];
+
+const planes = [
+  {
+    name: 'Visibilidad',
+    price: '$6,400',
+    period: '/mes',
+    desc: 'Presencia constante en redes sociales.',
+    accent: 'green',
+    popular: false,
+    features: [
+      '12 posts mensuales',
+      'Diseño + copywriting',
+      'Parrilla de contenido',
+      'Hashtag strategy',
+      'Reporte mensual',
+      'Soporte WhatsApp',
+    ],
+  },
+  {
+    name: 'Crecimiento',
+    price: '$8,900',
+    period: '/mes',
+    desc: 'Estrategia completa para crecer.',
+    accent: 'blue',
+    popular: true,
+    features: [
+      '16 posts mensuales',
+      'Reels + Stories',
+      'Estrategia personalizada',
+      'Community management',
+      'Calendario + aprobación',
+      'Reportes quincenales',
+      'Análisis de competencia',
+    ],
+  },
+  {
+    name: 'Brand Power',
+    price: '$13,400',
+    period: '/mes',
+    desc: 'Domina tu industria en redes.',
+    accent: 'purple',
+    popular: false,
+    features: [
+      'Contenido completo',
+      'Estrategia + optimización',
+      'Insights avanzado',
+      'Community management completo',
+      'Influencer research',
+      'UGC strategy',
+      'Reportes semanales',
+      'Consultor dedicado',
+    ],
+  },
+];
+
+const accentColors: Record<string, { border: string; check: string; badge: string; btn: string }> = {
+  green: { border: 'border-green-500/30', check: 'text-green-400', badge: 'bg-green-500/20 text-green-300', btn: 'border-green-500 text-green-400 hover:bg-green-500 hover:text-white' },
+  blue: { border: 'border-blue-500/30', check: 'text-blue-400', badge: 'bg-blue-500/20 text-blue-300', btn: 'border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white' },
+  purple: { border: 'border-purple-500/30', check: 'text-purple-400', badge: 'bg-purple-500/20 text-purple-300', btn: 'border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white' },
+};
+
+const plansWithColors = planes.map((plan) => ({
+  ...plan,
+  colors: accentColors[plan.accent],
+  cardClass: plan.popular
+    ? 'bg-gradient-to-br from-blue-600/20 via-violet-600/20 to-purple-600/20 text-white ring-2 ring-blue-400/50 shadow-2xl shadow-blue-500/20 scale-105 border border-blue-500/30'
+    : 'bg-dark-800/80 backdrop-blur-sm text-white border ' + accentColors[plan.accent].border,
+  btnClass: plan.popular
+    ? 'bg-gradient-to-r from-blue-500 to-violet-500 border-transparent text-white hover:opacity-90 shadow-lg shadow-blue-500/25'
+    : accentColors[plan.accent].btn,
+}));
+
+const portfolioCards = [
+  { gradient: 'from-purple-500 to-pink-500', label: 'Marca Lifestyle' },
+  { gradient: 'from-blue-500 to-cyan-500', label: 'Restaurante Gourmet' },
+  { gradient: 'from-amber-500 to-orange-500', label: 'Consultora Financiera' },
+  { gradient: 'from-green-500 to-emerald-500', label: 'Clínica Dental' },
+  { gradient: 'from-rose-500 to-red-500', label: 'E-commerce Moda' },
+  { gradient: 'from-violet-500 to-indigo-500', label: 'Startup Tech' },
+];
+
+const faqs = [
+  {
+    q: '¿Necesitan acceso a mis redes sociales?',
+    a: 'Sí, necesitamos acceso de administrador a tus cuentas de redes sociales para poder publicar, responder comentarios y analizar métricas. Usamos herramientas profesionales de gestión y tus credenciales están seguras.',
+  },
+  {
+    q: '¿Cómo funciona el proceso de aprobación de contenido?',
+    a: 'Te enviamos la parrilla de contenido con anticipación para tu revisión. Tienes 48 horas para aprobar o solicitar cambios. Una vez aprobado, nosotros nos encargamos de publicar en los horarios óptimos.',
+  },
+  {
+    q: '¿Los anuncios pagados están incluidos?',
+    a: 'No, la gestión de redes sociales orgánica y la pauta publicitaria son servicios separados. Sin embargo, podemos crear una estrategia integral que combine ambos. El presupuesto de ads se cotiza aparte según tus objetivos.',
+  },
+  {
+    q: '¿Necesito proporcionar fotos y videos?',
+    a: 'Idealmente sí, ya que el contenido auténtico de tu marca genera más conexión. Sin embargo, también trabajamos con bancos de imágenes profesionales, diseño gráfico y podemos coordinar sesiones de fotos/video si lo necesitas.',
+  },
+  {
+    q: '¿Puedo combinar la gestión de redes con otros servicios?',
+    a: 'Por supuesto. Muchos clientes combinan social media con diseño web, SEO o campañas de ads para una estrategia digital integral. Ofrecemos descuentos en paquetes combinados.',
+  },
+  {
+    q: '¿En cuánto tiempo veré resultados?',
+    a: 'Los primeros resultados en engagement y alcance se notan desde el primer mes. El crecimiento orgánico sostenido y la generación de leads suelen consolidarse entre el segundo y tercer mes de gestión consistente.',
+  },
+];
+---
+
+<Layout title="Social Content System: Convierte Seguidores en Clientes | Portafolio Z" description="Gestión profesional de redes sociales. Estrategia, contenido, calendario editorial. +60 marcas gestionadas. Desde $6,400/mes.">
+  <Navbar />
+
+  <!-- SECCION 1: Hero -->
+  <section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-violet-500 to-fuchsia-500"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-fuchsia-400/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-violet-400/20 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <nav class="flex justify-center items-center gap-2 text-sm text-white/60 mb-6">
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span class="text-white/60">Servicios</span>
+        <span>/</span>
+        <span class="text-white">Social Media</span>
+      </nav>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+        Social Content System: Convierte Seguidores en <span class="text-fuchsia-300">Clientes</span>
+      </h1>
+      <p class="text-xl text-white/80 max-w-3xl mx-auto mb-8">
+        Tus redes sociales son tu aparador digital. Pero publicar sin estrategia es como gritar en una fiesta donde nadie te escucha. Nuestro <strong class="text-white">Social Content System</strong> crea contenido que conecta, comunica y convierte.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <a href="/contacto" class="bg-white text-purple-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl">
+          Cotizar Gestión de Redes
+        </a>
+        <a href="#portafolio" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Ver Ejemplos
+        </a>
+      </div>
+      <div class="flex flex-wrap justify-center gap-6 text-white/70 text-sm">
+        <span class="flex items-center gap-2"><span class="text-fuchsia-300 font-bold">+60</span> marcas gestionadas</span>
+        <span class="hidden sm:block">|</span>
+        <span class="flex items-center gap-2"><span class="text-fuchsia-300 font-bold">+2M</span> de alcance mensual</span>
+        <span class="hidden sm:block">|</span>
+        <span class="flex items-center gap-2">Engagement <span class="text-fuchsia-300 font-bold">4.2%</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 2: Problem (4 errors) -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-red-500 tracking-wider uppercase mb-3">El problema</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
+          ¿Tus Redes Sociales No Generan <span class="gradient-text">Clientes</span>?
+        </h2>
+      </div>
+      <p class="text-gray-600 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Publicar una foto bonita no es social media marketing. Si tus redes no generan conversaciones, leads ni ventas, estás desperdiciando tu tiempo y el de tu audiencia.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {errors.map((e) => (
+          <div class="relative p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-xl transition-all group" data-animate>
+            <div class={`w-14 h-14 rounded-xl bg-gradient-to-br ${e.gradient} flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform`}>
+              {e.icon}
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">{e.title}</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">{e.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 3: Services (4 areas) -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-violet-500 to-fuchsia-500"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-fuchsia-500/10 rounded-full blur-3xl translate-y-1/2"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-fuchsia-300 tracking-wider uppercase mb-3">Nuestros servicios</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-white">
+          ¿Qué Incluye Nuestra Gestión de <span class="text-fuchsia-300">Redes Sociales</span>?
+        </h2>
+      </div>
+      <p class="text-white/70 text-center max-w-3xl mx-auto mb-16" data-animate>
+        No solo publicamos contenido bonito. Creamos una estrategia integral que abarca desde la planificación hasta el análisis de resultados para que cada post tenga un propósito claro.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {services.map((s) => (
+          <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-all duration-300" data-animate>
+            <div class="text-3xl mb-4">{s.icon}</div>
+            <h3 class="text-lg font-bold text-white mb-4">{s.title}</h3>
+            <ul class="space-y-2">
+              {s.features.map((f) => (
+                <li class="flex items-start gap-2 text-sm">
+                  <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-fuchsia-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <span class="text-white/80">{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 4: Platforms (5) -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-sm font-semibold text-accent-500 tracking-wider uppercase mb-3">Plataformas</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
+          Plataformas que <span class="gradient-text">Dominamos</span>
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        {platforms.map((p) => (
+          <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-xl transition-all text-center group" data-animate>
+            <div class={`w-14 h-14 mx-auto rounded-xl bg-gradient-to-br ${p.gradient} flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform`}>
+              {p.icon}
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">{p.name}</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 5: Plans (3 cards) -->
+  <section class="relative bg-dark-900 py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(147,51,234,0.15),transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(168,85,247,0.15),transparent_50%)]"></div>
+    <div class="absolute top-10 left-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-fuchsia-400 font-medium text-sm uppercase tracking-widest mb-3">Planes</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Planes de Social Media — Elige Tu <span class="gradient-text">Nivel</span>
+        </h2>
+      </div>
+      <p class="text-gray-400 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Todos los planes incluyen: diseño profesional, copywriting, calendario editorial, hashtags optimizados y reporte de métricas. Sin contratos de permanencia.
+      </p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate>
+        {plansWithColors.map((plan) => (
+          <div class={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${plan.cardClass}`}>
+            {plan.popular && (
+              <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span class="bg-gradient-to-r from-blue-500 to-violet-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">Más Popular</span>
+              </div>
+            )}
+            <h3 class="text-lg font-bold mb-1 text-white">{plan.name}</h3>
+            <p class="text-xs mb-5 text-gray-400">{plan.desc}</p>
+            <div class="mb-2">
+              <span class="text-3xl font-extrabold text-white">{plan.price}</span>
+              <span class="text-xs ml-1 text-gray-500">MXN + IVA {plan.period}</span>
+            </div>
+            <ul class="space-y-2.5 mb-6 mt-5">
+              {plan.features.map((f) => (
+                <li class="flex items-start gap-2.5 text-sm">
+                  <svg class={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.colors.check}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <span class="text-gray-300">{f}</span>
+                </li>
+              ))}
+            </ul>
+            <a href="/contacto" class={`w-full text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 block ${plan.btnClass}`}>
+              Comenzar Ahora
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 6: Portfolio -->
+  <section id="portafolio" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-sm font-semibold text-accent-500 tracking-wider uppercase mb-3">Portafolio</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
+          Contenido que Hemos <span class="gradient-text">Creado</span>
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {portfolioCards.map((card) => (
+          <div class={`relative bg-gradient-to-br ${card.gradient} rounded-2xl aspect-square flex items-end p-6 group overflow-hidden hover:shadow-xl transition-all`} data-animate>
+            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-all"></div>
+            <div class="relative z-10">
+              <p class="text-white font-bold text-lg">{card.label}</p>
+              <p class="text-white/70 text-sm">Social Media Management</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 7: FAQ -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-sm font-semibold text-accent-500 tracking-wider uppercase mb-3">FAQ</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre <span class="gradient-text">Social Media</span></h2>
+      </div>
+      <div class="space-y-4">
+        {faqs.map((faq, i) => (
+          <details class="bg-white rounded-xl border border-gray-200 overflow-hidden group" data-animate>
+            <summary class="w-full px-6 py-5 text-left flex justify-between items-center gap-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+              <span class="font-semibold text-gray-900">{faq.q}</span>
+              <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </summary>
+            <div class="px-6 pb-5">
+              <p class="text-gray-600 leading-relaxed">{faq.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 8: CTA Final -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-violet-500 to-fuchsia-500"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-fuchsia-400/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+        Tus redes sociales pueden ser tu mejor <span class="text-fuchsia-300">vendedor</span>
+      </h2>
+      <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+        Deja de publicar sin estrategia. Nuestro Social Content System convierte tus redes en una máquina de atracción de clientes que trabaja todos los días por tu marca.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+        <a href="/contacto" class="bg-white text-purple-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl">
+          Cotizar Gestión de Redes
+        </a>
+        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Hablar por WhatsApp
+        </a>
+      </div>
+      <p class="text-white/50 text-sm">+60 marcas gestionadas · Engagement promedio 4.2%</p>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>
