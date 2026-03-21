@@ -1,0 +1,430 @@
+---
+/**
+ * administrador-de-contenidos.astro - Landing page: Administrador de Contenidos
+ *
+ * Secciones:
+ * 1. Hero
+ * 2. ¿Para Quién Es? (signals)
+ * 3. Planes (3 cards)
+ * 4. ¿Cómo Empezar? (4 pasos)
+ * 5. FAQ (10 preguntas)
+ * 6. CTA Final
+ */
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+
+const signals = [
+  {
+    icon: '📅',
+    title: 'Tu sitio tiene información desactualizada',
+    desc: 'Precios viejos, horarios incorrectos o servicios que ya no ofreces siguen publicados.',
+  },
+  {
+    icon: '✍️',
+    title: 'Quieres publicar en blog pero no sabes cómo',
+    desc: 'Sabes que necesitas contenido pero no tienes tiempo ni conocimiento técnico.',
+  },
+  {
+    icon: '📞',
+    title: 'Cada cambio requiere contactar un desarrollador',
+    desc: 'Para cambiar un texto o una foto necesitas esperar días y pagar extra.',
+  },
+  {
+    icon: '🏃',
+    title: 'Tu competencia publica contenido constantemente',
+    desc: 'Mientras tú no publicas, tu competencia gana posiciones en Google.',
+  },
+  {
+    icon: '🔍',
+    title: 'Quieres aparecer en Google pero no tienes contenido fresco',
+    desc: 'Google premia los sitios que se actualizan frecuentemente con contenido relevante.',
+  },
+  {
+    icon: '🚀',
+    title: 'Tu equipo de marketing necesita autonomía',
+    desc: 'Tu equipo quiere publicar contenido sin depender del área de sistemas.',
+  },
+];
+
+const planes = [
+  {
+    name: 'Plan Básico',
+    price: '$2,800',
+    period: 'MXN/mes',
+    desc: 'Para negocios que necesitan mantener su sitio web actualizado sin complicaciones.',
+    accent: 'green',
+    popular: false,
+    features: [
+      'Actualización de textos, imágenes y contenido',
+      'Subir y bajar información',
+      'Hasta 8 actualizaciones mensuales',
+      'Cambios menores de contenido',
+      'Backup mensual',
+      'Monitoreo básico uptime',
+      'Soporte WhatsApp y email',
+      'Respuesta: 48 horas hábiles',
+    ],
+    examples: [
+      'Cambia el precio del servicio X',
+      'Sube estas 5 fotos nuevas',
+      'Actualiza el horario',
+      'Agrega este nuevo servicio',
+      'Quita el banner de la promoción',
+    ],
+    ideal: 'Negocios con sitio estático, cambios ocasionales',
+  },
+  {
+    name: 'Plan Gestión',
+    price: '$4,500',
+    period: 'MXN/mes',
+    desc: 'Para negocios que quieren un sitio vivo con contenido fresco y posicionamiento en Google.',
+    accent: 'blue',
+    popular: true,
+    features: [
+      'Todo del Básico más:',
+      'Actualizaciones ilimitadas',
+      '2 artículos blog SEO/mes (800-1200 palabras)',
+      'Investigación de temas y keywords',
+      'Optimización SEO on-page básica',
+      'Gestión de blog (categorías, tags, imágenes)',
+      'Google Business Profile (1 post/semana)',
+      'Reporte mensual Analytics + Search Console',
+      'Backup semanal',
+      'Soporte prioritario WhatsApp (12 hrs)',
+      'Llamada mensual 15 min',
+    ],
+    examples: [],
+    ideal: 'PyMEs, clínicas, despachos, restaurantes, hoteles',
+  },
+  {
+    name: 'Plan Estratégico',
+    price: '$7,500',
+    period: 'MXN/mes',
+    desc: 'Para empresas que quieren una estrategia de contenido completa que genere tráfico orgánico y leads.',
+    accent: 'purple',
+    popular: false,
+    features: [
+      'Todo del Gestión más:',
+      '4 artículos blog premium SEO/mes (1500-2500 palabras)',
+      'Estrategia de contenido mensual (calendario editorial)',
+      'Investigación keywords profesional',
+      'Optimización SEO on-page avanzada (schema, interlinking)',
+      'Creación de landing pages nuevas',
+      'Análisis métricas con recomendaciones',
+      'Reporte quincenal',
+      'Backup diario automático',
+      'Soporte premium (4 hrs)',
+      'Reunión quincenal 30 min',
+    ],
+    examples: [],
+    ideal: 'Empresas con blog activo, SEO agresivo, generación leads orgánicos',
+  },
+];
+
+const accentColors: Record<string, { border: string; check: string; badge: string; btn: string }> = {
+  green: { border: 'border-green-500/30', check: 'text-green-400', badge: 'bg-green-500/20 text-green-300', btn: 'border-green-500 text-green-400 hover:bg-green-500 hover:text-white' },
+  blue: { border: 'border-blue-500/30', check: 'text-blue-400', badge: 'bg-blue-500/20 text-blue-300', btn: 'border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white' },
+  purple: { border: 'border-purple-500/30', check: 'text-purple-400', badge: 'bg-purple-500/20 text-purple-300', btn: 'border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white' },
+};
+
+const plansWithColors = planes.map((plan) => ({
+  ...plan,
+  colors: accentColors[plan.accent],
+  cardClass: plan.popular
+    ? 'bg-gradient-to-br from-blue-600/20 via-indigo-600/20 to-purple-600/20 text-white ring-2 ring-blue-400/50 shadow-2xl shadow-blue-500/20 scale-105 border border-blue-500/30'
+    : 'bg-dark-800/80 backdrop-blur-sm text-white border ' + accentColors[plan.accent].border,
+  btnClass: plan.popular
+    ? 'bg-gradient-to-r from-blue-500 to-indigo-500 border-transparent text-white hover:opacity-90 shadow-lg shadow-blue-500/25'
+    : accentColors[plan.accent].btn,
+}));
+
+const steps = [
+  {
+    num: '01',
+    title: 'Acceso',
+    desc: 'Nos das acceso a tu sitio web o CMS para comenzar a trabajar de inmediato.',
+    icon: '🔑',
+  },
+  {
+    num: '02',
+    title: 'Prioridades',
+    desc: 'Definimos juntos las prioridades del primer mes: qué actualizar, qué contenido crear.',
+    icon: '🎯',
+  },
+  {
+    num: '03',
+    title: 'Calendario',
+    desc: 'Cada mes recibes tu calendario de actualizaciones y publicaciones programadas.',
+    icon: '📅',
+  },
+  {
+    num: '04',
+    title: 'Ejecución',
+    desc: 'Publicamos, medimos resultados y optimizamos continuamente para mejores resultados.',
+    icon: '📈',
+  },
+];
+
+const faqs = [
+  {
+    q: '¿Necesito saber programar?',
+    a: 'No. WordPress es visual y fácil de usar. Con nuestros planes de gestión, nosotros nos encargamos de todo. Tú solo apruebas el contenido.',
+  },
+  {
+    q: '¿Pueden tener acceso múltiples usuarios?',
+    a: 'Sí, WordPress soporta roles de usuario (administrador, editor, autor, colaborador). Cada miembro de tu equipo puede tener su propio acceso con los permisos adecuados.',
+  },
+  {
+    q: '¿Qué pasa si rompo algo en el panel?',
+    a: 'El frontend está separado de WordPress, así que los cambios en el panel no afectan directamente la página pública. Además, contamos con backups automáticos para restaurar cualquier cambio no deseado.',
+  },
+  {
+    q: '¿Pueden migrar mi blog de WordPress tradicional?',
+    a: 'Sí, migramos todo tu contenido (posts, categorías, imágenes, autores) en 3-5 días hábiles sin pérdida de información.',
+  },
+  {
+    q: '¿Cuánto cuesta el hosting?',
+    a: 'El hosting está incluido en la renovación anual ($3,860/año). El servicio de gestión de contenido es adicional y se cobra mensualmente.',
+  },
+  {
+    q: '¿Puedo cambiar de plan?',
+    a: 'Sí, puedes subir o bajar de plan con 15 días de aviso previo. Sin penalizaciones ni cargos adicionales por el cambio.',
+  },
+  {
+    q: '¿Qué tipo de actualizaciones incluye el Plan Básico?',
+    a: 'Cambios de texto, imágenes, precios, horarios, agregar o quitar servicios, actualizar banners promocionales, subir fotos nuevas y cualquier cambio menor de contenido.',
+  },
+  {
+    q: '¿Los artículos de blog los escriben ustedes?',
+    a: 'Sí. Nuestro equipo de redacción crea los artículos optimizados para SEO. Te enviamos el borrador para tu aprobación antes de publicar.',
+  },
+  {
+    q: '¿Cuánto tarda un cambio en estar publicado?',
+    a: 'Depende de tu plan: Plan Básico 48 horas hábiles, Plan Gestión 12 horas, Plan Estratégico 4 horas.',
+  },
+  {
+    q: '¿Puedo cancelar el servicio?',
+    a: 'Sí, el servicio es mensual. Puedes cancelar con 15 días de anticipación sin penalización. Tu sitio web sigue funcionando, solo dejas de recibir el servicio de gestión.',
+  },
+];
+---
+
+<Layout title="Administra el Contenido de Tu Sitio Web sin Código | Portafolio Z" description="Gestión profesional de contenido web. Actualizaciones, blog SEO, reportes. WordPress + Astro. Desde $2,800/mes.">
+  <Navbar />
+
+  <!-- SECCION 1: Hero -->
+  <section class="relative pt-32 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-indigo-500"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-indigo-400/20 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <nav class="flex justify-center items-center gap-2 text-sm text-white/60 mb-6">
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span class="text-white/80">Servicios</span>
+        <span>/</span>
+        <span class="text-white">CMS</span>
+      </nav>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+        Administra el Contenido de Tu Sitio Web <span class="text-blue-300">sin Escribir una Sola Línea de Código</span>
+      </h1>
+      <p class="text-xl text-white/80 max-w-3xl mx-auto mb-8">
+        Con nuestro servicio de Administrador de Contenidos, tú o tu equipo pueden crear, editar y publicar contenido desde un panel visual intuitivo. O déjalo en nuestras manos: nosotros actualizamos tu sitio por ti. <strong class="text-white">WordPress como editor + Astro como frontend = velocidad + control.</strong>
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <a href="#planes" class="bg-white text-indigo-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl">
+          Elegir Mi Plan
+        </a>
+        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Hablar con un Asesor
+        </a>
+      </div>
+      <div class="flex flex-wrap justify-center gap-6 text-white/70 text-sm">
+        <span class="flex items-center gap-2"><span class="text-blue-300 font-bold">+200</span> sitios gestionados</span>
+        <span class="hidden sm:block">·</span>
+        <span class="flex items-center gap-2">Respuesta en <span class="text-blue-300 font-bold">24 hrs</span></span>
+        <span class="hidden sm:block">·</span>
+        <span class="flex items-center gap-2">Desde <span class="text-blue-300 font-bold">$2,800/mes</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 2: ¿Para Quién Es? -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-sm font-semibold text-blue-500 tracking-wider uppercase mb-3">Señales claras</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
+          ¿Necesitas Mantener Tu Sitio Web <span class="gradient-text">Actualizado</span>?
+        </h2>
+      </div>
+      <p class="text-gray-600 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Si tu sitio web tiene información que cambia (precios, servicios, fotos, horarios, menú, equipo, blog), necesitas un sistema para mantenerlo al día.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {signals.map((s) => (
+          <div class="relative p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-xl transition-all group" data-animate>
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
+              {s.icon}
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">{s.title}</h3>
+            <p class="text-gray-600 leading-relaxed">{s.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div class="mt-12 text-center" data-animate>
+        <p class="text-gray-500 text-sm">
+          <strong class="text-gray-700">Ideal para:</strong> Negocios con sitio web activo, empresas con blog, clínicas, restaurantes, despachos, escuelas, hoteles, e-commerce.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 3: Planes -->
+  <section id="planes" class="relative bg-dark-900 py-24 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(59,130,246,0.15),transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(99,102,241,0.15),transparent_50%)]"></div>
+    <div class="absolute top-10 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-1/4 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6" data-animate>
+        <p class="text-blue-400 font-medium text-sm uppercase tracking-widest mb-3">Planes de Gestión</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Planes de Administración de Contenido — Elige Tu <span class="gradient-text">Nivel</span>
+        </h2>
+      </div>
+      <p class="text-gray-400 text-center max-w-3xl mx-auto mb-16" data-animate>
+        Todos los planes incluyen acceso a WordPress como CMS, soporte dedicado y backups de seguridad. Sin contratos de permanencia.
+      </p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" data-animate>
+        {plansWithColors.map((plan) => (
+          <div class={`relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-2 ${plan.cardClass}`}>
+            {plan.popular && (
+              <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">Más Popular</span>
+              </div>
+            )}
+            <h3 class="text-lg font-bold mb-1 text-white">{plan.name}</h3>
+            <p class="text-xs mb-5 text-gray-400">{plan.desc}</p>
+            <div class="mb-5">
+              <span class="text-3xl font-extrabold text-white">{plan.price}</span>
+              <span class="text-xs ml-1 text-gray-500">{plan.period}</span>
+            </div>
+            <ul class="space-y-2.5 mb-6">
+              {plan.features.map((f) => (
+                <li class="flex items-start gap-2.5 text-sm">
+                  <svg class={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.colors.check}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <span class="text-gray-300">{f}</span>
+                </li>
+              ))}
+            </ul>
+            {plan.examples.length > 0 && (
+              <div class="mb-6 p-4 rounded-xl bg-white/5 border border-white/10">
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Ejemplos:</p>
+                <ul class="space-y-1.5">
+                  {plan.examples.map((ex) => (
+                    <li class="text-xs text-gray-400 flex items-start gap-2">
+                      <span class="text-green-400 mt-0.5">→</span>
+                      <span>"{ex}"</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <p class="text-xs text-gray-500 mb-5">
+              <strong class="text-gray-400">Ideal para:</strong> {plan.ideal}
+            </p>
+            <a href="#planes" class={`block w-full text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 ${plan.btnClass}`}>
+              Elegir {plan.name}
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 4: ¿Cómo Empezar? -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-sm font-semibold text-accent-500 tracking-wider uppercase mb-3">Proceso</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
+          ¿Cómo Funciona la <span class="gradient-text">Gestión de Contenido</span>?
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {steps.map((step) => (
+          <div class="relative text-center group" data-animate>
+            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+              {step.icon}
+            </div>
+            <div class="text-xs font-bold text-blue-500 uppercase tracking-wider mb-2">{step.num}</div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">{step.title}</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">{step.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div class="mt-12 text-center" data-animate>
+        <div class="inline-block bg-blue-50 border border-blue-200 rounded-xl px-6 py-4">
+          <p class="text-gray-700 text-sm">
+            ¿No tienes un sitio web con CMS? Podemos crear uno con nuestro <a href="/web-sales-machine" class="text-blue-600 font-semibold hover:underline">Plan Headless Premium ($10,600 MXN pago único)</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 5: FAQ -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16" data-animate>
+        <p class="text-sm font-semibold text-accent-500 tracking-wider uppercase mb-3">FAQ</p>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">Preguntas Frecuentes sobre <span class="gradient-text">Gestión de Contenido</span></h2>
+      </div>
+      <div class="space-y-4">
+        {faqs.map((faq) => (
+          <details class="bg-white rounded-xl border border-gray-200 overflow-hidden group" data-animate>
+            <summary class="w-full px-6 py-5 text-left flex justify-between items-center gap-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+              <span class="font-semibold text-gray-900">{faq.q}</span>
+              <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </summary>
+            <div class="px-6 pb-5">
+              <p class="text-gray-600 leading-relaxed">{faq.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCION 6: CTA Final -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-indigo-500"></div>
+    <div class="absolute inset-0 bg-black/10"></div>
+    <div class="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
+        Deja de Depender de un Programador para <span class="text-blue-300">Cambiar un Texto</span>
+      </h2>
+      <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+        Con nuestros planes de gestión de contenido, tu sitio web siempre está actualizado, optimizado y generando resultados.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+        <a href="/contacto" class="bg-white text-indigo-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl">
+          Elegir Mi Plan de Gestión
+        </a>
+        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+          Hablar por WhatsApp
+        </a>
+      </div>
+      <p class="text-white/50 text-sm">Sin contratos · Cancela cuando quieras · Respuesta en 24 hrs</p>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+</Layout>
