@@ -3,6 +3,8 @@
  * blog/[slug].astro - Pagina individual de articulo del blog
  * Consume el WP REST API para obtener el post por slug
  */
+export const prerender = false;
+
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
