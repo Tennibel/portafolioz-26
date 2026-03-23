@@ -1,0 +1,43 @@
+# WordPress Headless para blog.portafolioz.com
+# Se conecta a la misma red proxy-net que Astro
+services:
+  wordpress:
+    image: wordpress:6.7-php8.3-apache
+    container_name: wp-blog
+    restart: unless-stopped
+    volumes:
+      - wp_data:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: wp-db
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: ${WP_DB_PASSWORD}
+      WORDPRESS_DB_NAME: wp_blog
+    depends_on:
+      - wp-db
+    networks:
+      - proxy-net
+      - wp-internal
+
+  wp-db:
+    image: mariadb:11
+    container_name: wp-db
+    restart: unless-stopped
+    volumes:
+      - wp_db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${WP_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: wp_blog
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: ${WP_DB_PASSWORD}
+    networks:
+      - wp-internal
+
+volumes:
+  wp_data:
+  wp_db_data:
+
+networks:
+  proxy-net:
+    external: true
+  wp-internal:
+    driver: bridge

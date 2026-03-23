@@ -1,0 +1,203 @@
+---
+/**
+ * blog/[slug].astro - Pagina individual de articulo del blog
+ * Consume el WP REST API para obtener el post por slug
+ */
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import WhatsAppWidget from '../../components/WhatsAppWidget.astro';
+
+interface WPPost {
+  id: number;
+  title: { rendered: string };
+  excerpt: { rendered: string };
+  content: { rendered: string };
+  date: string;
+  slug: string;
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{ source_url: string; alt_text: string }>;
+    'wp:term'?: Array<Array<{ name: string }>>;
+    author?: Array<{ name: string; avatar_urls?: Record<string, string> }>;
+  };
+}
+
+const { slug } = Astro.params;
+const WP_API_URL = import.meta.env.WP_API_URL || '';
+
+let post: {
+  title: string;
+  content: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  image: string;
+  imageAlt: string;
+  author: string;
+} | null = null;
+
+if (WP_API_URL) {
+  try {
+    const res = await fetch(`${WP_API_URL}/wp-json/wp/v2/posts?slug=${slug}&_embed`, {
+      headers: { 'Accept': 'application/json' },
+    });
+    if (res.ok) {
+      const wpPosts: WPPost[] = await res.json();
+      if (wpPosts.length > 0) {
+        const p = wpPosts[0];
+        post = {
+          title: p.title.rendered.replace(/<[^>]*>/g, ''),
+          content: p.content.rendered,
+          excerpt: p.excerpt.rendered.replace(/<[^>]*>/g, '').trim(),
+          category: p._embedded?.['wp:term']?.[0]?.[0]?.name || 'Blog',
+          date: new Date(p.date).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' }),
+          image: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+          imageAlt: p._embedded?.['wp:featuredmedia']?.[0]?.alt_text || '',
+          author: p._embedded?.author?.[0]?.name || 'Portafolio Z',
+        };
+      }
+    }
+  } catch (e) {
+    // Error silencioso
+  }
+}
+
+if (!post) {
+  return Astro.redirect('/blog');
+}
+
+const gradients: Record<string, string> = {
+  'SEO': 'from-emerald-500 to-cyan-500',
+  'Marketing': 'from-orange-500 to-amber-500',
+  'Ventas': 'from-pink-500 to-rose-500',
+  'Sitio Web': 'from-indigo-500 to-violet-500',
+  'Wordpress': 'from-blue-500 to-indigo-500',
+  'Estrategias': 'from-purple-500 to-pink-500',
+  'Branding': 'from-amber-500 to-orange-500',
+};
+const gradient = gradients[post.category] || 'from-primary-500 to-accent-500';
+---
+
+<Layout title={`${post.title} | Blog Portafolio Z`} description={post.excerpt}>
+  <Navbar />
+
+  <!-- Hero del articulo -->
+  <section class="relative pt-32 pb-16 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-dark-900 via-purple-950/40 to-dark-900"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.15),transparent_60%)]"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex gap-2 text-sm text-white/60 mb-6" data-animate>
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <a href="/blog" class="hover:text-white transition-colors">Blog</a>
+        <span>/</span>
+        <span class="text-white line-clamp-1">{post.title}</span>
+      </nav>
+
+      <div class="flex items-center gap-3 mb-5" data-animate>
+        <span class={`bg-gradient-to-r ${gradient} text-white text-xs font-bold px-3 py-1 rounded-full`}>
+          {post.category}
+        </span>
+        <time class="text-white/40 text-sm">{post.date}</time>
+        <span class="text-white/20">·</span>
+        <span class="text-white/40 text-sm">{post.author}</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight" data-animate>
+        {post.title}
+      </h1>
+      <p class="text-xl text-white/60 leading-relaxed" data-animate>{post.excerpt}</p>
+    </div>
+  </section>
+
+  <!-- Imagen destacada -->
+  {post.image && (
+    <section class="bg-dark-900 pb-12">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8" data-animate>
+        <div class="rounded-2xl overflow-hidden border border-white/10">
+          <img src={post.image} alt={post.imageAlt || post.title} class="w-full h-auto object-cover" loading="eager" />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Contenido del articulo -->
+  <section class="bg-dark-900 pb-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <article class="prose prose-invert prose-lg max-w-none
+        prose-headings:font-bold prose-headings:text-white
+        prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
+        prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+        prose-p:text-white/70 prose-p:leading-relaxed prose-p:mb-6
+        prose-a:text-cyan-400 prose-a:no-underline hover:prose-a:text-cyan-300
+        prose-strong:text-white prose-strong:font-semibold
+        prose-ul:text-white/70 prose-ol:text-white/70
+        prose-li:mb-2
+        prose-img:rounded-xl prose-img:border prose-img:border-white/10
+        prose-blockquote:border-cyan-500 prose-blockquote:text-white/60
+        " data-animate set:html={post.content} />
+
+      <!-- Navegacion -->
+      <div class="mt-12 pt-8 border-t border-white/10 flex items-center justify-between">
+        <a href="/blog" class="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors">
+          <svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+          Volver al blog
+        </a>
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent(`Hola, vi el artículo *${post.title}* en su blog y me gustaría más información. ¿Me pueden asesorar?`)}`}
+          target="_blank" rel="noopener"
+          class="wa-lead inline-flex items-center gap-2 gradient-bg text-white text-sm font-semibold px-5 py-2 rounded-full hover:opacity-90 transition-all"
+          data-plan={post.title} data-price="" data-category="Blog">
+          ¿Necesitas ayuda?
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-primary-600 via-accent-600 to-pink-600"></div>
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center" data-animate>
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">¿Listo para transformar tu presencia digital?</h2>
+      <p class="text-white/80 text-lg mb-8">Aplica lo que aprendes en el blog o déjanos hacerlo por ti.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, vi su *Blog* y me gustaría cotizar un servicio. ¿Me pueden asesorar?')}`}
+          target="_blank" rel="noopener"
+          class="wa-lead bg-white text-primary-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl"
+          data-plan="Solicitar Cotización" data-price="" data-category="Blog">
+          Solicitar Cotización
+        </a>
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, quiero información sobre sus servicios.')}`}
+          target="_blank" rel="noopener"
+          class="wa-lead border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all"
+          data-plan="WhatsApp Blog" data-price="" data-category="Blog">
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+  <WhatsAppWidget />
+
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      document.querySelectorAll('.wa-lead').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const el = btn as HTMLElement;
+          if (typeof gtag === 'function') {
+            gtag('event', 'generate_lead', {
+              event_category: 'WhatsApp',
+              plan_name: el.dataset.plan || '',
+              plan_price: el.dataset.price || '',
+              category: el.dataset.category || '',
+              source_page: 'blog-post',
+            });
+          }
+        });
+      });
+    });
+  </script>
+</Layout>
