@@ -33,7 +33,7 @@ const categories = [
     icon: '📈',
     name: 'Growth Marketing',
     desc: 'Gestión profesional de Google Ads y Meta Ads. Campañas que generan clientes, no likes. Dashboard en tiempo real.',
-    price: '3 planes desde $4,500/mes',
+    price: '3 planes desde $6,400/mes',
     link: '/growth-marketing',
     plans: 3,
     gradient: 'from-orange-500 to-amber-500',
@@ -80,9 +80,9 @@ const allPlans = [
     check: 'text-orange-400',
     badge: 'bg-orange-500/20 text-orange-300',
     plans: [
-      { name: 'Google Ads', price: '$4,500', unit: '/mes', highlight: 'Aparece cuando te buscan', popular: false },
-      { name: 'Meta Ads', price: '$4,500', unit: '/mes', highlight: 'Facebook + Instagram Ads', popular: false },
-      { name: 'Paquete Integral', price: '$7,500', unit: '/mes', highlight: 'Google + Meta + Dashboard', popular: true, tag: 'RECOMENDADO' },
+      { name: 'Campaña Única', price: '$6,400', unit: '/mes', highlight: 'Google Ads o Meta Ads', popular: false },
+      { name: 'Paquete Dual', price: '$9,800', unit: '/mes', highlight: 'Google + Meta Ads', popular: true, tag: 'RECOMENDADO' },
+      { name: 'Performance Total', price: '$12,800', unit: '/mes', highlight: 'Google + Meta + Dashboard', popular: false },
     ],
   },
   {
@@ -104,8 +104,8 @@ const combos = [
   {
     name: 'Web + Ads',
     desc: 'Sitio web corporativo + Campaña Google Ads',
-    price: '$10,400/mes (primer mes)',
-    savings: 'Ahorra $500',
+    price: '$10,880 (primer mes)',
+    savings: 'Ahorra $1,920 (15% off)',
     gradient: 'from-indigo-500 via-violet-500 to-orange-500',
     border: 'border-violet-500/30',
     ring: 'ring-violet-400/30',
@@ -113,8 +113,8 @@ const combos = [
   {
     name: 'Web + LeadBoost',
     desc: 'Sitio web SEO + LeadBoost Starter',
-    price: '$15,300 (primer mes)',
-    savings: 'Ahorra $500',
+    price: '$14,220 (primer mes)',
+    savings: 'Ahorra $1,580 (10% off)',
     gradient: 'from-indigo-500 via-cyan-500 to-emerald-500',
     border: 'border-cyan-500/30',
     ring: 'ring-cyan-400/30',
@@ -155,7 +155,7 @@ const benefits = [
 ];
 ---
 
-<Layout title="Paquetes Digitales | Web + Marketing + Automatización | Portafolio Z" description="Compara todos los paquetes digitales de Portafolio Z: diseño web desde $3,800, marketing desde $4,500/mes, automatización desde $6,900/mes.">
+<Layout title="Paquetes Digitales | Web + Marketing + Automatización | Portafolio Z" description="Compara todos los paquetes digitales de Portafolio Z: diseño web desde $3,800, marketing desde $6,400/mes, automatización desde $6,900/mes.">
   <Navbar />
 
   <!-- SECCION 1: Hero Espectacular -->
@@ -309,7 +309,10 @@ const benefits = [
                   <span class="text-2xl font-extrabold text-white">{plan.price}</span>
                   <span class="text-xs ml-1 text-gray-500">{plan.unit} + IVA</span>
                 </div>
-                <a href="/contacto" class={`block text-center font-semibold py-2.5 px-4 rounded-full transition-all text-sm border-2 ${
+                <a href={`https://wa.me/5215564721547?text=${encodeURIComponent(`Hola, me interesa el plan *${plan.name}* (${plan.price} ${plan.unit}) de ${group.category}. ¿Me pueden dar más información?`)}`}
+                  target="_blank" rel="noopener"
+                  data-plan={plan.name} data-price={plan.price} data-category={group.category}
+                  class={`wa-lead block text-center font-semibold py-2.5 px-4 rounded-full transition-all text-sm border-2 ${
                   plan.popular
                     ? `bg-gradient-to-r ${group.gradient} border-transparent text-white hover:opacity-90 shadow-lg`
                     : `border-${group.color}-500/50 text-${group.color}-400 hover:bg-${group.color}-500 hover:text-white`
@@ -372,7 +375,10 @@ const benefits = [
                 </span>
                 {!combo.featured && <span class="text-xs ml-1 text-gray-500">+ IVA</span>}
               </div>
-              <a href="/contacto" class={`block text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 ${
+              <a href={`https://wa.me/5215564721547?text=${encodeURIComponent(`Hola, me interesa el combo *${combo.name}* (${combo.price}). ${combo.desc}. ¿Me pueden dar más información?`)}`}
+                target="_blank" rel="noopener"
+                data-plan={combo.name} data-price={combo.price} data-category="Combo"
+                class={`wa-lead block text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 ${
                 combo.featured
                   ? 'bg-gradient-to-r from-amber-400 to-orange-500 border-transparent text-white hover:opacity-90 shadow-lg shadow-amber-500/25'
                   : `border-white/20 text-white hover:bg-white/10`
@@ -385,7 +391,10 @@ const benefits = [
       </div>
 
       <div class="text-center mt-12" data-animate>
-        <a href="/contacto" class="inline-flex items-center gap-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white font-bold px-10 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105 shadow-xl shadow-amber-500/25">
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, me interesa un *Paquete Personalizado* combinando servicios. ¿Me pueden asesorar?')}`}
+          target="_blank" rel="noopener"
+          data-plan="Paquete Personalizado" data-price="personalizado" data-category="Combo"
+          class="wa-lead inline-flex items-center gap-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white font-bold px-10 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105 shadow-xl shadow-amber-500/25">
           Cotizar Paquete Personalizado
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
         </a>
@@ -440,10 +449,16 @@ const benefits = [
         Elige un servicio o combínalos todos. Estamos aquí para ayudarte a crecer.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-        <a href="/contacto" class="bg-white text-indigo-600 font-bold px-10 py-5 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-2xl shadow-black/20">
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, vi sus Paquetes Digitales y me gustaría cotizar. ¿Me pueden asesorar?')}`}
+          target="_blank" rel="noopener"
+          data-plan="CTA Paquetes Digitales" data-price="general" data-category="CTA"
+          class="wa-lead bg-white text-indigo-600 font-bold px-10 py-5 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-2xl shadow-black/20">
           Cotizar Ahora
         </a>
-        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white/40 text-white font-semibold px-10 py-5 rounded-full text-lg hover:bg-white/10 transition-all backdrop-blur-sm">
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, quiero información sobre sus Paquetes Digitales.')}`}
+          target="_blank" rel="noopener"
+          data-plan="WhatsApp Paquetes Digitales" data-price="general" data-category="CTA"
+          class="wa-lead border-2 border-white/40 text-white font-semibold px-10 py-5 rounded-full text-lg hover:bg-white/10 transition-all backdrop-blur-sm">
           WhatsApp
         </a>
       </div>
@@ -455,6 +470,26 @@ const benefits = [
 
   <Footer />
   <WhatsAppWidget />
+
+  <!-- GA4: tracking de clics en botones de WhatsApp -->
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      document.querySelectorAll('.wa-lead').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const el = btn as HTMLElement;
+          if (typeof gtag === 'function') {
+            gtag('event', 'generate_lead', {
+              event_category: 'WhatsApp',
+              plan_name: el.dataset.plan || '',
+              plan_price: el.dataset.price || '',
+              category: el.dataset.category || '',
+              source_page: 'paquetes-digitales',
+            });
+          }
+        });
+      });
+    });
+  </script>
 </Layout>
 
 <style>

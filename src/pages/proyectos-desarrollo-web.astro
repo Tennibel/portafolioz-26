@@ -197,7 +197,7 @@ const categoriaLabels: Record<string, string> = {
         <a href="/consultoria-marketing-digital" class="bg-white text-purple-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl">
           Consultoria Gratuita
         </a>
-        <a href="/contacto" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+        <a href="https://wa.me/5215564721547?text=Hola%2C%20vi%20su%20*portafolio%20de%20proyectos*%20y%20me%20gustar%C3%ADa%20cotizar%20mi%20sitio%20web.%20%C2%BFMe%20pueden%20asesorar%3F" target="_blank" rel="noopener" class="wa-lead border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all" data-plan="Contacto Proyectos" data-price="" data-category="Proyectos">
           Contacto
         </a>
       </div>
@@ -206,6 +206,25 @@ const categoriaLabels: Record<string, string> = {
 
   <Footer />
   <WhatsAppWidget />
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.wa-lead').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const el = btn as HTMLElement;
+        if (typeof gtag === 'function') {
+          gtag('event', 'generate_lead', {
+            event_category: 'WhatsApp',
+            plan_name: el.dataset.plan || '',
+            plan_price: el.dataset.price || '',
+            category: el.dataset.category || '',
+            source_page: 'proyectos-desarrollo-web',
+          });
+        }
+      });
+    });
+  });
+</script>
 </Layout>
 
 <style>

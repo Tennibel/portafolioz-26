@@ -170,10 +170,10 @@ const plansWithColors = planes.map((plan) => ({
             Un sitio web que muestra tu menu, toma reservaciones y aparece cuando alguien busca <strong class="text-white">"donde comer en [tu zona]"</strong>.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 mb-8">
-            <button data-open-cotizador class="bg-white text-red-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl cursor-pointer">
+            <a href="https://wa.me/5215564721547?text=Hola%2C%20me%20interesa%20un%20sitio%20web%20para%20mi%20*Restaurante*.%20%C2%BFMe%20pueden%20dar%20m%C3%A1s%20informaci%C3%B3n%3F" target="_blank" rel="noopener" class="wa-lead bg-white text-red-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl" data-plan="General" data-price="Desde $3,800" data-category="Sector Restaurantes">
               Cotiza Tu Sitio Web Gratis
-            </button>
-            <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all text-center">
+            </a>
+            <a href="https://wa.me/5215564721547?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20sitios%20web%20para%20*Restaurantes*." target="_blank" rel="noopener" class="wa-lead border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all text-center" data-plan="General" data-price="Desde $3,800" data-category="Sector Restaurantes">
               Hablar por WhatsApp
             </a>
           </div>
@@ -370,9 +370,9 @@ const plansWithColors = planes.map((plan) => ({
                 </li>
               ))}
             </ul>
-            <button data-open-cotizador class={`w-full text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 cursor-pointer ${plan.btnClass}`}>
+            <a href={`https://wa.me/5215564721547?text=Hola%2C%20me%20interesa%20el%20plan%20*${encodeURIComponent(plan.name)}*%20(${encodeURIComponent(plan.price)})%20para%20Restaurantes.%20%C2%BFMe%20pueden%20dar%20m%C3%A1s%20informaci%C3%B3n%3F`} target="_blank" rel="noopener" class={`wa-lead w-full text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 ${plan.btnClass}`} data-plan={plan.name} data-price={plan.price} data-category="Sector Restaurantes">
               Cotizar Ahora
-            </button>
+            </a>
           </div>
         ))}
       </div>
@@ -393,10 +393,10 @@ const plansWithColors = planes.map((plan) => ({
         Mientras tu competencia solo publica stories, tu podrias tener un sitio web que aparece en Google, muestra tu menu y toma reservaciones en automatico. Desde $3,800 MXN.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6" data-animate>
-        <button data-open-cotizador class="bg-white text-red-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl cursor-pointer">
+        <a href="https://wa.me/5215564721547?text=Hola%2C%20vi%20su%20servicio%20de%20*sitios%20web%20para%20Restaurantes*%20y%20me%20gustar%C3%ADa%20cotizar.%20%C2%BFMe%20pueden%20asesorar%3F" target="_blank" rel="noopener" class="wa-lead bg-white text-red-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl" data-plan="CTA Final" data-price="Desde $3,800" data-category="Sector Restaurantes">
           Cotiza Tu Sitio Web Ahora
-        </button>
-        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+        </a>
+        <a href="https://wa.me/5215564721547?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20sitios%20web%20para%20*Restaurantes*." target="_blank" rel="noopener" class="wa-lead border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all" data-plan="CTA Final" data-price="Desde $3,800" data-category="Sector Restaurantes">
           Hablar por WhatsApp
         </a>
       </div>
@@ -406,4 +406,23 @@ const plansWithColors = planes.map((plan) => ({
 
   <Footer />
   <WhatsAppWidget />
+
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      document.querySelectorAll('.wa-lead').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const el = btn as HTMLElement;
+          if (typeof gtag === 'function') {
+            gtag('event', 'generate_lead', {
+              event_category: 'WhatsApp',
+              plan_name: el.dataset.plan || '',
+              plan_price: el.dataset.price || '',
+              category: el.dataset.category || '',
+              source_page: 'sector-restaurantes',
+            });
+          }
+        });
+      });
+    });
+  </script>
 </Layout>

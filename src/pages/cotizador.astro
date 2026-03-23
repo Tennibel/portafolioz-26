@@ -72,7 +72,7 @@ import WhatsAppWidget from '../components/WhatsAppWidget.astro';
           class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white text-gray-900 font-semibold hover:bg-gray-100 transition-colors">
           Consultoria Gratuita
         </a>
-        <a href="/contacto" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border-2 border-white text-white font-semibold hover:bg-white/10 transition-colors">
+        <a href="https://wa.me/5215564721547?text=Hola%2C%20estuve%20usando%20su%20*Cotizador*%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n.%20%C2%BFMe%20pueden%20asesorar%3F" target="_blank" rel="noopener" class="wa-lead inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border-2 border-white text-white font-semibold hover:bg-white/10 transition-colors" data-plan="Contacto Cotizador" data-price="" data-category="Cotizador">
           Formulario de contacto
         </a>
       </div>
@@ -81,4 +81,23 @@ import WhatsAppWidget from '../components/WhatsAppWidget.astro';
 
   <Footer />
   <WhatsAppWidget />
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.wa-lead').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const el = btn as HTMLElement;
+        if (typeof gtag === 'function') {
+          gtag('event', 'generate_lead', {
+            event_category: 'WhatsApp',
+            plan_name: el.dataset.plan || '',
+            plan_price: el.dataset.price || '',
+            category: el.dataset.category || '',
+            source_page: 'cotizador',
+          });
+        }
+      });
+    });
+  });
+</script>
 </Layout>

@@ -137,7 +137,7 @@ const faqs = [
         LeadBoost Z es tu sistema de ventas inteligente. Chatbot IA + CRM + embudos automatizados + WhatsApp. Tu equipo de ventas digital que trabaja 24/7 sin descansar.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12" data-animate>
-        <a href="/contacto" class="bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105 shadow-xl shadow-emerald-500/25">
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, me interesa *LeadBoost Z* para automatizar mis ventas. ¿Me pueden dar más información?')}`} target="_blank" rel="noopener" class="wa-lead bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105 shadow-xl shadow-emerald-500/25" data-plan="LeadBoost Z" data-price="Desde $6,900/mes" data-category="LeadBoost Z">
           Agendar Demo Gratis
         </a>
         <a href="#pilares" class="border-2 border-emerald-500/30 text-emerald-400 font-semibold px-8 py-4 rounded-full text-lg hover:bg-emerald-500/10 transition-all">
@@ -249,7 +249,7 @@ const faqs = [
                 </li>
               ))}
             </ul>
-            <a href="/contacto" class={`block text-center font-semibold py-3.5 px-5 rounded-full transition-all text-sm ${plan.popular ? 'bg-white text-emerald-700 hover:bg-white/90' : 'border-2 border-emerald-500/50 text-emerald-400 hover:bg-emerald-500 hover:text-white'}`}>
+            <a href={`https://wa.me/5215564721547?text=${encodeURIComponent(`Hola, me interesa el plan *${plan.name}* (${plan.price}/mes) de LeadBoost Z. ¿Me pueden dar más información?`)}`} target="_blank" rel="noopener" class={`wa-lead block text-center font-semibold py-3.5 px-5 rounded-full transition-all text-sm ${plan.popular ? 'bg-white text-emerald-700 hover:bg-white/90' : 'border-2 border-emerald-500/50 text-emerald-400 hover:bg-emerald-500 hover:text-white'}`} data-plan={plan.name} data-price={plan.price} data-category="LeadBoost Z">
               Agendar Demo Gratis
             </a>
           </div>
@@ -303,10 +303,10 @@ const faqs = [
         Agenda una demo gratuita y descubre cómo LeadBoost Z puede transformar tu proceso de ventas con inteligencia artificial.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/contacto" class="bg-white text-emerald-700 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl">
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, vi *LeadBoost Z* y me gustaría una demo. ¿Me pueden asesorar?')}`} target="_blank" rel="noopener" class="wa-lead bg-white text-emerald-700 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl" data-plan="LeadBoost Z" data-price="Desde $6,900/mes" data-category="LeadBoost Z">
           Agendar Demo Gratis
         </a>
-        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, quiero información sobre *LeadBoost Z*.')}`} target="_blank" rel="noopener" class="wa-lead border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all" data-plan="LeadBoost Z" data-price="" data-category="LeadBoost Z">
           Hablar por WhatsApp
         </a>
       </div>
@@ -315,4 +315,23 @@ const faqs = [
 
   <Footer />
   <WhatsAppWidget />
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.wa-lead').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const el = btn as HTMLElement;
+        if (typeof gtag === 'function') {
+          gtag('event', 'generate_lead', {
+            event_category: 'WhatsApp',
+            plan_name: el.dataset.plan || '',
+            plan_price: el.dataset.price || '',
+            category: el.dataset.category || '',
+            source_page: 'leadboost-z',
+          });
+        }
+      });
+    });
+  });
+</script>
 </Layout>

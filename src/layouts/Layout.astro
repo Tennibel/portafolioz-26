@@ -55,6 +55,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://portafol
 
     <title>{title} | Portafolio Z</title>
 
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M7ZTR6TP6K"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-M7ZTR6TP6K');
+    </script>
+
     <!-- ClientRouter (Astro v6): navegacion SPA entre subpaginas -->
     <ClientRouter />
   </head>

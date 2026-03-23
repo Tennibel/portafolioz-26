@@ -159,10 +159,10 @@ const faqs = [
         Más tráfico, mejor posicionamiento, nuevos clientes y ventas. Tu éxito comercial comienza con un sitio web profesional.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center" data-animate>
-        <a href="/contacto" class="gradient-bg text-white font-semibold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105">
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, me interesa el servicio de *Diseño Web Profesional*. ¿Me pueden dar más información?')}`} target="_blank" rel="noopener" class="wa-lead gradient-bg text-white font-semibold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105" data-plan="Hero CTA" data-price="" data-category="Diseño Web Profesional">
           Solicitar Cotización
         </a>
-        <a href="https://wa.me/5215561959724" target="_blank" rel="noopener" class="border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, me interesa el servicio de *Diseño Web Profesional*. ¿Me pueden dar más información?')}`} target="_blank" rel="noopener" class="wa-lead border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all" data-plan="Hero WhatsApp" data-price="" data-category="Diseño Web Profesional">
           Hablar por WhatsApp
         </a>
       </div>
@@ -230,7 +230,7 @@ const faqs = [
                 </li>
               ))}
             </ul>
-            <a href="https://wa.me/5215561959724" target="_blank" rel="noopener" class={`block text-center font-semibold py-3.5 px-5 rounded-full transition-all text-sm ${plan.popular ? 'bg-white text-primary-600 hover:bg-white/90' : 'border-2 border-accent-500 text-accent-600 hover:bg-accent-500 hover:text-white'}`}>Comienza hoy</a>
+            <a href={`https://wa.me/5215564721547?text=${encodeURIComponent(`Hola, me interesa el plan *${plan.name}* (${plan.price}) de Diseño Web Profesional. ¿Me pueden dar más información?`)}`} target="_blank" rel="noopener" class={`wa-lead block text-center font-semibold py-3.5 px-5 rounded-full transition-all text-sm ${plan.popular ? 'bg-white text-primary-600 hover:bg-white/90' : 'border-2 border-accent-500 text-accent-600 hover:bg-accent-500 hover:text-white'}`} data-plan={plan.name} data-price={plan.price} data-category="Diseño Web Profesional">Comienza hoy</a>
           </div>
         ))}
       </div>
@@ -307,10 +307,10 @@ const faqs = [
           Tu próximo cliente te está buscando en Google. Asegúrate de que te encuentre con un sitio web que genera confianza y convierte.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="/contacto" class="gradient-bg text-white font-semibold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105">
+          <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, vi su servicio de *Diseño Web Profesional* y me gustaría cotizar. ¿Me pueden asesorar?')}`} target="_blank" rel="noopener" class="wa-lead gradient-bg text-white font-semibold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105" data-plan="CTA Cotización" data-price="" data-category="Diseño Web Profesional">
             Solicitar Cotización
           </a>
-          <a href="https://wa.me/5215561959724" target="_blank" rel="noopener" class="bg-dark-900 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-dark-800 transition-all">
+          <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, vi su servicio de *Diseño Web Profesional* y me gustaría cotizar. ¿Me pueden asesorar?')}`} target="_blank" rel="noopener" class="wa-lead bg-dark-900 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-dark-800 transition-all" data-plan="CTA WhatsApp" data-price="" data-category="Diseño Web Profesional">
             Hablar por WhatsApp
           </a>
         </div>
@@ -320,4 +320,23 @@ const faqs = [
 
   <Footer />
   <WhatsAppWidget />
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.wa-lead').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const el = btn as HTMLElement;
+        if (typeof gtag === 'function') {
+          gtag('event', 'generate_lead', {
+            event_category: 'WhatsApp',
+            plan_name: el.dataset.plan || '',
+            plan_price: el.dataset.price || '',
+            category: el.dataset.category || '',
+            source_page: 'diseno-web-profesional',
+          });
+        }
+      });
+    });
+  });
+</script>
 </Layout>

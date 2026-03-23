@@ -330,7 +330,7 @@ const stats = [
           <a href="/#contacto" class="gradient-bg text-white font-semibold px-8 py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-105">
             Contáctanos
           </a>
-          <a href="https://wa.me/5215561959724" target="_blank" rel="noopener" class="bg-dark-900 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-dark-800 transition-all">
+          <a href="https://wa.me/5215564721547?text=Hola%2C%20vi%20su%20p%C3%A1gina%20y%20me%20gustar%C3%ADa%20conocer%20m%C3%A1s%20sobre%20sus%20servicios." target="_blank" rel="noopener" class="wa-lead bg-dark-900 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-dark-800 transition-all" data-plan="Hablar por WhatsApp" data-price="" data-category="Nosotros">
             Hablar por WhatsApp
           </a>
         </div>
@@ -340,4 +340,23 @@ const stats = [
 
   <Footer />
   <WhatsAppWidget />
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.wa-lead').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const el = btn as HTMLElement;
+        if (typeof gtag === 'function') {
+          gtag('event', 'generate_lead', {
+            event_category: 'WhatsApp',
+            plan_name: el.dataset.plan || '',
+            plan_price: el.dataset.price || '',
+            category: el.dataset.category || '',
+            source_page: 'nosotros',
+          });
+        }
+      });
+    });
+  });
+</script>
 </Layout>

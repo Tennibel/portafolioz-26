@@ -116,10 +116,10 @@ const faqs = [
         Creamos Sitios Web en CDMX en solo <strong class="text-white">6 dias</strong>. Diseno personalizado, optimizado para ventas y posicionamiento en Google.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <button data-open-cotizador class="bg-white text-primary-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl cursor-pointer">
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, me interesa el servicio de *Diseño Web en CDMX*. ¿Me pueden dar más información?')}`} target="_blank" rel="noopener" class="wa-lead bg-white text-primary-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl" data-plan="Hero CTA" data-price="" data-category="Diseño Web CDMX">
           Cotiza Ahora
-        </button>
-        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+        </a>
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, me interesa el servicio de *Diseño Web en CDMX*. ¿Me pueden dar más información?')}`} target="_blank" rel="noopener" class="wa-lead border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all" data-plan="Hero WhatsApp" data-price="" data-category="Diseño Web CDMX">
           Hablar por WhatsApp
         </a>
       </div>
@@ -205,9 +205,9 @@ const faqs = [
                 </li>
               ))}
             </ul>
-            <button data-open-cotizador class={`w-full py-3 rounded-xl font-semibold transition-all cursor-pointer ${plan.popular ? 'bg-white text-primary-600 hover:bg-white/90' : 'gradient-bg text-white hover:opacity-90'}`}>
+            <a href={`https://wa.me/5215564721547?text=${encodeURIComponent(`Hola, me interesa el plan *${plan.name}* (${plan.price}) de Diseño Web CDMX. ¿Me pueden dar más información?`)}`} target="_blank" rel="noopener" class={`wa-lead block text-center w-full py-3 rounded-xl font-semibold transition-all ${plan.popular ? 'bg-white text-primary-600 hover:bg-white/90' : 'gradient-bg text-white hover:opacity-90'}`} data-plan={plan.name} data-price={plan.price} data-category="Diseño Web CDMX">
               Comienza hoy
-            </button>
+            </a>
             <p class={`text-xs text-center mt-3 ${plan.popular ? 'text-white/40' : 'text-gray-400'}`}>Renovacion anual: {plan.renewal} + IVA</p>
           </div>
         ))}
@@ -316,10 +316,10 @@ const faqs = [
       <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Comienza a vender hoy mismo</h2>
       <p class="text-white/80 text-lg mb-8">Agenda tu consulta gratuita y empieza a transformar tu negocio con un sitio web profesional.</p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <button data-open-cotizador class="bg-white text-primary-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl cursor-pointer">
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, vi su servicio de *Diseño Web CDMX* y me gustaría cotizar. ¿Me pueden asesorar?')}`} target="_blank" rel="noopener" class="wa-lead bg-white text-primary-600 font-bold px-8 py-4 rounded-full text-lg hover:bg-white/90 transition-all hover:scale-105 shadow-xl" data-plan="CTA Cotización" data-price="" data-category="Diseño Web CDMX">
           Cotiza Ahora
-        </button>
-        <a href="https://wa.me/525561959724" target="_blank" rel="noopener" class="border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all">
+        </a>
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, vi su servicio de *Diseño Web CDMX* y me gustaría cotizar. ¿Me pueden asesorar?')}`} target="_blank" rel="noopener" class="wa-lead border-2 border-white text-white font-semibold px-8 py-4 rounded-full text-lg hover:bg-white/10 transition-all" data-plan="CTA WhatsApp" data-price="" data-category="Diseño Web CDMX">
           WhatsApp
         </a>
       </div>
@@ -328,6 +328,25 @@ const faqs = [
 
   <Footer />
   <WhatsAppWidget />
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.wa-lead').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const el = btn as HTMLElement;
+        if (typeof gtag === 'function') {
+          gtag('event', 'generate_lead', {
+            event_category: 'WhatsApp',
+            plan_name: el.dataset.plan || '',
+            plan_price: el.dataset.price || '',
+            category: el.dataset.category || '',
+            source_page: 'diseno-web-cdmx',
+          });
+        }
+      });
+    });
+  });
+</script>
 </Layout>
 
 <script>

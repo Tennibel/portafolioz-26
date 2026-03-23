@@ -289,7 +289,7 @@ import WhatsAppWidget from '../components/WhatsAppWidget.astro';
   <div id="urgency-popup" class="urgency-popup" aria-live="polite">
     <button id="urgency-close" class="urgency-close" aria-label="Cerrar">✕</button>
     <p class="urgency-text">🔥 <strong>Marzo 2026:</strong> 20% de descuento en tu primer sitio web. Quedan <strong>7 lugares</strong> este mes.</p>
-    <button class="urgency-cta" data-open-cotizador>Apartar Mi Lugar</button>
+    <a href="https://wa.me/5215564721547?text=Hola%2C%20vi%20su%20p%C3%A1gina%20y%20me%20gustar%C3%ADa%20*apartar%20mi%20lugar*.%20%C2%BFMe%20pueden%20dar%20m%C3%A1s%20informaci%C3%B3n%3F" target="_blank" rel="noopener" class="wa-lead urgency-cta" style="text-decoration:none;" data-plan="Apartar Mi Lugar" data-price="" data-category="Home">Apartar Mi Lugar</a>
   </div>
 
   <style>
@@ -355,7 +355,6 @@ import WhatsAppWidget from '../components/WhatsAppWidget.astro';
       font-weight: 700;
       border: none;
       border-radius: 0.5rem;
-      cursor: pointer;
       text-align: center;
       transition: opacity 0.3s ease, transform 0.2s ease;
     }
@@ -402,4 +401,23 @@ import WhatsAppWidget from '../components/WhatsAppWidget.astro';
       closeBtn.addEventListener('click', hidePopup);
     });
   </script>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.wa-lead').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const el = btn as HTMLElement;
+        if (typeof gtag === 'function') {
+          gtag('event', 'generate_lead', {
+            event_category: 'WhatsApp',
+            plan_name: el.dataset.plan || '',
+            plan_price: el.dataset.price || '',
+            category: el.dataset.category || '',
+            source_page: 'home',
+          });
+        }
+      });
+    });
+  });
+</script>
 </Layout>
