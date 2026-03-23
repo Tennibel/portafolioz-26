@@ -7,8 +7,33 @@ import type { APIRoute } from 'astro';
 import { calculateTotal, PRICING } from '../../../lib/pricing';
 import { insertQuote } from '../../../lib/db';
 import { sendQuoteEmails } from '../../../lib/email';
+import { getClientIp, rateLimit } from '../../../lib/rate-limit';
+
+const MAX_NAME_LENGTH = 120;
+const MAX_EMAIL_LENGTH = 160;
+const MAX_PHONE_LENGTH = 30;
+const MAX_COMPANY_LENGTH = 120;
+const MAX_PAGES = 200;
+const MAX_ITEMS_PER_GROUP = 20;
 
 export const POST: APIRoute = async ({ request }) => {
+  const ip = getClientIp(request);
+  const quoteLimit = rateLimit({
+    namespace: 'public-quote',
+    key: ip,
+    maxRequests: 10,
+    windowMs: 10 * 60 * 1000,
+  });
+  if (!quoteLimit.allowed) {
+    return new Response(JSON.stringify({ ok: false, error: 'Demasiadas solicitudes. Intenta de nuevo en unos minutos.' }), {
+      status: 429,
+      headers: {
+        'Content-Type': 'application/json',
+        'Retry-After': String(quoteLimit.retryAfterSeconds),
+      },
+    });
+  }
+
   try {
     const body = await request.json();
 
@@ -17,6 +42,28 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (!nombre || !email || !tipo_sitio || !diseno) {
       return new Response(JSON.stringify({ ok: false, error: 'Faltan campos requeridos' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    if (
+      typeof nombre !== 'string' ||
+      typeof email !== 'string' ||
+      (body.telefono && typeof body.telefono !== 'string') ||
+      (body.empresa && typeof body.empresa !== 'string')
+    ) {
+      return new Response(JSON.stringify({ ok: false, error: 'Formato de datos invalido' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    if (
+      nombre.length > MAX_NAME_LENGTH ||
+      email.length > MAX_EMAIL_LENGTH ||
+      (body.telefono && body.telefono.length > MAX_PHONE_LENGTH) ||
+      (body.empresa && body.empresa.length > MAX_COMPANY_LENGTH)
+    ) {
+      return new Response(JSON.stringify({ ok: false, error: 'Algunos campos exceden el tamano permitido' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -37,16 +84,25 @@ export const POST: APIRoute = async ({ request }) => {
         headers: { 'Content-Type': 'application/json' },
       });
     }
+    const safeNumPaginas = Number.parseInt(String(num_paginas), 10);
+    if (!Number.isFinite(safeNumPaginas) || safeNumPaginas < 1 || safeNumPaginas > MAX_PAGES) {
+      return new Response(JSON.stringify({ ok: false, error: 'Numero de paginas invalido' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    const safeFuncionalidades = Array.isArray(funcionalidades) ? funcionalidades.slice(0, MAX_ITEMS_PER_GROUP) : [];
+    const safeExtras = Array.isArray(extras) ? extras.slice(0, MAX_ITEMS_PER_GROUP) : [];
 
     // Calcular total del lado del servidor (no confiar en el frontend)
     const { total, items } = calculateTotal({
       tipo_sitio,
-      num_paginas: parseInt(num_paginas) || 1,
+      num_paginas: safeNumPaginas,
       diseno,
       hosting: hosting || 'propio',
       correo: correo || 'sin',
-      funcionalidades: Array.isArray(funcionalidades) ? funcionalidades : [],
-      extras: Array.isArray(extras) ? extras : [],
+      funcionalidades: safeFuncionalidades,
+      extras: safeExtras,
     });
 
     // Guardar en SQLite
@@ -56,7 +112,7 @@ export const POST: APIRoute = async ({ request }) => {
       telefono: body.telefono || undefined,
       empresa: body.empresa || undefined,
       tipo_sitio,
-      num_paginas: parseInt(num_paginas) || 1,
+      num_paginas: safeNumPaginas,
       diseno,
       hosting: hosting || 'propio',
       correo: correo || 'sin',

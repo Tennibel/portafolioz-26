@@ -1,17 +1,27 @@
 /**
  * auth.ts - Autenticacion simple por cookie para el admin
  */
-import { createHmac } from 'crypto';
+import { createHash, createHmac, timingSafeEqual } from 'crypto';
 
 const COOKIE_NAME = 'pz_admin_session';
 const MAX_AGE = 60 * 60 * 24; // 24 horas
 
 function getSecret(): string {
-  return import.meta.env.COOKIE_SECRET || 'portafolioz-dev-secret-change-me';
+  const secret = import.meta.env.COOKIE_SECRET;
+  if (secret) return secret;
+  if (import.meta.env.PROD) {
+    throw new Error('COOKIE_SECRET no esta configurado en produccion.');
+  }
+  return 'dev-only-cookie-secret-change-me';
 }
 
 function getAdminPassword(): string {
-  return import.meta.env.ADMIN_PASSWORD || 'admin123';
+  const password = import.meta.env.ADMIN_PASSWORD;
+  if (password) return password;
+  if (import.meta.env.PROD) {
+    throw new Error('ADMIN_PASSWORD no esta configurado en produccion.');
+  }
+  return 'admin123-dev-only';
 }
 
 function sign(value: string): string {
@@ -24,23 +34,32 @@ function verify(signed: string): string | null {
   const idx = signed.lastIndexOf('.');
   if (idx === -1) return null;
   const value = signed.slice(0, idx);
-  const expected = sign(value);
-  if (expected === signed) return value;
+  const receivedSig = signed.slice(idx + 1);
+  const expectedSig = createHmac('sha256', getSecret()).update(value).digest('hex');
+  const receivedBuf = Buffer.from(receivedSig, 'utf8');
+  const expectedBuf = Buffer.from(expectedSig, 'utf8');
+  if (receivedBuf.length !== expectedBuf.length) return null;
+  if (timingSafeEqual(receivedBuf, expectedBuf)) return value;
   return null;
 }
 
 export function checkPassword(password: string): boolean {
-  return password === getAdminPassword();
+  if (!password) return false;
+  const providedHash = createHash('sha256').update(password).digest();
+  const expectedHash = createHash('sha256').update(getAdminPassword()).digest();
+  return timingSafeEqual(providedHash, expectedHash);
 }
 
 export function createSessionCookie(): string {
   const token = `admin:${Date.now()}`;
   const signed = sign(token);
-  return `${COOKIE_NAME}=${signed}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${MAX_AGE}`;
+  const secure = import.meta.env.PROD ? '; Secure' : '';
+  return `${COOKIE_NAME}=${signed}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${MAX_AGE}${secure}`;
 }
 
 export function clearSessionCookie(): string {
-  return `${COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0`;
+  const secure = import.meta.env.PROD ? '; Secure' : '';
+  return `${COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0${secure}`;
 }
 
 export function isAuthenticated(request: Request): boolean {

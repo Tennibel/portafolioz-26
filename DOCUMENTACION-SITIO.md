@@ -7,6 +7,23 @@
 
 ---
 
+## Decisiones de rutas y contenido (Mar 2026)
+
+Lineamientos acordados para nuevas paginas y actualizaciones:
+
+| Tema | Decision |
+|------|----------|
+| **Servicios Web** (`/servicios-web/`) | **Convive** con la pagina actual **`/servicios`**. No reemplaza; las dos existen. |
+| **Branding & Launch Kit** | Ruta **directa** en raiz: **`/branding-and-launch-kit`** (sin prefijo `/servicios-web/`). |
+| **Social Content System** | Ruta **directa** en raiz: **`/social-media-marketing/`** (sin prefijo `/servicios-web/`). |
+| **Growth Marketing** (`/growth-marketing`) | **Solo agregar** nuevas secciones y precios (**$6,400 / $9,800 / $12,800**). No reemplazar toda la pagina. |
+| **Posicionamiento SEO** (`/posicionamiento-web-seo/`) | Pagina **completamente nueva**. |
+| **Administrador de Contenidos** (`/administrador-de-contenidos/`) | Pagina **completamente nueva**. |
+| **Tienda en Linea / E-commerce** (`/tienda-en-linea-e-commerce/`) | Pagina **completamente nueva**. |
+| **Orden de trabajo** | Empezar por **`/servicios-web`** (nueva pagina Servicios Web). |
+
+---
+
 ## Resumen General
 
 Sitio web completo para la agencia de diseno web **Portafolio Z**, que incluye:
