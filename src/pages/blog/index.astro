@@ -159,21 +159,45 @@ const postsByCategory = categories.map((cat) => ({
   <Navbar />
 
   <!-- HERO -->
-  <section class="bg-white pt-32 pb-12 border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <nav class="flex gap-2 text-sm text-gray-400 mb-6" data-animate>
-        <a href="/" class="hover:text-primary-600 transition-colors">Inicio</a>
+  <section class="relative pt-32 pb-16 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-primary-900 to-dark-900"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(99,102,241,0.25),transparent_50%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(236,72,153,0.15),transparent_50%)]"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex gap-2 text-sm text-white/50 mb-6" data-animate>
+        <a href="/" class="hover:text-white transition-colors">Inicio</a>
         <span>/</span>
-        <span class="text-gray-600">Blog</span>
+        <span class="text-white">Blog</span>
       </nav>
-
       <div class="max-w-3xl" data-animate>
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
-          Nuestro Blog
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-5 leading-tight">
+          Nuestro <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-primary-400 to-pink-400">Blog</span>
         </h1>
-        <p class="text-lg text-gray-500 leading-relaxed">
+        <p class="text-lg text-white/60 leading-relaxed max-w-2xl">
           Ideas prácticas sobre diseño web, SEO, marketing digital y tecnología para hacer crecer tu negocio.
         </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BARRA DE SERVICIOS -->
+  <section class="bg-gray-900 py-4 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between gap-4 overflow-x-auto scrollbar-hide">
+        <div class="flex items-center gap-6 text-sm whitespace-nowrap">
+          <a href="/web-sales-machine" class="text-white/50 hover:text-cyan-400 transition-colors flex items-center gap-1.5">🌐 Diseño Web</a>
+          <a href="/growth-marketing" class="text-white/50 hover:text-orange-400 transition-colors flex items-center gap-1.5">📈 Marketing</a>
+          <a href="/posicionamiento-web-seo" class="text-white/50 hover:text-emerald-400 transition-colors flex items-center gap-1.5">🔍 SEO</a>
+          <a href="/branding-and-launch-kit" class="text-white/50 hover:text-amber-400 transition-colors flex items-center gap-1.5">🎨 Branding</a>
+          <a href="/tienda-en-linea-e-commerce" class="text-white/50 hover:text-pink-400 transition-colors flex items-center gap-1.5">🛒 E-Commerce</a>
+          <a href="/social-media-marketing" class="text-white/50 hover:text-violet-400 transition-colors flex items-center gap-1.5">📱 Social Media</a>
+        </div>
+        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, vi su blog y me gustaría cotizar un servicio.')}`}
+          target="_blank" rel="noopener"
+          class="wa-lead shrink-0 bg-gradient-to-r from-primary-500 to-accent-500 text-white text-xs font-bold px-4 py-2 rounded-full hover:opacity-90 transition-all"
+          data-plan="Blog Services Bar" data-price="" data-category="Blog">
+          Cotizar Ahora
+        </a>
       </div>
     </div>
   </section>
@@ -219,9 +243,9 @@ const postsByCategory = categories.map((cat) => ({
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p class="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-6" data-animate>Artículos destacados</p>
         <div class="grid md:grid-cols-3 gap-6" data-animate>
-          {featured.map((feat, i) => (
-            <a href={`/${feat.slug}`} class={`blog-card group block rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-gray-300 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ${i === 0 ? 'md:col-span-2 md:row-span-2' : ''}`} data-category={feat.category} data-title={feat.title.toLowerCase()}>
-              <div class={`relative overflow-hidden ${i === 0 ? 'h-64 md:h-80' : 'h-48'}`}>
+          {featured.map((feat) => (
+            <a href={`/${feat.slug}`} class="blog-card group flex flex-col rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-gray-300 hover:shadow-xl hover:-translate-y-1 transition-all duration-300" data-category={feat.category} data-title={feat.title.toLowerCase()}>
+              <div class="relative h-52 overflow-hidden">
                 {feat.image ? (
                   <img src={feat.image} alt={feat.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                 ) : (
@@ -236,12 +260,12 @@ const postsByCategory = categories.map((cat) => ({
                   </span>
                 </div>
               </div>
-              <div class={`p-6 ${i === 0 ? 'md:p-8' : ''}`}>
+              <div class="p-6 flex flex-col flex-1">
                 <time class="text-gray-400 text-xs">{feat.date}</time>
-                <h2 class={`font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2 mt-2 ${i === 0 ? 'text-2xl md:text-3xl' : 'text-lg'}`}>
+                <h2 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2 mt-2">
                   {feat.title}
                 </h2>
-                <p class={`text-gray-500 leading-relaxed line-clamp-2 ${i === 0 ? 'text-base' : 'text-sm'}`}>{feat.excerpt}</p>
+                <p class="text-gray-500 text-sm leading-relaxed line-clamp-2 flex-1">{feat.excerpt}</p>
                 <div class="flex items-center gap-2 mt-4 text-primary-600 text-sm font-medium">
                   <span>Leer artículo</span>
                   <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -258,22 +282,30 @@ const postsByCategory = categories.map((cat) => ({
 
   <!-- POSTS BY CATEGORY - cada categoría con diseño diferente -->
   {postsByCategory.map((group, groupIdx) => (
-    <section class={`pb-16 blog-category-section ${groupIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`} data-section-category={group.category}>
+    <section class={`py-12 blog-category-section ${groupIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`} data-section-category={group.category}>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class={`rounded-2xl ${group.style.bg} ${group.style.border} border p-6 md:p-8 mb-8`} data-animate>
-          <div class="flex items-center gap-4">
-            <span class="text-3xl">{group.style.icon}</span>
-            <div>
-              <h2 class={`text-2xl font-bold ${group.style.accent}`}>{group.category}</h2>
-              <p class="text-gray-400 text-sm">{group.posts.length} artículo{group.posts.length !== 1 ? 's' : ''}</p>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <span class="text-3xl">{group.style.icon}</span>
+              <div>
+                <h2 class={`text-2xl font-bold ${group.style.accent}`}>{group.category}</h2>
+                <p class="text-gray-400 text-sm">{group.posts.length} artículo{group.posts.length !== 1 ? 's' : ''}</p>
+              </div>
             </div>
+            {group.posts.length > 6 && (
+              <button class="cat-toggle text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors flex items-center gap-1 cursor-pointer" data-cat-id={`cat-${groupIdx}`}>
+                Ver todos
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+            )}
           </div>
         </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate>
-          {group.posts.map((post) => (
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate id={`cat-${groupIdx}`}>
+          {group.posts.map((post, postIdx) => (
             <a
               href={`/${post.slug}`}
-              class={`blog-card group rounded-2xl overflow-hidden bg-white border ${group.style.border} hover:-translate-y-1 hover:shadow-lg transition-all duration-300`}
+              class={`blog-card group rounded-2xl overflow-hidden bg-white border ${group.style.border} hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ${postIdx >= 6 ? 'hidden cat-extra' : ''}`}
               data-category={post.category}
               data-title={post.title.toLowerCase()}
             >
@@ -295,7 +327,7 @@ const postsByCategory = categories.map((cat) => ({
                   <span class="text-gray-300">·</span>
                   <span class="text-gray-400 text-xs">{post.author}</span>
                 </div>
-                <h3 class={`text-base font-bold text-gray-900 mb-2 group-hover:${group.style.accent} transition-colors line-clamp-2`}>
+                <h3 class="text-base font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
                   {post.title}
                 </h3>
                 <p class="text-gray-500 text-sm leading-relaxed line-clamp-2">
@@ -456,6 +488,21 @@ function initBlogFilters() {
 
   // Search input
   searchInput?.addEventListener('input', applyFilters);
+
+  // Category toggle (Ver todos / Ver menos)
+  document.querySelectorAll('.cat-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const catId = (btn as HTMLElement).dataset.catId || '';
+      const grid = document.getElementById(catId);
+      if (!grid) return;
+      const extras = grid.querySelectorAll('.cat-extra');
+      const isHidden = extras[0]?.classList.contains('hidden');
+      extras.forEach((el) => el.classList.toggle('hidden'));
+      btn.innerHTML = isHidden
+        ? 'Ver menos <svg class="w-4 h-4 rotate-180 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>'
+        : 'Ver todos <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>';
+    });
+  });
 }
 
 initBlogFilters();
