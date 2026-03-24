@@ -9,6 +9,8 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
+ARG WP_API_URL=""
+ENV WP_API_URL=${WP_API_URL}
 RUN npm run build
 
 # Production image

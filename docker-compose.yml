@@ -1,6 +1,9 @@
 services:
   portafolioz:
-    build: .
+    build:
+      context: .
+      args:
+        WP_API_URL: ${WP_API_URL:-}
     container_name: portafolioz
     restart: unless-stopped
     env_file: .env
