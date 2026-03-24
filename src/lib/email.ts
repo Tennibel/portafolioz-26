@@ -105,7 +105,6 @@ export async function sendQuoteEmails(quote: EmailQuote): Promise<{ success: boo
   const resend = getResend();
   if (!resend) {
     console.log('[email] Resend no configurado. Cotizacion guardada sin enviar emails.');
-    console.log('[email] Quote:', JSON.stringify(quote, null, 2));
     return { success: true };
   }
 

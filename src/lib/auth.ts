@@ -1,7 +1,7 @@
 /**
  * auth.ts - Autenticacion simple por cookie para el admin
  */
-import { createHash, createHmac, timingSafeEqual } from 'crypto';
+import { createHash, createHmac, randomBytes, timingSafeEqual } from 'crypto';
 
 const COOKIE_NAME = 'pz_admin_session';
 const MAX_AGE = 60 * 60 * 24; // 24 horas
@@ -51,7 +51,7 @@ export function checkPassword(password: string): boolean {
 }
 
 export function createSessionCookie(): string {
-  const token = `admin:${Date.now()}`;
+  const token = `admin:${Date.now()}:${randomBytes(16).toString('hex')}`;
   const signed = sign(token);
   const secure = import.meta.env.PROD ? '; Secure' : '';
   return `${COOKIE_NAME}=${signed}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${MAX_AGE}${secure}`;

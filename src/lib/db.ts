@@ -164,10 +164,17 @@ export function getQuoteById(id: number): { quote: Quote | undefined; items: Quo
   return { quote, items };
 }
 
-export function updateQuoteStatus(id: number, status: string, notas_admin?: string): boolean {
+const ALLOWED_QUOTE_STATUSES = new Set(['nueva', 'contactada', 'cerrada', 'descartada']);
+
+export function updateQuoteStatus(id: number, status?: string, notas_admin?: string): boolean {
   const db = getDb();
-  const fields = ['status = @status', "updated_at = datetime('now')"];
-  const params: Record<string, unknown> = { id, status };
+  const fields = ["updated_at = datetime('now')"];
+  const params: Record<string, unknown> = { id };
+  if (status !== undefined) {
+    if (!ALLOWED_QUOTE_STATUSES.has(status)) return false;
+    fields.push('status = @status');
+    params.status = status;
+  }
   if (notas_admin !== undefined) {
     fields.push('notas_admin = @notas_admin');
     params.notas_admin = notas_admin;
@@ -178,12 +185,16 @@ export function updateQuoteStatus(id: number, status: string, notas_admin?: stri
 
 export function getQuoteStats(): { total: number; nueva: number; contactada: number; cerrada: number; descartada: number } {
   const db = getDb();
-  const total = (db.prepare('SELECT COUNT(*) as c FROM quotes').get() as { c: number }).c;
-  const nueva = (db.prepare("SELECT COUNT(*) as c FROM quotes WHERE status = 'nueva'").get() as { c: number }).c;
-  const contactada = (db.prepare("SELECT COUNT(*) as c FROM quotes WHERE status = 'contactada'").get() as { c: number }).c;
-  const cerrada = (db.prepare("SELECT COUNT(*) as c FROM quotes WHERE status = 'cerrada'").get() as { c: number }).c;
-  const descartada = (db.prepare("SELECT COUNT(*) as c FROM quotes WHERE status = 'descartada'").get() as { c: number }).c;
-  return { total, nueva, contactada, cerrada, descartada };
+  const row = db.prepare(`
+    SELECT
+      COUNT(*) as total,
+      SUM(CASE WHEN status = 'nueva' THEN 1 ELSE 0 END) as nueva,
+      SUM(CASE WHEN status = 'contactada' THEN 1 ELSE 0 END) as contactada,
+      SUM(CASE WHEN status = 'cerrada' THEN 1 ELSE 0 END) as cerrada,
+      SUM(CASE WHEN status = 'descartada' THEN 1 ELSE 0 END) as descartada
+    FROM quotes
+  `).get() as { total: number; nueva: number; contactada: number; cerrada: number; descartada: number };
+  return { total: row.total, nueva: row.nueva ?? 0, contactada: row.contactada ?? 0, cerrada: row.cerrada ?? 0, descartada: row.descartada ?? 0 };
 }
 
 /* ============================================
@@ -274,13 +285,17 @@ export function insertProject(data: {
   return result.lastInsertRowid as number;
 }
 
+const ALLOWED_PROJECT_COLUMNS = new Set<string>([
+  'nombre', 'slug', 'url', 'categoria', 'descripcion', 'imagen', 'featured', 'visible', 'orden',
+]);
+
 export function updateProject(id: number, data: Partial<Omit<Project, 'id' | 'created_at' | 'updated_at'>>): boolean {
   const db = getDb();
   const fields: string[] = [];
   const params: Record<string, unknown> = { id };
 
   for (const [key, val] of Object.entries(data)) {
-    if (val !== undefined) {
+    if (val !== undefined && ALLOWED_PROJECT_COLUMNS.has(key)) {
       fields.push(`${key} = @${key}`);
       params[key] = val;
     }

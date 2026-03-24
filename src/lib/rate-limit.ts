@@ -7,12 +7,16 @@ type Entry = {
 };
 
 const buckets = new Map<string, Entry>();
+const CLEANUP_INTERVAL_MS = 60_000; // limpiar cada 60s
+let lastCleanup = Date.now();
 
 function nowMs(): number {
   return Date.now();
 }
 
-function cleanupExpiredEntries(current: number): void {
+function cleanupIfNeeded(current: number): void {
+  if (current - lastCleanup < CLEANUP_INTERVAL_MS) return;
+  lastCleanup = current;
   for (const [key, entry] of buckets.entries()) {
     if (entry.resetAt <= current) {
       buckets.delete(key);
@@ -21,13 +25,20 @@ function cleanupExpiredEntries(current: number): void {
 }
 
 export function getClientIp(request: Request): string {
-  const xff = request.headers.get('x-forwarded-for');
-  if (xff) {
-    const [first] = xff.split(',');
-    if (first?.trim()) return first.trim();
+  const trustProxyHeaders = process.env.TRUST_PROXY_HEADERS === 'true';
+
+  if (trustProxyHeaders) {
+    const xff = request.headers.get('x-forwarded-for');
+    if (xff) {
+      const [first] = xff.split(',');
+      if (first?.trim()) return first.trim();
+    }
+    const realIp = request.headers.get('x-real-ip');
+    if (realIp?.trim()) return realIp.trim();
   }
-  const realIp = request.headers.get('x-real-ip');
-  if (realIp?.trim()) return realIp.trim();
+
+  // Fallback conservador: no usar cabeceras manipulables por clientes
+  // cuando no se haya declarado explicitamente un proxy confiable.
   return 'unknown';
 }
 
@@ -38,7 +49,7 @@ export function rateLimit(input: {
   windowMs: number;
 }): { allowed: boolean; remaining: number; retryAfterSeconds: number } {
   const current = nowMs();
-  cleanupExpiredEntries(current);
+  cleanupIfNeeded(current);
 
   const bucketKey = `${input.namespace}:${input.key}`;
   const existing = buckets.get(bucketKey);

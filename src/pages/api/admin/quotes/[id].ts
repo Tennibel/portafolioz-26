@@ -36,11 +36,30 @@ export const PATCH: APIRoute = async ({ params, request }) => {
 
   try {
     const id = parseInt(params.id || '0');
+    if (!Number.isFinite(id) || id < 1) {
+      return new Response(JSON.stringify({ ok: false, error: 'ID invalido' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     const body = await request.json();
     const { status, notas_admin } = body;
 
-    if (status && !['nueva', 'contactada', 'cerrada', 'descartada'].includes(status)) {
+    if (status !== undefined && !['nueva', 'contactada', 'cerrada', 'descartada'].includes(status)) {
       return new Response(JSON.stringify({ ok: false, error: 'Status invalido' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    if (notas_admin !== undefined && typeof notas_admin !== 'string') {
+      return new Response(JSON.stringify({ ok: false, error: 'Notas invalidas' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    if (status === undefined && notas_admin === undefined) {
+      return new Response(JSON.stringify({ ok: false, error: 'No hay cambios para actualizar' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
