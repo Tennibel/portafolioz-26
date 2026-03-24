@@ -12,17 +12,20 @@
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import CotizadorModal from '../components/CotizadorModal.astro';
+import LeadMagnetPopup from '../components/LeadMagnetPopup.astro';
 
 interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  showLeadMagnet?: boolean;
 }
 
 const {
   title,
   description = 'Agencia de Diseño Web con más de 12 años de experiencia. Especialistas en diseño y desarrollo web a la medida en México, EE.UU. y España.',
   ogImage = '/og-image.jpg',
+  showLeadMagnet = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://portafolioz.com');
@@ -74,6 +77,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://portafol
 
     <!-- Cotizador Modal (global, se abre con data-open-cotizador) -->
     <CotizadorModal />
+
+    <!-- Lead Magnet Popup (solo en paginas de diseno web) -->
+    {showLeadMagnet && <LeadMagnetPopup />}
 
     <!--
       IntersectionObserver para animaciones de scroll.

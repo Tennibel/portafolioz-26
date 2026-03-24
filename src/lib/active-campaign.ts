@@ -97,6 +97,18 @@ export async function addTag(contactId: number, tagName: string): Promise<void> 
 }
 
 /**
+ * Suscribe un contacto a una lista por ID.
+ */
+export async function addToList(contactId: number, listId: number): Promise<void> {
+  await acFetch('contactLists', {
+    method: 'POST',
+    body: JSON.stringify({
+      contactList: { list: listId, contact: contactId, status: 1 },
+    }),
+  });
+}
+
+/**
  * Crea una nota en un contacto (para guardar detalles de cotizacion).
  */
 export async function addNote(contactId: number, note: string): Promise<void> {
@@ -131,6 +143,7 @@ export async function trackContactForm(data: {
     if (!contactId) return;
 
     await addTag(contactId, 'Web - Contacto');
+    await addToList(contactId, 9); // Lista "Servicios" (ID 9)
 
     if (data.proyecto) {
       await addNote(contactId, `Mensaje del formulario web:\n${data.proyecto}`);
@@ -165,6 +178,7 @@ export async function trackQuote(data: {
     if (!contactId) return;
 
     await addTag(contactId, 'Web - Cotizacion');
+    await addToList(contactId, 15); // Lista "Cotizador" (ID 15)
 
     // Construir nota con desglose
     let note = `Cotizacion por $${data.total.toLocaleString('es-MX')} MXN\n\n`;
@@ -183,5 +197,28 @@ export async function trackQuote(data: {
     await addNote(contactId, note);
   } catch (err) {
     console.error('[AC] Error en trackQuote:', err);
+  }
+}
+
+/**
+ * Registra un contacto desde el popup de lead magnet (Textos Legales).
+ * Lista: "LM - Textos Legales" (ID 5)
+ * Tag: "LM - Textos Legales"
+ */
+export async function trackLeadMagnet(data: {
+  nombre: string;
+  email: string;
+}): Promise<void> {
+  try {
+    const contactId = await syncContact({
+      email: data.email,
+      nombre: data.nombre,
+    });
+    if (!contactId) return;
+
+    await addTag(contactId, 'LM - Textos Legales');
+    await addToList(contactId, 5); // Lista "LM - Textos Legales" (ID 5)
+  } catch (err) {
+    console.error('[AC] Error en trackLeadMagnet:', err);
   }
 }
