@@ -1,8 +1,11 @@
 ---
 /**
- * Cotizador.astro - Wizard de 4 pasos para cotizar sitio web
- * Se usa tanto en la pagina dedicada /cotizador como en el modal
- * Vanilla JS para calcular precios en tiempo real
+ * Cotizador.astro - Wizard de 5 pasos para cotizar sitio web
+ * Paso 1: Infraestructura (Hosting + Correo)
+ * Paso 2: Tu sitio (Tipo + Paginas)
+ * Paso 3: Diseno + Idiomas + Urgencia + Mantenimiento
+ * Paso 4: Funciones y Extras
+ * Paso 5: Resumen + Contacto
  */
 import { PRICING } from '../lib/pricing';
 ---
@@ -11,24 +14,61 @@ import { PRICING } from '../lib/pricing';
   <!-- Steps indicator -->
   <div class="flex items-center justify-center gap-2 mb-8" id="steps-indicator">
     {[
-      { num: 1, label: 'Tu sitio' },
-      { num: 2, label: 'Funciones' },
-      { num: 3, label: 'Extras' },
-      { num: 4, label: 'Contacto' },
+      { num: 1, label: 'Hosting' },
+      { num: 2, label: 'Tu sitio' },
+      { num: 3, label: 'Diseno' },
+      { num: 4, label: 'Funciones' },
+      { num: 5, label: 'Contacto' },
     ].map((step) => (
       <div class="flex items-center" data-step-indicator={step.num}>
-        <div class={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${step.num === 1 ? 'gradient-bg text-white shadow-lg shadow-primary-500/30' : 'bg-white/10 text-white/50'}`} data-step-circle>
+        <div class={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${step.num === 1 ? 'gradient-bg text-white shadow-lg shadow-primary-500/30' : 'bg-white/10 text-white/50'}`} data-step-circle>
           {step.num}
         </div>
         <span class={`ml-2 text-sm font-medium hidden sm:inline transition-colors duration-300 ${step.num === 1 ? 'text-white' : 'text-white/40'}`} data-step-label>{step.label}</span>
-        {step.num < 4 && <div class="w-8 sm:w-16 h-px bg-white/20 mx-3"></div>}
+        {step.num < 5 && <div class="w-6 sm:w-12 h-px bg-white/20 mx-2 sm:mx-3"></div>}
       </div>
     ))}
   </div>
 
   <form id="cotizador-form" class="glass-card p-6 sm:p-8">
-    <!-- PASO 1: Tipo de sitio -->
+
+    <!-- ============ PASO 1: Infraestructura ============ -->
     <div class="step-panel" data-step="1">
+      <h3 class="text-xl font-bold text-white mb-2">Hosting y dominio</h3>
+      <p class="text-white/50 text-sm mb-6">Si ya tienes hosting y dominio, selecciona "Ya tengo hosting" para no incluirlo en tu cotizacion.</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        {PRICING.hosting.map((h, i) => (
+          <label class={`relative glass-card p-5 cursor-pointer hover:bg-white/15 transition-all duration-300 group ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="hosting">
+            <input type="radio" name="hosting" value={h.id} class="sr-only" checked={i === 0} />
+            <div class="flex justify-between items-start">
+              <div>
+                <div class="font-semibold text-white group-hover:text-cyan-300 transition-colors">{h.label}</div>
+                <div class="text-xs text-white/40 mt-1">{h.desc}</div>
+              </div>
+              <div class="text-lg font-bold gradient-text">{h.precio === 0 ? '$0' : `$${h.precio.toLocaleString('es-MX')}`}</div>
+            </div>
+            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
+              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
+            </div>
+          </label>
+        ))}
+      </div>
+
+      <h3 class="text-xl font-bold text-white mb-4">Cuentas de correo corporativo</h3>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {PRICING.correo.map((c, i) => (
+          <label class={`glass-card p-4 cursor-pointer hover:bg-white/15 transition-all duration-300 text-center ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="correo">
+            <input type="radio" name="correo" value={c.id} class="sr-only" checked={i === 0} />
+            <div class="text-sm font-medium text-white">{c.label}</div>
+            <div class="text-sm font-bold gradient-text mt-1">{c.precio === 0 ? '$0' : `$${c.precio.toLocaleString('es-MX')}`}</div>
+          </label>
+        ))}
+      </div>
+    </div>
+
+    <!-- ============ PASO 2: Tipo de sitio ============ -->
+    <div class="step-panel hidden" data-step="2">
       <h3 class="text-xl font-bold text-white mb-6">Elige el tipo de sitio web</h3>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -49,7 +89,7 @@ import { PRICING } from '../lib/pricing';
         ))}
       </div>
 
-      <div class="mb-8">
+      <div class="mb-4">
         <label class="block text-white font-medium mb-3">
           Numero de paginas: <span class="gradient-text font-bold" id="paginas-display">3</span>
         </label>
@@ -60,15 +100,73 @@ import { PRICING } from '../lib/pricing';
           <span>1</span><span>5</span><span>10</span><span>15</span><span>20</span>
         </div>
       </div>
+    </div>
 
-      <h3 class="text-xl font-bold text-white mb-4">Tipo de diseno</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <!-- ============ PASO 3: Diseno + Idiomas + Urgencia + Mantenimiento ============ -->
+    <div class="step-panel hidden" data-step="3">
+      <h3 class="text-xl font-bold text-white mb-2">Tipo de diseno</h3>
+      <p class="text-white/50 text-sm mb-6">Puedes enviarnos tu diseno listo o nosotros lo creamos.</p>
+      <div class="grid grid-cols-1 gap-4 mb-8">
         {PRICING.diseno.map((d, i) => (
-          <label class={`glass-card p-5 cursor-pointer hover:bg-white/15 transition-all duration-300 group ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="diseno">
+          <label class={`relative glass-card p-5 cursor-pointer hover:bg-white/15 transition-all duration-300 group ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="diseno">
             <input type="radio" name="diseno" value={d.id} class="sr-only" checked={i === 0} />
             <div class="flex justify-between items-center">
-              <span class="font-medium text-white">{d.label}</span>
-              <span class="font-bold gradient-text">{d.precio === 0 ? 'Incluido' : `+$${d.precio.toLocaleString('es-MX')}`}</span>
+              <div>
+                <span class="font-medium text-white">{d.label}</span>
+                <div class="text-xs text-white/40 mt-1">{d.desc}</div>
+              </div>
+              <span class="font-bold gradient-text text-lg">{d.precio === 0 ? 'Incluido' : `+$${d.precio.toLocaleString('es-MX')}`}</span>
+            </div>
+            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
+              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
+            </div>
+          </label>
+        ))}
+      </div>
+
+      <h3 class="text-xl font-bold text-white mb-4">Idiomas del sitio</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {PRICING.idiomas.map((idm, i) => (
+          <label class={`relative glass-card p-5 cursor-pointer hover:bg-white/15 transition-all duration-300 group ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="idiomas">
+            <input type="radio" name="idiomas" value={idm.id} class="sr-only" checked={i === 0} />
+            <div class="text-center">
+              <div class="font-semibold text-white">{idm.label}</div>
+              <div class="text-xs text-white/40 mt-1">{idm.desc}</div>
+              <div class="text-sm font-bold gradient-text mt-2">{idm.precio === 0 ? 'Incluido' : `+$${idm.precio.toLocaleString('es-MX')}`}</div>
+            </div>
+            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
+              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
+            </div>
+          </label>
+        ))}
+      </div>
+
+      <h3 class="text-xl font-bold text-white mb-4">Tiempo de entrega</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {PRICING.urgencia.map((u, i) => (
+          <label class={`relative glass-card p-5 cursor-pointer hover:bg-white/15 transition-all duration-300 group ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="urgencia">
+            <input type="radio" name="urgencia" value={u.id} class="sr-only" checked={i === 0} />
+            <div class="text-center">
+              <div class="font-semibold text-white">{u.label}</div>
+              <div class="text-xs text-white/40 mt-1">{u.desc}</div>
+              <div class="text-sm font-bold gradient-text mt-2">{u.multiplicador === 1 ? 'Sin recargo' : `+${Math.round((u.multiplicador - 1) * 100)}%`}</div>
+            </div>
+            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
+              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
+            </div>
+          </label>
+        ))}
+      </div>
+
+      <h3 class="text-xl font-bold text-white mb-4">Mantenimiento mensual</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {PRICING.mantenimiento.map((m, i) => (
+          <label class={`relative glass-card p-5 cursor-pointer hover:bg-white/15 transition-all duration-300 group ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="mantenimiento">
+            <input type="radio" name="mantenimiento" value={m.id} class="sr-only" checked={i === 0} />
+            <div class="text-center">
+              <div class="font-semibold text-white">{m.label}</div>
+              <div class="text-xs text-white/40 mt-1">{m.desc}</div>
+              <div class="text-sm font-bold gradient-text mt-2">{m.precio === 0 ? '$0' : `$${m.precio.toLocaleString('es-MX')}/mes`}</div>
             </div>
             <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
               <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
@@ -78,8 +176,8 @@ import { PRICING } from '../lib/pricing';
       </div>
     </div>
 
-    <!-- PASO 2: Funcionalidades + Hosting + Correo -->
-    <div class="step-panel hidden" data-step="2">
+    <!-- ============ PASO 4: Funciones y Extras ============ -->
+    <div class="step-panel hidden" data-step="4">
       <h3 class="text-xl font-bold text-white mb-6">Funcionalidades</h3>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
         {PRICING.funcionalidades.map((f) => (
@@ -87,7 +185,7 @@ import { PRICING } from '../lib/pricing';
             <input type="checkbox" name="funcionalidades" value={f.id} class="sr-only" checked={'included' in f && f.included} disabled={'included' in f && f.included} />
             <div class="flex justify-between items-center">
               <span class="text-sm font-medium text-white">{f.label}</span>
-              <span class="text-sm font-bold text-cyan-300">{'included' in f && f.included ? 'Incluido' : f.precio === 0 ? 'Gratis' : `+$${f.precio.toLocaleString('es-MX')}`}</span>
+              <span class="text-sm font-bold text-cyan-300">{'included' in f && f.included ? 'Incluido' : `+$${f.precio.toLocaleString('es-MX')}`}</span>
             </div>
             <div class="absolute top-3 right-3 w-4 h-4 rounded border-2 border-white/30 flex items-center justify-center transition-all" data-check-box>
               <svg class="w-3 h-3 text-cyan-400 scale-0 transition-transform" data-check-svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
@@ -96,31 +194,6 @@ import { PRICING } from '../lib/pricing';
         ))}
       </div>
 
-      <h3 class="text-xl font-bold text-white mb-4">Hosting</h3>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-        {PRICING.hosting.map((h, i) => (
-          <label class={`glass-card p-4 cursor-pointer hover:bg-white/15 transition-all duration-300 text-center ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="hosting">
-            <input type="radio" name="hosting" value={h.id} class="sr-only" checked={i === 0} />
-            <div class="text-sm font-medium text-white">{h.label}</div>
-            <div class="text-sm font-bold gradient-text mt-1">{h.precio === 0 ? '$0' : `$${h.precio.toLocaleString('es-MX')}`}</div>
-          </label>
-        ))}
-      </div>
-
-      <h3 class="text-xl font-bold text-white mb-4">Cuentas de correo</h3>
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {PRICING.correo.map((c, i) => (
-          <label class={`glass-card p-4 cursor-pointer hover:bg-white/15 transition-all duration-300 text-center ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="correo">
-            <input type="radio" name="correo" value={c.id} class="sr-only" checked={i === 0} />
-            <div class="text-sm font-medium text-white">{c.label}</div>
-            <div class="text-sm font-bold gradient-text mt-1">{c.precio === 0 ? '$0' : `$${c.precio.toLocaleString('es-MX')}`}</div>
-          </label>
-        ))}
-      </div>
-    </div>
-
-    <!-- PASO 3: Extras -->
-    <div class="step-panel hidden" data-step="3">
       <h3 class="text-xl font-bold text-white mb-6">Extras y complementos</h3>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {PRICING.extras.map((e) => (
@@ -138,8 +211,8 @@ import { PRICING } from '../lib/pricing';
       </div>
     </div>
 
-    <!-- PASO 4: Resumen + Contacto -->
-    <div class="step-panel hidden" data-step="4">
+    <!-- ============ PASO 5: Resumen + Contacto ============ -->
+    <div class="step-panel hidden" data-step="5">
       <h3 class="text-xl font-bold text-white mb-6">Resumen de tu cotizacion</h3>
 
       <div class="glass-card p-5 mb-6" id="resumen-items">
@@ -177,10 +250,17 @@ import { PRICING } from '../lib/pricing';
         &larr; Anterior
       </button>
 
-      <div class="flex items-center gap-3 order-first sm:order-none">
-        <span class="text-white/60 text-sm">Total estimado:</span>
-        <span class="text-2xl sm:text-3xl font-bold gradient-text" id="total-display">$5,600</span>
-        <span class="text-white/40 text-sm">MXN</span>
+      <div class="flex flex-col items-center order-first sm:order-none gap-1">
+        <div class="flex items-center gap-3">
+          <span class="text-white/60 text-sm">Inversion unica:</span>
+          <span class="text-2xl sm:text-3xl font-bold gradient-text" id="total-display">$3,800</span>
+          <span class="text-white/40 text-sm">MXN</span>
+        </div>
+        <div class="flex items-center gap-2" id="monthly-display-wrapper" style="display:none">
+          <span class="text-white/50 text-xs">+ Mantenimiento:</span>
+          <span class="text-sm font-bold text-cyan-300" id="monthly-display">$0</span>
+          <span class="text-white/40 text-xs">/mes</span>
+        </div>
       </div>
 
       <button type="button" id="btn-next" class="px-8 py-3 rounded-xl gradient-bg text-white font-semibold hover:opacity-90 transition-all shadow-lg shadow-primary-500/25">
@@ -201,7 +281,7 @@ import { PRICING } from '../lib/pricing';
     <p class="text-white/60 mb-2">Tu cotizacion por <span class="font-bold gradient-text" id="success-total"></span> MXN ha sido recibida.</p>
     <p class="text-white/60 mb-6">Revisamos tu solicitud y te contactaremos pronto.</p>
     <div class="flex flex-col sm:flex-row gap-3 justify-center">
-      <a href="https://wa.me/525512345678" target="_blank" rel="noopener"
+      <a href="https://wa.me/5215647215472?text=Hola%2C%20acabo%20de%20enviar%20una%20cotizaci%C3%B3n%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n." target="_blank" rel="noopener"
         class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-green-500 text-white font-semibold hover:bg-green-600 transition-colors">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.316 0-4.458-.764-6.182-2.054l-.432-.338-2.844.953.953-2.844-.338-.432A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
         Contactar por WhatsApp
@@ -233,6 +313,7 @@ function initCotizador() {
   if (!form) return;
 
   const PRICING = JSON.parse(document.getElementById('pricing-data')?.textContent || '{}');
+  const TOTAL_STEPS = 5;
   let currentStep = 1;
 
   const panels = form.querySelectorAll('.step-panel') as NodeListOf<HTMLElement>;
@@ -241,6 +322,8 @@ function initCotizador() {
   const btnNext = form.querySelector('#btn-next') as HTMLButtonElement;
   const btnSubmit = form.querySelector('#btn-submit') as HTMLButtonElement;
   const totalDisplay = form.querySelector('#total-display') as HTMLElement;
+  const monthlyDisplay = form.querySelector('#monthly-display') as HTMLElement;
+  const monthlyWrapper = form.querySelector('#monthly-display-wrapper') as HTMLElement;
   const paginasSlider = form.querySelector('#paginas-slider') as HTMLInputElement;
   const paginasDisplay = form.querySelector('#paginas-display') as HTMLElement;
 
@@ -253,19 +336,19 @@ function initCotizador() {
       const circle = ind.querySelector('[data-step-circle]') as HTMLElement;
       const label = ind.querySelector('[data-step-label]') as HTMLElement;
       if (num <= step) {
-        circle.className = 'w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 gradient-bg text-white shadow-lg shadow-primary-500/30';
+        circle.className = 'w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 gradient-bg text-white shadow-lg shadow-primary-500/30';
         if (label) label.className = 'ml-2 text-sm font-medium hidden sm:inline transition-colors duration-300 text-white';
       } else {
-        circle.className = 'w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 bg-white/10 text-white/50';
+        circle.className = 'w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 bg-white/10 text-white/50';
         if (label) label.className = 'ml-2 text-sm font-medium hidden sm:inline transition-colors duration-300 text-white/40';
       }
     });
 
     btnPrev.classList.toggle('hidden', step === 1);
-    btnNext.classList.toggle('hidden', step === 4);
-    btnSubmit.classList.toggle('hidden', step !== 4);
+    btnNext.classList.toggle('hidden', step === TOTAL_STEPS);
+    btnSubmit.classList.toggle('hidden', step !== TOTAL_STEPS);
 
-    if (step === 4) buildResumen();
+    if (step === TOTAL_STEPS) buildResumen();
     form.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -337,12 +420,16 @@ function initCotizador() {
       correo: data.get('correo') as string || 'sin',
       funcionalidades: data.getAll('funcionalidades') as string[],
       extras: data.getAll('extras') as string[],
+      urgencia: data.get('urgencia') as string || 'normal',
+      mantenimiento: data.get('mantenimiento') as string || 'sin',
+      idiomas: data.get('idiomas') as string || 'uno',
     };
   }
 
   function calcTotal(fd: ReturnType<typeof getFormData>) {
     let total = 0;
     const items: { cat: string; label: string; precio: number }[] = [];
+    const itemsMensuales: { cat: string; label: string; precio: number }[] = [];
 
     const tipo = PRICING.tipoSitio.find((t: any) => t.id === fd.tipo_sitio);
     if (tipo) { total += tipo.base; items.push({ cat: 'Base', label: tipo.label, precio: tipo.base }); }
@@ -373,22 +460,43 @@ function initCotizador() {
       if (e && e.precio > 0) { total += e.precio; items.push({ cat: 'Extra', label: e.label, precio: e.precio }); }
     }
 
-    return { total, items };
+    const idioma = PRICING.idiomas.find((x: any) => x.id === fd.idiomas);
+    if (idioma && idioma.precio > 0) { total += idioma.precio; items.push({ cat: 'Idioma', label: idioma.label, precio: idioma.precio }); }
+
+    // Urgencia
+    const urg = PRICING.urgencia.find((x: any) => x.id === fd.urgencia);
+    const mult = urg?.multiplicador ?? 1;
+    if (mult > 1) {
+      const recargo = Math.round(total * (mult - 1));
+      items.push({ cat: 'Urgencia', label: `Entrega ${urg.label} (+${Math.round((mult - 1) * 100)}%)`, precio: recargo });
+      total += recargo;
+    }
+
+    // Mantenimiento
+    const mant = PRICING.mantenimiento.find((x: any) => x.id === fd.mantenimiento);
+    if (mant && mant.precio > 0) {
+      itemsMensuales.push({ cat: 'Mantenimiento', label: mant.label, precio: mant.precio });
+    }
+
+    const totalMensual = itemsMensuales.reduce((s: number, i: any) => s + i.precio, 0);
+    return { total, totalMensual, items, itemsMensuales };
   }
 
   function recalc() {
     const fd = getFormData();
-    const { total } = calcTotal(fd);
+    const { total, totalMensual } = calcTotal(fd);
     if (totalDisplay) totalDisplay.textContent = '$' + total.toLocaleString('es-MX');
+    if (monthlyDisplay) monthlyDisplay.textContent = '$' + totalMensual.toLocaleString('es-MX');
+    if (monthlyWrapper) monthlyWrapper.style.display = totalMensual > 0 ? 'flex' : 'none';
   }
 
   function buildResumen() {
     const container = form.querySelector('#resumen-items');
     if (!container) return;
     const fd = getFormData();
-    const { total, items } = calcTotal(fd);
+    const { total, totalMensual, items, itemsMensuales } = calcTotal(fd);
 
-    container.innerHTML = items.map(i => `
+    let html = items.map(i => `
       <div class="flex justify-between items-center py-2 border-b border-white/10 last:border-0">
         <div>
           <span class="text-xs text-white/40">${i.cat}</span>
@@ -396,16 +504,38 @@ function initCotizador() {
         </div>
         <span class="text-sm font-semibold text-cyan-300">$${i.precio.toLocaleString('es-MX')}</span>
       </div>
-    `).join('') + `
+    `).join('');
+
+    html += `
       <div class="flex justify-between items-center pt-4 mt-2 border-t border-white/20">
-        <span class="text-lg font-bold text-white">Total</span>
+        <span class="text-lg font-bold text-white">Inversion unica</span>
         <span class="text-xl font-bold gradient-text">$${total.toLocaleString('es-MX')} MXN</span>
       </div>
     `;
+
+    if (itemsMensuales.length > 0) {
+      html += itemsMensuales.map(i => `
+        <div class="flex justify-between items-center py-2 mt-3 border-t border-white/10">
+          <div>
+            <span class="text-xs text-white/40">${i.cat}</span>
+            <span class="text-sm text-white ml-2">${i.label}</span>
+          </div>
+          <span class="text-sm font-semibold text-cyan-300">$${i.precio.toLocaleString('es-MX')}/mes</span>
+        </div>
+      `).join('');
+      html += `
+        <div class="flex justify-between items-center pt-3 border-t border-white/20">
+          <span class="text-base font-bold text-white">Mensualidad</span>
+          <span class="text-lg font-bold text-cyan-300">$${totalMensual.toLocaleString('es-MX')} MXN/mes</span>
+        </div>
+      `;
+    }
+
+    container.innerHTML = html;
   }
 
   btnNext.addEventListener('click', () => {
-    if (currentStep < 4) goToStep(currentStep + 1);
+    if (currentStep < TOTAL_STEPS) goToStep(currentStep + 1);
   });
 
   btnPrev.addEventListener('click', () => {
@@ -464,15 +594,12 @@ function initCotizador() {
     errorEl.classList.add('hidden');
     goToStep(1);
     recalc();
-    // Reset visual states
     form.querySelectorAll('.ring-2').forEach(el => el.classList.remove('ring-2', 'ring-cyan-400'));
     form.querySelectorAll('[data-check-dot]').forEach(el => (el as HTMLElement).style.transform = 'scale(0)');
     form.querySelectorAll('[data-check-svg]').forEach(el => (el as HTMLElement).style.transform = 'scale(0)');
-    // Re-select defaults
-    const firstCards = form.querySelectorAll('[data-radio-card]');
-    firstCards.forEach(card => {
-      const radio = card.querySelector('input[type="radio"]:checked') as HTMLInputElement;
-      if (radio) {
+    form.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+      const card = (radio as HTMLElement).closest('[data-radio-card]');
+      if (card) {
         card.classList.add('ring-2', 'ring-cyan-400');
         const dot = card.querySelector('[data-check-dot]') as HTMLElement;
         if (dot) dot.style.transform = 'scale(1)';

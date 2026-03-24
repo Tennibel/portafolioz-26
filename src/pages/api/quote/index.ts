@@ -38,7 +38,7 @@ export const POST: APIRoute = async ({ request }) => {
     const body = await request.json();
 
     // Validar campos requeridos
-    const { nombre, email, tipo_sitio, num_paginas, diseno, hosting, correo, funcionalidades, extras } = body;
+    const { nombre, email, tipo_sitio, num_paginas, diseno, hosting, correo, funcionalidades, extras, urgencia, mantenimiento, idiomas } = body;
 
     if (!nombre || !email || !tipo_sitio || !diseno) {
       return new Response(JSON.stringify({ ok: false, error: 'Faltan campos requeridos' }), {
@@ -103,6 +103,9 @@ export const POST: APIRoute = async ({ request }) => {
       correo: correo || 'sin',
       funcionalidades: safeFuncionalidades,
       extras: safeExtras,
+      urgencia: urgencia || 'normal',
+      mantenimiento: mantenimiento || 'sin',
+      idiomas: idiomas || 'uno',
     });
 
     // Guardar en SQLite
