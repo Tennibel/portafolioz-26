@@ -8,6 +8,7 @@ import { calculateTotal, PRICING } from '../../../lib/pricing';
 import { insertQuote } from '../../../lib/db';
 import { sendQuoteEmails } from '../../../lib/email';
 import { getClientIp, rateLimit } from '../../../lib/rate-limit';
+import { trackQuote } from '../../../lib/active-campaign';
 
 const MAX_NAME_LENGTH = 120;
 const MAX_EMAIL_LENGTH = 160;
@@ -126,6 +127,11 @@ export const POST: APIRoute = async ({ request }) => {
     // Enviar emails (no bloquea la respuesta si falla)
     sendQuoteEmails({ nombre, email, telefono: body.telefono, empresa: body.empresa, total, items }).catch(err => {
       console.error('[api/quote] Error enviando emails:', err);
+    });
+
+    // Registrar en Active Campaign (no bloquea la respuesta)
+    trackQuote({ nombre, email, telefono: body.telefono, empresa: body.empresa, total, items }).catch(err => {
+      console.error('[api/quote] Error en Active Campaign:', err);
     });
 
     return new Response(JSON.stringify({ ok: true, quoteId, total }), {
