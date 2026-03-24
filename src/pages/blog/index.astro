@@ -126,14 +126,31 @@ function getGradient(category: string): string {
   return categoryColors[category] || 'from-primary-500 to-accent-500';
 }
 
-const featured = posts[0];
-const rest = posts.slice(1);
+const featured = posts.slice(0, 3);
+const rest = posts.slice(3);
 const categories = [...new Set(posts.map(p => p.category))];
+
+// Category styles - cada categoría tiene un look diferente
+const categoryStyles: Record<string, { bg: string; border: string; accent: string; icon: string }> = {
+  'SEO': { bg: 'bg-emerald-50', border: 'border-emerald-200', accent: 'text-emerald-600', icon: '🔍' },
+  'Sitio Web': { bg: 'bg-indigo-50', border: 'border-indigo-200', accent: 'text-indigo-600', icon: '🌐' },
+  'Marketing': { bg: 'bg-orange-50', border: 'border-orange-200', accent: 'text-orange-600', icon: '📈' },
+  'Ventas': { bg: 'bg-pink-50', border: 'border-pink-200', accent: 'text-pink-600', icon: '💰' },
+  'Wordpress': { bg: 'bg-blue-50', border: 'border-blue-200', accent: 'text-blue-600', icon: '📝' },
+  'Estrategias': { bg: 'bg-purple-50', border: 'border-purple-200', accent: 'text-purple-600', icon: '🎯' },
+  'Branding': { bg: 'bg-amber-50', border: 'border-amber-200', accent: 'text-amber-600', icon: '🎨' },
+  'Diseño': { bg: 'bg-cyan-50', border: 'border-cyan-200', accent: 'text-cyan-600', icon: '✨' },
+};
+
+function getCategoryStyle(category: string) {
+  return categoryStyles[category] || { bg: 'bg-gray-50', border: 'border-gray-200', accent: 'text-primary-600', icon: '📄' };
+}
 
 // Group posts by category (excluding featured)
 const postsByCategory = categories.map((cat) => ({
   category: cat,
   gradient: getGradient(cat),
+  style: getCategoryStyle(cat),
   posts: rest.filter((p) => p.category === cat),
 })).filter((g) => g.posts.length > 0);
 ---
@@ -142,28 +159,22 @@ const postsByCategory = categories.map((cat) => ({
   <Navbar />
 
   <!-- HERO -->
-  <section class="relative pt-32 pb-16 overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-dark-900 via-purple-950/40 to-dark-900"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.15),transparent_60%)]"></div>
-    <div class="absolute top-20 right-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-0 left-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
-
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <nav class="flex gap-2 text-sm text-white/60 mb-6" data-animate>
-        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+  <section class="bg-white pt-32 pb-12 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex gap-2 text-sm text-gray-400 mb-6" data-animate>
+        <a href="/" class="hover:text-primary-600 transition-colors">Inicio</a>
         <span>/</span>
-        <span class="text-white">Blog</span>
+        <span class="text-gray-600">Blog</span>
       </nav>
 
-      <div class="max-w-3xl">
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6" data-animate>
-          Blog para <span class="gradient-text">emprendedores</span>
+      <div class="max-w-3xl" data-animate>
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
+          Nuestro Blog
         </h1>
-        <p class="text-xl text-white/60" data-animate>
+        <p class="text-lg text-gray-500 leading-relaxed">
           Ideas prácticas sobre diseño web, SEO, marketing digital y tecnología para hacer crecer tu negocio.
         </p>
       </div>
-
     </div>
   </section>
 
@@ -202,105 +213,95 @@ const postsByCategory = categories.map((cat) => ({
     </div>
   </section>
 
-  <!-- FEATURED POST -->
-  {featured && (
-    <section class="bg-gray-50 pb-12" id="featured-section">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-animate>
-        <p class="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-4">Artículo destacado</p>
-        <a href={`/${featured.slug}`} class="blog-card group block rounded-3xl overflow-hidden bg-white border border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300" data-category={featured.category} data-title={featured.title.toLowerCase()}>
-          <div class="grid md:grid-cols-2">
-            <!-- Image -->
-            <div class="relative h-64 md:h-auto md:min-h-[360px] overflow-hidden">
-              {featured.image ? (
-                <img src={featured.image} alt={featured.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-              ) : (
-                <div class={`w-full h-full bg-gradient-to-br ${getGradient(featured.category)}`}>
-                  <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.15),transparent_60%)]"></div>
-                  <div class="absolute bottom-6 left-6">
-                    <span class="text-6xl opacity-20">📝</span>
-                  </div>
+  <!-- 3 FEATURED POSTS -->
+  {featured.length > 0 && (
+    <section class="bg-gray-50 py-12" id="featured-section">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p class="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-6" data-animate>Artículos destacados</p>
+        <div class="grid md:grid-cols-3 gap-6" data-animate>
+          {featured.map((feat, i) => (
+            <a href={`/${feat.slug}`} class={`blog-card group block rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-gray-300 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ${i === 0 ? 'md:col-span-2 md:row-span-2' : ''}`} data-category={feat.category} data-title={feat.title.toLowerCase()}>
+              <div class={`relative overflow-hidden ${i === 0 ? 'h-64 md:h-80' : 'h-48'}`}>
+                {feat.image ? (
+                  <img src={feat.image} alt={feat.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                ) : (
+                  <div class={`w-full h-full bg-gradient-to-br ${getGradient(feat.category)}`}></div>
+                )}
+                <div class="absolute top-4 left-4 flex items-center gap-2">
+                  <span class="bg-white/90 backdrop-blur-sm text-gray-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                    Destacado
+                  </span>
+                  <span class={`bg-gradient-to-r ${getGradient(feat.category)} text-white text-[10px] font-bold px-2.5 py-1 rounded-full`}>
+                    {feat.category}
+                  </span>
                 </div>
-              )}
-              <div class="absolute top-5 left-5">
-                <span class="bg-white/80 backdrop-blur-md text-gray-800 text-xs font-bold px-3 py-1.5 rounded-full border border-white/40 uppercase tracking-wider shadow-sm">
-                  Destacado
-                </span>
               </div>
-            </div>
-            <!-- Content -->
-            <div class="p-8 md:p-10 flex flex-col justify-center">
-              <div class="flex items-center gap-3 mb-4">
-                <span class={`bg-gradient-to-r ${getGradient(featured.category)} text-white text-xs font-bold px-3 py-1 rounded-full`}>
-                  {featured.category}
-                </span>
-                <time class="text-gray-400 text-sm">{featured.date}</time>
-              </div>
-              <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors">
-                {featured.title}
-              </h2>
-              <p class="text-gray-500 leading-relaxed mb-6">{featured.excerpt}</p>
-              <div class="flex items-center justify-between">
-                <span class="text-gray-400 text-sm">{featured.author}</span>
-                <span class="flex items-center gap-2 text-primary-600 text-sm font-medium group-hover:gap-3 transition-all">
-                  Leer artículo
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class={`p-6 ${i === 0 ? 'md:p-8' : ''}`}>
+                <time class="text-gray-400 text-xs">{feat.date}</time>
+                <h2 class={`font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2 mt-2 ${i === 0 ? 'text-2xl md:text-3xl' : 'text-lg'}`}>
+                  {feat.title}
+                </h2>
+                <p class={`text-gray-500 leading-relaxed line-clamp-2 ${i === 0 ? 'text-base' : 'text-sm'}`}>{feat.excerpt}</p>
+                <div class="flex items-center gap-2 mt-4 text-primary-600 text-sm font-medium">
+                  <span>Leer artículo</span>
+                  <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
-                </span>
+                </div>
               </div>
-            </div>
-          </div>
-        </a>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
   )}
 
-  <!-- POSTS BY CATEGORY -->
-  {postsByCategory.map((group) => (
-    <section class="bg-gray-50 pb-16 blog-category-section" data-section-category={group.category}>
+  <!-- POSTS BY CATEGORY - cada categoría con diseño diferente -->
+  {postsByCategory.map((group, groupIdx) => (
+    <section class={`pb-16 blog-category-section ${groupIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`} data-section-category={group.category}>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center gap-4 mb-8" data-animate>
-          <div class={`h-8 w-1.5 rounded-full bg-gradient-to-b ${group.gradient}`}></div>
-          <div>
-            <h2 class="text-2xl font-bold text-gray-900">{group.category}</h2>
-            <p class="text-gray-400 text-sm">{group.posts.length} artículo{group.posts.length !== 1 ? 's' : ''}</p>
+        <div class={`rounded-2xl ${group.style.bg} ${group.style.border} border p-6 md:p-8 mb-8`} data-animate>
+          <div class="flex items-center gap-4">
+            <span class="text-3xl">{group.style.icon}</span>
+            <div>
+              <h2 class={`text-2xl font-bold ${group.style.accent}`}>{group.category}</h2>
+              <p class="text-gray-400 text-sm">{group.posts.length} artículo{group.posts.length !== 1 ? 's' : ''}</p>
+            </div>
           </div>
         </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" data-animate>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate>
           {group.posts.map((post) => (
             <a
               href={`/${post.slug}`}
-              class="blog-card group rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-gray-300 hover:-translate-y-2 hover:shadow-xl transition-all duration-300"
+              class={`blog-card group rounded-2xl overflow-hidden bg-white border ${group.style.border} hover:-translate-y-1 hover:shadow-lg transition-all duration-300`}
               data-category={post.category}
               data-title={post.title.toLowerCase()}
             >
-              <div class="relative h-52 overflow-hidden">
+              <div class="relative h-48 overflow-hidden">
                 {post.image ? (
                   <img src={post.image} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                 ) : (
-                  <div class={`w-full h-full bg-gradient-to-br ${getGradient(post.category)} opacity-80`}>
-                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_60%)]"></div>
-                  </div>
+                  <div class={`w-full h-full bg-gradient-to-br ${getGradient(post.category)} opacity-80`}></div>
                 )}
                 <div class="absolute top-4 left-4">
-                  <span class={`bg-gradient-to-r ${getGradient(post.category)} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg`}>
+                  <span class={`bg-gradient-to-r ${group.gradient} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg`}>
                     {post.category}
                   </span>
                 </div>
               </div>
-              <div class="p-6">
-                <div class="flex items-center gap-3 mb-3">
+              <div class="p-5">
+                <div class="flex items-center gap-3 mb-2">
                   <time class="text-gray-400 text-xs">{post.date}</time>
                   <span class="text-gray-300">·</span>
                   <span class="text-gray-400 text-xs">{post.author}</span>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
+                <h3 class={`text-base font-bold text-gray-900 mb-2 group-hover:${group.style.accent} transition-colors line-clamp-2`}>
                   {post.title}
                 </h3>
                 <p class="text-gray-500 text-sm leading-relaxed line-clamp-2">
                   {post.excerpt}
                 </p>
-                <div class="flex items-center gap-2 mt-5 text-primary-600 text-sm font-medium">
+                <div class={`flex items-center gap-2 mt-4 ${group.style.accent} text-sm font-medium`}>
                   <span>Leer artículo</span>
                   <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -443,11 +444,11 @@ function initBlogFilters() {
   filterBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
       filterBtns.forEach((b) => {
-        b.classList.remove('active', 'bg-cyan-500/20', 'border-cyan-500/30', 'text-cyan-400');
-        b.classList.add('bg-white/5', 'border-white/10', 'text-white/60');
+        b.classList.remove('active', 'bg-primary-500/10', 'border-primary-500/30', 'text-primary-600');
+        b.classList.add('bg-gray-50', 'border-gray-200', 'text-gray-500');
       });
-      btn.classList.add('active', 'bg-cyan-500/20', 'border-cyan-500/30', 'text-cyan-400');
-      btn.classList.remove('bg-white/5', 'border-white/10', 'text-white/60');
+      btn.classList.add('active', 'bg-primary-500/10', 'border-primary-500/30', 'text-primary-600');
+      btn.classList.remove('bg-gray-50', 'border-gray-200', 'text-gray-500');
       activeCategory = (btn as HTMLElement).dataset.category || 'all';
       applyFilters();
     });

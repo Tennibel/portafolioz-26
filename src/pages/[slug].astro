@@ -38,6 +38,8 @@ let post: {
   author: string;
 } | null = null;
 
+let relatedPosts: Array<{ title: string; slug: string; image: string; category: string; date: string }> = [];
+
 if (WP_API_URL) {
   try {
     const res = await fetch(`${WP_API_URL}/wp-json/wp/v2/posts?slug=${slug}&_embed`, {
@@ -57,6 +59,21 @@ if (WP_API_URL) {
           imageAlt: p._embedded?.['wp:featuredmedia']?.[0]?.alt_text || '',
           author: p._embedded?.author?.[0]?.name || 'Portafolio Z',
         };
+
+        // Traer posts relacionados (excluyendo el actual)
+        const relRes = await fetch(`${WP_API_URL}/wp-json/wp/v2/posts?per_page=4&_embed&exclude=${p.id}`, {
+          headers: { 'Accept': 'application/json' },
+        });
+        if (relRes.ok) {
+          const relPosts: WPPost[] = await relRes.json();
+          relatedPosts = relPosts.slice(0, 3).map((r) => ({
+            title: r.title.rendered.replace(/<[^>]*>/g, ''),
+            slug: r.slug,
+            image: r._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+            category: r._embedded?.['wp:term']?.[0]?.[0]?.name || 'Blog',
+            date: new Date(r.date).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }),
+          }));
+        }
       }
     }
   } catch (e) {
@@ -204,6 +221,57 @@ const quickLinks = [
     </div>
   </section>
 
+  <!-- Notas relacionadas -->
+  {relatedPosts.length > 0 && (
+    <section class="bg-white py-16 border-t border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8" data-animate>También te puede interesar</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate>
+          {relatedPosts.map((rel) => (
+            <a href={`/${rel.slug}`} class="group rounded-2xl overflow-hidden bg-gray-50 border border-gray-200 hover:border-gray-300 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+              <div class="relative h-44 overflow-hidden">
+                {rel.image ? (
+                  <img src={rel.image} alt={rel.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                ) : (
+                  <div class="w-full h-full bg-gradient-to-br from-primary-500 to-accent-500"></div>
+                )}
+                <div class="absolute top-3 left-3">
+                  <span class="bg-white/90 backdrop-blur-sm text-gray-700 text-[10px] font-bold px-2.5 py-1 rounded-full">{rel.category}</span>
+                </div>
+              </div>
+              <div class="p-5">
+                <time class="text-gray-400 text-xs">{rel.date}</time>
+                <h3 class="text-base font-bold text-gray-900 mt-1 group-hover:text-primary-600 transition-colors line-clamp-2">{rel.title}</h3>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Servicios relacionados -->
+  <section class="bg-gray-50 py-16 border-t border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-3" data-animate>Nuestros Servicios</h2>
+      <p class="text-gray-500 mb-8" data-animate>Conoce cómo podemos ayudarte a crecer tu negocio</p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4" data-animate>
+        {quickLinks.map((link) => (
+          <a href={link.href} class="flex items-center gap-4 bg-white border border-gray-200 rounded-xl p-5 hover:border-primary-300 hover:shadow-md hover:-translate-y-0.5 transition-all group">
+            <span class="text-2xl group-hover:scale-110 transition-transform">{link.icon}</span>
+            <div>
+              <h3 class="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">{link.name}</h3>
+              <p class="text-gray-400 text-xs">Ver más</p>
+            </div>
+            <svg class="w-5 h-5 text-gray-300 ml-auto group-hover:text-primary-500 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <!-- CTA final -->
   <section class="relative py-20 overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-r from-primary-600 via-accent-600 to-pink-600"></div>
@@ -274,6 +342,7 @@ const quickLinks = [
     .blog-content p {
       margin-bottom: 1.5rem;
       line-height: 1.85;
+      text-align: justify;
     }
     .blog-content a {
       color: #7c3aed;
@@ -295,6 +364,7 @@ const quickLinks = [
     .blog-content li {
       margin-bottom: 0.5rem;
       line-height: 1.75;
+      text-align: justify;
     }
     .blog-content ol li {
       list-style-type: decimal;
