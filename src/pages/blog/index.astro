@@ -40,7 +40,7 @@ let posts: Array<{
 
 if (WP_API_URL) {
   try {
-    const res = await fetch(`${WP_API_URL}/wp-json/wp/v2/posts?per_page=12&_embed&orderby=date&order=desc`, {
+    const res = await fetch(`${WP_API_URL}/wp-json/wp/v2/posts?per_page=100&_embed&orderby=date&order=desc`, {
       headers: { 'Accept': 'application/json' },
     });
     if (res.ok) {
@@ -168,46 +168,46 @@ const postsByCategory = categories.map((cat) => ({
   </section>
 
   <!-- SEARCH & CATEGORIES -->
-  <section class="bg-dark-900 pt-8 pb-12">
+  <section class="bg-gray-50 pt-8 pb-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-animate>
-      <div class="bg-gradient-to-r from-dark-800 to-dark-800/80 border border-white/15 rounded-2xl p-6 md:p-8 shadow-xl shadow-black/20">
+      <div class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm">
         <div class="flex flex-col md:flex-row md:items-center gap-6">
           <!-- Search -->
           <div class="flex-1 relative">
-            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
               type="text"
               id="blog-search"
               placeholder="Buscar artículos por título, tema o palabra clave..."
-              class="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-white/40 text-sm focus:outline-none focus:border-cyan-500/60 focus:ring-2 focus:ring-cyan-500/20 focus:bg-white/15 transition-all"
+              class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3.5 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:bg-white transition-all"
             />
           </div>
           <!-- Category filters -->
           <div class="flex flex-wrap gap-2">
-            <button class="blog-filter active bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 text-sm font-medium px-4 py-2.5 rounded-full cursor-pointer transition-all" data-category="all">
+            <button class="blog-filter active bg-primary-500/10 border border-primary-500/30 text-primary-600 text-sm font-medium px-4 py-2.5 rounded-full cursor-pointer transition-all" data-category="all">
               Todos
             </button>
             {categories.map((cat) => (
-              <button class="blog-filter bg-white/5 border border-white/15 text-white/60 text-sm font-medium px-4 py-2.5 rounded-full hover:bg-white/10 hover:text-white hover:border-white/25 cursor-pointer transition-all" data-category={cat}>
+              <button class="blog-filter bg-gray-50 border border-gray-200 text-gray-500 text-sm font-medium px-4 py-2.5 rounded-full hover:bg-primary-50 hover:text-primary-600 hover:border-primary-300 cursor-pointer transition-all" data-category={cat}>
                 {cat}
               </button>
             ))}
           </div>
         </div>
         <!-- Results count -->
-        <p class="text-white/40 text-xs mt-4" id="blog-results-count">{posts.length} artículos encontrados</p>
+        <p class="text-gray-400 text-xs mt-4" id="blog-results-count">{posts.length} artículos encontrados</p>
       </div>
     </div>
   </section>
 
   <!-- FEATURED POST -->
   {featured && (
-    <section class="bg-dark-900 pb-12" id="featured-section">
+    <section class="bg-gray-50 pb-12" id="featured-section">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-animate>
-        <p class="text-white/40 text-xs font-semibold uppercase tracking-widest mb-4">Artículo destacado</p>
-        <a href={`/${featured.slug}`} class="blog-card group block rounded-3xl overflow-hidden bg-dark-800/50 border border-white/10 hover:border-white/20 transition-all duration-300" data-category={featured.category} data-title={featured.title.toLowerCase()}>
+        <p class="text-gray-400 text-xs font-semibold uppercase tracking-widest mb-4">Artículo destacado</p>
+        <a href={`/${featured.slug}`} class="blog-card group block rounded-3xl overflow-hidden bg-white border border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300" data-category={featured.category} data-title={featured.title.toLowerCase()}>
           <div class="grid md:grid-cols-2">
             <!-- Image -->
             <div class="relative h-64 md:h-auto md:min-h-[360px] overflow-hidden">
@@ -222,7 +222,7 @@ const postsByCategory = categories.map((cat) => ({
                 </div>
               )}
               <div class="absolute top-5 left-5">
-                <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 uppercase tracking-wider">
+                <span class="bg-white/80 backdrop-blur-md text-gray-800 text-xs font-bold px-3 py-1.5 rounded-full border border-white/40 uppercase tracking-wider shadow-sm">
                   Destacado
                 </span>
               </div>
@@ -233,15 +233,15 @@ const postsByCategory = categories.map((cat) => ({
                 <span class={`bg-gradient-to-r ${getGradient(featured.category)} text-white text-xs font-bold px-3 py-1 rounded-full`}>
                   {featured.category}
                 </span>
-                <time class="text-white/40 text-sm">{featured.date}</time>
+                <time class="text-gray-400 text-sm">{featured.date}</time>
               </div>
-              <h2 class="text-2xl md:text-3xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">
+              <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors">
                 {featured.title}
               </h2>
-              <p class="text-white/50 leading-relaxed mb-6">{featured.excerpt}</p>
+              <p class="text-gray-500 leading-relaxed mb-6">{featured.excerpt}</p>
               <div class="flex items-center justify-between">
-                <span class="text-white/30 text-sm">{featured.author}</span>
-                <span class="flex items-center gap-2 text-cyan-400 text-sm font-medium group-hover:gap-3 transition-all">
+                <span class="text-gray-400 text-sm">{featured.author}</span>
+                <span class="flex items-center gap-2 text-primary-600 text-sm font-medium group-hover:gap-3 transition-all">
                   Leer artículo
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -257,20 +257,20 @@ const postsByCategory = categories.map((cat) => ({
 
   <!-- POSTS BY CATEGORY -->
   {postsByCategory.map((group) => (
-    <section class="bg-dark-900 pb-16 blog-category-section" data-section-category={group.category}>
+    <section class="bg-gray-50 pb-16 blog-category-section" data-section-category={group.category}>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center gap-4 mb-8" data-animate>
           <div class={`h-8 w-1.5 rounded-full bg-gradient-to-b ${group.gradient}`}></div>
           <div>
-            <h2 class="text-2xl font-bold text-white">{group.category}</h2>
-            <p class="text-white/40 text-sm">{group.posts.length} artículo{group.posts.length !== 1 ? 's' : ''}</p>
+            <h2 class="text-2xl font-bold text-gray-900">{group.category}</h2>
+            <p class="text-gray-400 text-sm">{group.posts.length} artículo{group.posts.length !== 1 ? 's' : ''}</p>
           </div>
         </div>
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" data-animate>
           {group.posts.map((post) => (
             <a
               href={`/${post.slug}`}
-              class="blog-card group rounded-2xl overflow-hidden bg-dark-800/50 border border-white/10 hover:border-white/20 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300"
+              class="blog-card group rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-gray-300 hover:-translate-y-2 hover:shadow-xl transition-all duration-300"
               data-category={post.category}
               data-title={post.title.toLowerCase()}
             >
@@ -282,7 +282,6 @@ const postsByCategory = categories.map((cat) => ({
                     <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_60%)]"></div>
                   </div>
                 )}
-                <div class="absolute inset-0 bg-gradient-to-t from-dark-900/80 via-transparent to-transparent"></div>
                 <div class="absolute top-4 left-4">
                   <span class={`bg-gradient-to-r ${getGradient(post.category)} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg`}>
                     {post.category}
@@ -291,17 +290,17 @@ const postsByCategory = categories.map((cat) => ({
               </div>
               <div class="p-6">
                 <div class="flex items-center gap-3 mb-3">
-                  <time class="text-white/40 text-xs">{post.date}</time>
-                  <span class="text-white/20">·</span>
-                  <span class="text-white/40 text-xs">{post.author}</span>
+                  <time class="text-gray-400 text-xs">{post.date}</time>
+                  <span class="text-gray-300">·</span>
+                  <span class="text-gray-400 text-xs">{post.author}</span>
                 </div>
-                <h3 class="text-lg font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors line-clamp-2">
+                <h3 class="text-lg font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
                   {post.title}
                 </h3>
-                <p class="text-white/50 text-sm leading-relaxed line-clamp-2">
+                <p class="text-gray-500 text-sm leading-relaxed line-clamp-2">
                   {post.excerpt}
                 </p>
-                <div class="flex items-center gap-2 mt-5 text-cyan-400 text-sm font-medium">
+                <div class="flex items-center gap-2 mt-5 text-primary-600 text-sm font-medium">
                   <span>Leer artículo</span>
                   <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -316,7 +315,7 @@ const postsByCategory = categories.map((cat) => ({
   ))}
 
   <!-- FULL ARTICLES -->
-  <section class="bg-dark-900 pb-24">
+  <section class="bg-gray-50 pb-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Full articles (for mock/fallback) -->
