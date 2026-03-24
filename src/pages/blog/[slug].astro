@@ -78,86 +78,144 @@ const gradients: Record<string, string> = {
   'Branding': 'from-amber-500 to-orange-500',
 };
 const gradient = gradients[post.category] || 'from-primary-500 to-accent-500';
+
+const quickLinks = [
+  { name: 'Diseño Web', href: '/web-sales-machine', icon: '🌐' },
+  { name: 'Marketing', href: '/growth-marketing', icon: '📈' },
+  { name: 'SEO', href: '/posicionamiento-web-seo', icon: '🔍' },
+  { name: 'Branding', href: '/branding-and-launch-kit', icon: '🎨' },
+  { name: 'E-Commerce', href: '/tienda-en-linea-e-commerce', icon: '🛒' },
+  { name: 'Cotizador', href: '/cotizador', icon: '💰' },
+];
 ---
 
 <Layout title={`${post.title} | Blog Portafolio Z`} description={post.excerpt}>
   <Navbar />
 
-  <!-- Hero del articulo -->
-  <section class="relative pt-32 pb-16 overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-dark-900 via-purple-950/40 to-dark-900"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.15),transparent_60%)]"></div>
-    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <nav class="flex gap-2 text-sm text-white/60 mb-6" data-animate>
-        <a href="/" class="hover:text-white transition-colors">Inicio</a>
+  <!-- Breadcrumb -->
+  <section class="bg-gray-50 pt-28 pb-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex gap-2 text-sm text-gray-400" data-animate>
+        <a href="/" class="hover:text-primary-600 transition-colors">Inicio</a>
         <span>/</span>
-        <a href="/blog" class="hover:text-white transition-colors">Blog</a>
+        <a href="/blog" class="hover:text-primary-600 transition-colors">Blog</a>
         <span>/</span>
-        <span class="text-white line-clamp-1">{post.title}</span>
+        <span class="text-gray-600 line-clamp-1">{post.title}</span>
       </nav>
-
-      <div class="flex items-center gap-3 mb-5" data-animate>
-        <span class={`bg-gradient-to-r ${gradient} text-white text-xs font-bold px-3 py-1 rounded-full`}>
-          {post.category}
-        </span>
-        <time class="text-white/40 text-sm">{post.date}</time>
-        <span class="text-white/20">·</span>
-        <span class="text-white/40 text-sm">{post.author}</span>
-      </div>
-
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight" data-animate>
-        {post.title}
-      </h1>
-      <p class="text-xl text-white/60 leading-relaxed" data-animate>{post.excerpt}</p>
     </div>
   </section>
 
-  <!-- Imagen destacada -->
-  {post.image && (
-    <section class="bg-dark-900 pb-12">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8" data-animate>
-        <div class="rounded-2xl overflow-hidden border border-white/10">
-          <img src={post.image} alt={post.imageAlt || post.title} class="w-full h-auto object-cover" loading="eager" />
+  <!-- Contenido principal + Sidebar -->
+  <section class="bg-gray-50 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-[1fr_320px] gap-12">
+
+        <!-- Columna principal -->
+        <div>
+          <!-- Header del articulo -->
+          <div class="mb-8" data-animate>
+            <div class="flex flex-wrap items-center gap-3 mb-5">
+              <span class={`bg-gradient-to-r ${gradient} text-white text-xs font-bold px-3 py-1.5 rounded-full`}>
+                {post.category}
+              </span>
+              <time class="text-gray-400 text-sm">{post.date}</time>
+              <span class="text-gray-300">·</span>
+              <span class="text-gray-400 text-sm">{post.author}</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+              {post.title}
+            </h1>
+            <p class="text-lg text-gray-500 leading-relaxed">{post.excerpt}</p>
+          </div>
+
+          <!-- Imagen destacada -->
+          {post.image && (
+            <div class="mb-10 rounded-2xl overflow-hidden shadow-lg" data-animate>
+              <img src={post.image} alt={post.imageAlt || post.title} class="w-full h-auto object-cover" loading="eager" />
+            </div>
+          )}
+
+          <!-- Contenido del articulo -->
+          <article class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12 mb-10
+            prose prose-lg max-w-none
+            prose-headings:font-bold prose-headings:text-gray-900
+            prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-3 prose-h2:border-b prose-h2:border-gray-100
+            prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+            prose-p:text-gray-600 prose-p:leading-relaxed prose-p:mb-5
+            prose-a:text-primary-600 prose-a:no-underline hover:prose-a:text-accent-600 prose-a:font-medium
+            prose-strong:text-gray-800 prose-strong:font-semibold
+            prose-ul:text-gray-600 prose-ol:text-gray-600
+            prose-li:mb-2
+            prose-img:rounded-xl prose-img:shadow-md
+            prose-blockquote:border-primary-500 prose-blockquote:bg-primary-50 prose-blockquote:rounded-r-xl prose-blockquote:text-gray-600 prose-blockquote:py-1
+            " data-animate set:html={post.content} />
+
+          <!-- Navegacion inferior -->
+          <div class="flex items-center justify-between py-8 border-t border-gray-200">
+            <a href="/blog" class="inline-flex items-center gap-2 text-primary-600 hover:text-accent-600 text-sm font-medium transition-colors">
+              <svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+              Volver al blog
+            </a>
+            <a href={`https://wa.me/5215564721547?text=${encodeURIComponent(`Hola, vi el artículo *${post.title}* en su blog y me gustaría más información. ¿Me pueden asesorar?`)}`}
+              target="_blank" rel="noopener"
+              class="wa-lead inline-flex items-center gap-2 gradient-bg text-white text-sm font-semibold px-6 py-3 rounded-full hover:opacity-90 transition-all hover:scale-105 shadow-lg shadow-primary-500/20"
+              data-plan={post.title} data-price="" data-category="Blog">
+              ¿Necesitas ayuda?
+            </a>
+          </div>
         </div>
-      </div>
-    </section>
-  )}
 
-  <!-- Contenido del articulo -->
-  <section class="bg-dark-900 pb-24">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <article class="prose prose-invert prose-lg max-w-none
-        prose-headings:font-bold prose-headings:text-white
-        prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
-        prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-        prose-p:text-white/70 prose-p:leading-relaxed prose-p:mb-6
-        prose-a:text-cyan-400 prose-a:no-underline hover:prose-a:text-cyan-300
-        prose-strong:text-white prose-strong:font-semibold
-        prose-ul:text-white/70 prose-ol:text-white/70
-        prose-li:mb-2
-        prose-img:rounded-xl prose-img:border prose-img:border-white/10
-        prose-blockquote:border-cyan-500 prose-blockquote:text-white/60
-        " data-animate set:html={post.content} />
+        <!-- Sidebar -->
+        <aside class="lg:sticky lg:top-28 lg:self-start space-y-6">
 
-      <!-- Navegacion -->
-      <div class="mt-12 pt-8 border-t border-white/10 flex items-center justify-between">
-        <a href="/blog" class="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors">
-          <svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-          Volver al blog
-        </a>
-        <a href={`https://wa.me/5215564721547?text=${encodeURIComponent(`Hola, vi el artículo *${post.title}* en su blog y me gustaría más información. ¿Me pueden asesorar?`)}`}
-          target="_blank" rel="noopener"
-          class="wa-lead inline-flex items-center gap-2 gradient-bg text-white text-sm font-semibold px-5 py-2 rounded-full hover:opacity-90 transition-all"
-          data-plan={post.title} data-price="" data-category="Blog">
-          ¿Necesitas ayuda?
-        </a>
+          <!-- Accesos rapidos -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6" data-animate>
+            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Nuestros Servicios</h3>
+            <div class="space-y-2">
+              {quickLinks.map((link) => (
+                <a href={link.href} class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors group">
+                  <span class="text-xl group-hover:scale-110 transition-transform">{link.icon}</span>
+                  <span class="text-sm font-medium text-gray-700 group-hover:text-primary-600 transition-colors">{link.name}</span>
+                  <svg class="w-4 h-4 text-gray-300 ml-auto group-hover:text-primary-500 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <!-- CTA WhatsApp sidebar -->
+          <div class="bg-gradient-to-br from-primary-600 to-accent-600 rounded-2xl p-6 text-white shadow-lg shadow-primary-500/20" data-animate>
+            <h3 class="text-lg font-bold mb-2">¿Tienes un proyecto en mente?</h3>
+            <p class="text-white/70 text-sm mb-5 leading-relaxed">Platiquemos sobre cómo podemos ayudarte a crecer tu negocio.</p>
+            <a href={`https://wa.me/5215564721547?text=${encodeURIComponent('Hola, vi su blog y me gustaría cotizar un servicio. ¿Me pueden asesorar?')}`}
+              target="_blank" rel="noopener"
+              class="wa-lead flex items-center justify-center gap-2 bg-white text-primary-600 font-semibold py-3 px-5 rounded-full text-sm hover:bg-white/90 transition-all hover:scale-105"
+              data-plan="Sidebar Blog CTA" data-price="" data-category="Blog">
+              <svg class="w-5 h-5 text-green-500" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Escríbenos por WhatsApp
+            </a>
+          </div>
+
+          <!-- Mas articulos -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6" data-animate>
+            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Sigue leyendo</h3>
+            <a href="/blog" class="flex items-center gap-3 text-sm font-medium text-primary-600 hover:text-accent-600 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+              </svg>
+              Ver todos los artículos
+            </a>
+          </div>
+
+        </aside>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
+  <!-- CTA final -->
   <section class="relative py-20 overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-r from-primary-600 via-accent-600 to-pink-600"></div>
     <div class="absolute inset-0 bg-black/20"></div>
