@@ -46,7 +46,7 @@ if (WP_API_URL) {
         date: new Date(p.date).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }),
         slug: p.slug,
         image: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
-        link: `/blog/${p.slug}`,
+        link: `/${p.slug}`,
       }));
     }
   } catch (e) {
