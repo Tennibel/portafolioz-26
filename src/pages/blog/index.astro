@@ -301,48 +301,184 @@ const postsByCategory = categories.map((cat) => ({
             )}
           </div>
         </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate id={`cat-${groupIdx}`}>
-          {group.posts.map((post, postIdx) => (
-            <a
-              href={`/${post.slug}`}
-              class={`blog-card group rounded-2xl overflow-hidden bg-white border ${group.style.border} hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ${postIdx >= 6 ? 'hidden cat-extra' : ''}`}
-              data-category={post.category}
-              data-title={post.title.toLowerCase()}
-            >
-              <div class="relative h-48 overflow-hidden">
-                {post.image ? (
-                  <img src={post.image} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                ) : (
-                  <div class={`w-full h-full bg-gradient-to-br ${getGradient(post.category)} opacity-80`}></div>
-                )}
-                <div class="absolute top-4 left-4">
-                  <span class={`bg-gradient-to-r ${group.gradient} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg`}>
-                    {post.category}
-                  </span>
+        {/* Layout 0: Standard 3-column grid */}
+        {groupIdx % 3 === 0 && (
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate id={`cat-${groupIdx}`}>
+            {group.posts.map((post, postIdx) => (
+              <a
+                href={`/${post.slug}`}
+                class={`blog-card group rounded-2xl overflow-hidden bg-white border ${group.style.border} hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ${postIdx >= 6 ? 'hidden cat-extra' : ''}`}
+                data-category={post.category}
+                data-title={post.title.toLowerCase()}
+              >
+                <div class="relative h-48 overflow-hidden">
+                  {post.image ? (
+                    <img src={post.image} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                  ) : (
+                    <div class={`w-full h-full bg-gradient-to-br ${getGradient(post.category)} opacity-80`}></div>
+                  )}
+                  <div class="absolute top-4 left-4">
+                    <span class={`bg-gradient-to-r ${group.gradient} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg`}>
+                      {post.category}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div class="p-5">
-                <div class="flex items-center gap-3 mb-2">
-                  <time class="text-gray-400 text-xs">{post.date}</time>
-                  <span class="text-gray-300">·</span>
-                  <span class="text-gray-400 text-xs">{post.author}</span>
+                <div class="p-5">
+                  <div class="flex items-center gap-3 mb-2">
+                    <time class="text-gray-400 text-xs">{post.date}</time>
+                    <span class="text-gray-300">·</span>
+                    <span class="text-gray-400 text-xs">{post.author}</span>
+                  </div>
+                  <h3 class="text-base font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
+                    {post.title}
+                  </h3>
+                  <p class="text-gray-500 text-sm leading-relaxed line-clamp-2">
+                    {post.excerpt}
+                  </p>
+                  <div class={`flex items-center gap-2 mt-4 ${group.style.accent} text-sm font-medium`}>
+                    <span>Leer artículo</span>
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
                 </div>
-                <h3 class="text-base font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
-                  {post.title}
-                </h3>
-                <p class="text-gray-500 text-sm leading-relaxed line-clamp-2">
-                  {post.excerpt}
-                </p>
-                <div class={`flex items-center gap-2 mt-4 ${group.style.accent} text-sm font-medium`}>
-                  <span>Leer artículo</span>
-                  <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
+              </a>
+            ))}
+          </div>
+        )}
+
+        {/* Layout 1: Featured first post (horizontal) + 2-col grid for the rest */}
+        {groupIdx % 3 === 1 && (
+          <div class="grid md:grid-cols-2 gap-6" data-animate id={`cat-${groupIdx}`}>
+            {group.posts.map((post, postIdx) => (
+              postIdx === 0 ? (
+                <a
+                  href={`/${post.slug}`}
+                  class={`blog-card group md:col-span-2 grid md:grid-cols-2 rounded-2xl overflow-hidden bg-white border ${group.style.border} hover:-translate-y-1 hover:shadow-lg transition-all duration-300`}
+                  data-category={post.category}
+                  data-title={post.title.toLowerCase()}
+                >
+                  <div class="h-52 md:h-auto relative overflow-hidden">
+                    {post.image ? (
+                      <img src={post.image} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                    ) : (
+                      <div class={`w-full h-full bg-gradient-to-br ${getGradient(post.category)} opacity-80`}></div>
+                    )}
+                    <div class="absolute top-4 left-4">
+                      <span class={`bg-gradient-to-r ${group.gradient} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg`}>
+                        {post.category}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="p-6 flex flex-col justify-center">
+                    <div class="flex items-center gap-3 mb-2">
+                      <time class="text-gray-400 text-xs">{post.date}</time>
+                      <span class="text-gray-300">·</span>
+                      <span class="text-gray-400 text-xs">{post.author}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
+                      {post.title}
+                    </h3>
+                    <p class="text-gray-500 text-sm leading-relaxed line-clamp-3">
+                      {post.excerpt}
+                    </p>
+                    <div class={`flex items-center gap-2 mt-4 ${group.style.accent} text-sm font-medium`}>
+                      <span>Leer artículo</span>
+                      <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </a>
+              ) : (
+                <a
+                  href={`/${post.slug}`}
+                  class={`blog-card group rounded-2xl overflow-hidden bg-white border ${group.style.border} hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ${postIdx >= 6 ? 'hidden cat-extra' : ''}`}
+                  data-category={post.category}
+                  data-title={post.title.toLowerCase()}
+                >
+                  <div class="relative h-48 overflow-hidden">
+                    {post.image ? (
+                      <img src={post.image} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                    ) : (
+                      <div class={`w-full h-full bg-gradient-to-br ${getGradient(post.category)} opacity-80`}></div>
+                    )}
+                    <div class="absolute top-4 left-4">
+                      <span class={`bg-gradient-to-r ${group.gradient} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg`}>
+                        {post.category}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="p-5">
+                    <div class="flex items-center gap-3 mb-2">
+                      <time class="text-gray-400 text-xs">{post.date}</time>
+                      <span class="text-gray-300">·</span>
+                      <span class="text-gray-400 text-xs">{post.author}</span>
+                    </div>
+                    <h3 class="text-base font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
+                      {post.title}
+                    </h3>
+                    <p class="text-gray-500 text-sm leading-relaxed line-clamp-2">
+                      {post.excerpt}
+                    </p>
+                    <div class={`flex items-center gap-2 mt-4 ${group.style.accent} text-sm font-medium`}>
+                      <span>Leer artículo</span>
+                      <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </a>
+              )
+            ))}
+          </div>
+        )}
+
+        {/* Layout 2: Horizontal list cards (image left, content right) */}
+        {groupIdx % 3 === 2 && (
+          <div class="space-y-4" data-animate id={`cat-${groupIdx}`}>
+            {group.posts.map((post, postIdx) => (
+              <a
+                href={`/${post.slug}`}
+                class={`blog-card group flex gap-0 rounded-2xl overflow-hidden bg-white border ${group.style.border} hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ${postIdx >= 6 ? 'hidden cat-extra' : ''}`}
+                data-category={post.category}
+                data-title={post.title.toLowerCase()}
+              >
+                <div class="w-48 h-36 shrink-0 relative overflow-hidden">
+                  {post.image ? (
+                    <img src={post.image} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                  ) : (
+                    <div class={`w-full h-full bg-gradient-to-br ${getGradient(post.category)} opacity-80`}></div>
+                  )}
+                  <div class="absolute top-3 left-3">
+                    <span class={`bg-gradient-to-r ${group.gradient} text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg`}>
+                      {post.category}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </a>
-          ))}
-        </div>
+                <div class="p-5 flex flex-col justify-center">
+                  <div class="flex items-center gap-3 mb-1">
+                    <time class="text-gray-400 text-xs">{post.date}</time>
+                    <span class="text-gray-300">·</span>
+                    <span class="text-gray-400 text-xs">{post.author}</span>
+                  </div>
+                  <h3 class="text-base font-bold text-gray-900 mb-1 group-hover:text-primary-600 transition-colors line-clamp-1">
+                    {post.title}
+                  </h3>
+                  <p class="text-gray-500 text-sm leading-relaxed line-clamp-2">
+                    {post.excerpt}
+                  </p>
+                  <div class={`flex items-center gap-2 mt-2 ${group.style.accent} text-sm font-medium`}>
+                    <span>Leer artículo</span>
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   ))}
@@ -505,7 +641,12 @@ function initBlogFilters() {
   });
 }
 
-initBlogFilters();
+// Run on initial load (wait for DOM) and on Astro page transitions
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initBlogFilters);
+} else {
+  initBlogFilters();
+}
 document.addEventListener('astro:page-load', initBlogFilters);
 </script>
 
