@@ -25,7 +25,7 @@ interface WPPost {
 }
 
 const { slug } = Astro.params;
-const WP_API_URL = import.meta.env.WP_API_URL || '';
+const WP_API_URL = import.meta.env.WP_API_URL || process.env.WP_API_URL || '';
 
 let post: {
   title: string;

@@ -4,10 +4,11 @@ set -e
 # === CONFIGURAR ANTES DE USAR ===
 SERVER="root@76.13.110.57"
 REMOTE_DIR="/home/deploy/docker/portafolioz"
+WP_API_URL="https://blog.portafolioz.com"
 # ================================
 
 echo "==> Building Docker image locally..."
-docker build --platform linux/amd64 -t portafolioz:latest .
+docker build --platform linux/amd64 --build-arg WP_API_URL="$WP_API_URL" -t portafolioz:latest .
 
 echo "==> Saving image..."
 docker save portafolioz:latest | gzip > /tmp/portafolioz.tar.gz
