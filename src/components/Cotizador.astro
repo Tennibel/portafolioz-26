@@ -48,9 +48,6 @@ import { PRICING } from '../lib/pricing';
               </div>
               <div class="text-lg font-bold gradient-text">{h.precio === 0 ? '$0' : `$${h.precio.toLocaleString('es-MX')}`}</div>
             </div>
-            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
-              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
-            </div>
           </label>
         ))}
       </div>
@@ -82,18 +79,15 @@ import { PRICING } from '../lib/pricing';
               </div>
               <div class="text-lg font-bold gradient-text">${tipo.base.toLocaleString('es-MX')}</div>
             </div>
-            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
-              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
-            </div>
           </label>
         ))}
       </div>
 
       <div class="mb-4">
         <label class="block text-white font-medium mb-3">
-          Numero de paginas: <span class="gradient-text font-bold" id="paginas-display">3</span>
+          Numero de paginas: <span class="gradient-text font-bold" id="paginas-display">1</span>
         </label>
-        <input type="range" name="num_paginas" min="1" max="20" value="3"
+        <input type="range" name="num_paginas" min="1" max="20" value="1"
           class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-400"
           id="paginas-slider" />
         <div class="flex justify-between text-xs text-white/40 mt-1">
@@ -117,9 +111,6 @@ import { PRICING } from '../lib/pricing';
               </div>
               <span class="font-bold gradient-text text-lg">{d.precio === 0 ? 'Incluido' : `+$${d.precio.toLocaleString('es-MX')}`}</span>
             </div>
-            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
-              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
-            </div>
           </label>
         ))}
       </div>
@@ -134,9 +125,6 @@ import { PRICING } from '../lib/pricing';
               <div class="text-xs text-white/40 mt-1">{idm.desc}</div>
               <div class="text-sm font-bold gradient-text mt-2">{idm.precio === 0 ? 'Incluido' : `+$${idm.precio.toLocaleString('es-MX')}`}</div>
             </div>
-            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
-              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
-            </div>
           </label>
         ))}
       </div>
@@ -149,10 +137,7 @@ import { PRICING } from '../lib/pricing';
             <div class="text-center">
               <div class="font-semibold text-white">{u.label}</div>
               <div class="text-xs text-white/40 mt-1">{u.desc}</div>
-              <div class="text-sm font-bold gradient-text mt-2">{u.multiplicador === 1 ? 'Sin recargo' : `+${Math.round((u.multiplicador - 1) * 100)}%`}</div>
-            </div>
-            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
-              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
+              <div class="text-sm font-bold gradient-text mt-2">{u.multiplicador === 1 ? 'Sin costo extra' : `+${Math.round((u.multiplicador - 1) * 100)}%`}</div>
             </div>
           </label>
         ))}
@@ -167,9 +152,6 @@ import { PRICING } from '../lib/pricing';
               <div class="font-semibold text-white">{m.label}</div>
               <div class="text-xs text-white/40 mt-1">{m.desc}</div>
               <div class="text-sm font-bold gradient-text mt-2">{m.precio === 0 ? '$0' : `$${m.precio.toLocaleString('es-MX')}/mes`}</div>
-            </div>
-            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all" data-check-circle>
-              <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 scale-0 transition-transform" data-check-dot></div>
             </div>
           </label>
         ))}
@@ -360,13 +342,9 @@ function initCotizador() {
       const name = radio.name;
       form.querySelectorAll(`[data-radio-card="${name}"]`).forEach(c => {
         c.classList.remove('ring-2', 'ring-cyan-400');
-        const dot = c.querySelector('[data-check-dot]') as HTMLElement;
-        if (dot) dot.style.transform = 'scale(0)';
       });
       card.classList.add('ring-2', 'ring-cyan-400');
       radio.checked = true;
-      const dot = card.querySelector('[data-check-dot]') as HTMLElement;
-      if (dot) dot.style.transform = 'scale(1)';
       recalc();
     });
   });
@@ -397,8 +375,6 @@ function initCotizador() {
   form.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
     const card = (radio as HTMLElement).closest('[data-radio-card]');
     if (card) {
-      const dot = card.querySelector('[data-check-dot]') as HTMLElement;
-      if (dot) dot.style.transform = 'scale(1)';
     }
   });
 
@@ -434,7 +410,7 @@ function initCotizador() {
     const tipo = PRICING.tipoSitio.find((t: any) => t.id === fd.tipo_sitio);
     if (tipo) { total += tipo.base; items.push({ cat: 'Base', label: tipo.label, precio: tipo.base }); }
 
-    const basePag = tipo?.id === 'landing' ? 3 : tipo?.id === 'basico' ? 4 : tipo?.id === 'profesional' ? 8 : 12;
+    const basePag = tipo?.id === 'landing' ? 1 : tipo?.id === 'basico' ? 4 : tipo?.id === 'profesional' ? 8 : 12;
     if (fd.num_paginas > basePag) {
       const extra = (fd.num_paginas - basePag) * PRICING.paginaExtra;
       total += extra;
@@ -595,7 +571,6 @@ function initCotizador() {
     goToStep(1);
     recalc();
     form.querySelectorAll('.ring-2').forEach(el => el.classList.remove('ring-2', 'ring-cyan-400'));
-    form.querySelectorAll('[data-check-dot]').forEach(el => (el as HTMLElement).style.transform = 'scale(0)');
     form.querySelectorAll('[data-check-svg]').forEach(el => (el as HTMLElement).style.transform = 'scale(0)');
     form.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
       const card = (radio as HTMLElement).closest('[data-radio-card]');

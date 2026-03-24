@@ -17,14 +17,13 @@ export const PRICING = {
     { id: 'ilimitado', label: 'Ilimitado', precio: 900 },
   ],
   tipoSitio: [
-    { id: 'landing', label: 'Landing Page', desc: '1-3 secciones', base: 3800 },
-    { id: 'basico', label: 'Web Corporativa', desc: '2-4 secciones', base: 6400 },
-    { id: 'profesional', label: 'Web SEO Performance', desc: '5-8 secciones', base: 8900 },
-    { id: 'empresarial', label: 'Headless Premium', desc: '9-12 secciones', base: 10600 },
+    { id: 'landing', label: 'Landing Page', desc: '1 pagina (1 seccion)', base: 3800 },
+    { id: 'basico', label: 'Web Corporativa', desc: '2 a 4 paginas', base: 6400 },
+    { id: 'profesional', label: 'Web SEO Performance', desc: '5 a 8 paginas', base: 8900 },
+    { id: 'empresarial', label: 'Headless Premium', desc: '9 a 12 paginas', base: 10600 },
   ],
   paginaExtra: 900,
   diseno: [
-    { id: 'plantilla', label: 'Plantilla personalizada', desc: 'Nosotros elegimos y adaptamos una plantilla a tu marca', precio: 0 },
     { id: 'cliente', label: 'Cliente provee diseno', desc: 'Tu nos envias los archivos de diseno (Figma, PSD, etc.)', precio: 0 },
     { id: 'desde_cero', label: 'Diseno desde cero', desc: 'Creamos un diseno original y unico para tu marca', precio: 3200 },
   ],
@@ -48,7 +47,7 @@ export const PRICING = {
     { id: 'ssl', label: 'Certificado SSL', precio: 0, included: true },
   ],
   urgencia: [
-    { id: 'normal', label: 'Normal', desc: 'Tiempo estandar de entrega', multiplicador: 1 },
+    { id: 'normal', label: 'Normal', desc: 'Tiempo estandar, sin costo extra', multiplicador: 1 },
     { id: 'express', label: 'Express', desc: 'Entrega 30% mas rapido', multiplicador: 1.3 },
     { id: 'urgente', label: 'Urgente', desc: 'Entrega 50% mas rapido', multiplicador: 1.5 },
   ],
@@ -91,7 +90,7 @@ export function calculateTotal(data: Omit<QuoteData, 'total' | 'nombre' | 'email
   if (tipo) items.push({ categoria: 'base', nombre: tipo.label, precio: tipo.base });
 
   // Paginas extra
-  const basePaginas = tipo?.id === 'landing' ? 3 : tipo?.id === 'basico' ? 4 : tipo?.id === 'profesional' ? 8 : 12;
+  const basePaginas = tipo?.id === 'landing' ? 1 : tipo?.id === 'basico' ? 4 : tipo?.id === 'profesional' ? 8 : 12;
   if (data.num_paginas > basePaginas) {
     const extra = (data.num_paginas - basePaginas) * PRICING.paginaExtra;
     items.push({ categoria: 'base', nombre: `${data.num_paginas - basePaginas} paginas extra`, precio: extra });
