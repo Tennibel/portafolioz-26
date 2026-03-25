@@ -53,13 +53,17 @@ export function checkPassword(password: string): boolean {
 export function createSessionCookie(): string {
   const token = `admin:${Date.now()}:${randomBytes(16).toString('hex')}`;
   const signed = sign(token);
-  const secure = import.meta.env.PROD ? '; Secure' : '';
-  return `${COOKIE_NAME}=${signed}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${MAX_AGE}${secure}`;
+  const useSecure = process.env.FORCE_HTTPS === 'true';
+  const secure = useSecure ? '; Secure' : '';
+  const sameSite = useSecure ? 'Strict' : 'Lax';
+  return `${COOKIE_NAME}=${signed}; Path=/; HttpOnly; SameSite=${sameSite}; Max-Age=${MAX_AGE}${secure}`;
 }
 
 export function clearSessionCookie(): string {
-  const secure = import.meta.env.PROD ? '; Secure' : '';
-  return `${COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0${secure}`;
+  const useSecure = process.env.FORCE_HTTPS === 'true';
+  const secure = useSecure ? '; Secure' : '';
+  const sameSite = useSecure ? 'Strict' : 'Lax';
+  return `${COOKIE_NAME}=; Path=/; HttpOnly; SameSite=${sameSite}; Max-Age=0${secure}`;
 }
 
 export function isAuthenticated(request: Request): boolean {
