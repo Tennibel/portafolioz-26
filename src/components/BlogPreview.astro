@@ -32,18 +32,13 @@ let posts: Array<{
 }> = [];
 
 // Intentar obtener posts de WordPress
-console.log('[BlogPreview] WP_API_URL:', WP_API_URL);
 if (WP_API_URL) {
   try {
-    const wpUrl = `${WP_API_URL}/wp-json/wp/v2/posts?per_page=3&_embed&orderby=date&order=desc`;
-    console.log('[BlogPreview] Fetching:', wpUrl);
-    const res = await fetch(wpUrl, {
+    const res = await fetch(`${WP_API_URL}/wp-json/wp/v2/posts?per_page=3&_embed&orderby=date&order=desc`, {
       headers: { 'Accept': 'application/json' },
     });
-    console.log('[BlogPreview] Response status:', res.status);
     if (res.ok) {
       const wpPosts: WPPost[] = await res.json();
-      console.log('[BlogPreview] Posts received:', wpPosts.length);
       posts = wpPosts.map((p) => ({
         title: p.title.rendered.replace(/<[^>]*>/g, ''),
         excerpt: p.excerpt.rendered.replace(/<[^>]*>/g, '').trim(),
@@ -54,8 +49,8 @@ if (WP_API_URL) {
         link: `/${p.slug}`,
       }));
     }
-  } catch (e: any) {
-    console.error('[BlogPreview] Error:', e?.message || e);
+  } catch {
+    // Fallback silencioso a mock data
   }
 }
 
