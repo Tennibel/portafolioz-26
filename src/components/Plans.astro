@@ -64,7 +64,7 @@ const plansWithColors = plans.map((plan) => ({
               </li>
             ))}
           </ul>
-          <a href="/contacto" class={`block text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 ${plan.btnClass}`}>¡Quiero mi Web!</a>
+          <a href={`https://wa.me/5215647215472?text=${encodeURIComponent(`Hola, me interesa el plan *${plan.name}* de ${plan.price} MXN. ¿Me pueden dar más información?`)}`} target="_blank" rel="noopener" class={`wa-lead block text-center font-semibold py-3 px-5 rounded-full transition-all text-sm border-2 ${plan.btnClass}`} data-plan={plan.name} data-price={plan.price} data-category="Planes">¡Quiero mi Web!</a>
         </div>
       ))}
     </div>
