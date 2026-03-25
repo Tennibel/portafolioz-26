@@ -7,7 +7,7 @@ const COOKIE_NAME = 'pz_admin_session';
 const MAX_AGE = 60 * 60 * 24; // 24 horas
 
 function getSecret(): string {
-  const secret = import.meta.env.COOKIE_SECRET;
+  const secret = process.env.COOKIE_SECRET || import.meta.env.COOKIE_SECRET;
   if (secret) return secret;
   if (import.meta.env.PROD) {
     throw new Error('COOKIE_SECRET no esta configurado en produccion.');
@@ -16,7 +16,7 @@ function getSecret(): string {
 }
 
 function getAdminPassword(): string {
-  const password = import.meta.env.ADMIN_PASSWORD;
+  const password = process.env.ADMIN_PASSWORD || import.meta.env.ADMIN_PASSWORD;
   if (password) return password;
   if (import.meta.env.PROD) {
     throw new Error('ADMIN_PASSWORD no esta configurado en produccion.');
