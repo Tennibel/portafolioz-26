@@ -24,7 +24,7 @@ interface Props {
 const {
   title,
   description = 'Agencia de Diseño Web con más de 12 años de experiencia. Especialistas en diseño y desarrollo web a la medida en México, EE.UU. y España.',
-  ogImage = '/og-image.jpg',
+  ogImage = '/og-image.png',
   showLeadMagnet = false,
 } = Astro.props;
 
@@ -46,7 +46,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://portafol
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={`${title} | Portafolio Z`} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={new URL(ogImage, 'https://portafolioz.com').href} />
     <meta property="og:locale" content="es_MX" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@PortafolioZ" />
@@ -59,6 +59,48 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://portafol
     <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" /></noscript>
 
     <title>{title} | Portafolio Z</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/logo/logo-ico.png" />
+    <link rel="apple-touch-icon" href="/img/logo/logo-ico.png" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Portafolio Z",
+      "url": "https://portafolioz.com",
+      "logo": "https://portafolioz.com/img/logo/logo-light.png",
+      "description": "Agencia de Diseño Web con más de 12 años de experiencia. Especialistas en diseño y desarrollo web a la medida en México.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Dr. José María Vértiz 84BIS",
+        "addressLocality": "Ciudad de México",
+        "addressRegion": "CDMX",
+        "addressCountry": "MX"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+52-1-56-4721-5472",
+        "contactType": "sales",
+        "availableLanguage": ["Spanish"]
+      },
+      "sameAs": [
+        "https://www.facebook.com/portafolioz",
+        "https://www.instagram.com/portafolioz"
+      ]
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Portafolio Z",
+      "url": "https://portafolioz.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://portafolioz.com/blog?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    })} />
 
     <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-M7ZTR6TP6K"></script>
