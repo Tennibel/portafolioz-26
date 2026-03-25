@@ -1,9 +1,9 @@
 ---
 /**
  * blog.astro - Página de listado de artículos
- *
- * Se alimenta del WP REST API. Fallback a posts mock si la API no responde.
+ * SSR para cargar posts de WordPress en tiempo real
  */
+export const prerender = false;
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
