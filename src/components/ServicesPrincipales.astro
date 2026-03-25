@@ -1,30 +1,21 @@
 ---
 /**
  * ServicesPrincipales.astro - Servicios de Marketing Digital
- * Diseño diferente al de Services.astro para diferenciar las secciones
+ * Diseño sólido con fondo degradado, sin glass
  */
 const servicios = [
-  { href: '/posicionamiento-web-seo', icon: '🔍', title: 'Posicionamiento SEO', desc: 'Aparece en los primeros resultados de Google y atrae tráfico orgánico de calidad.', badge: 'Desde $4,900/mes', color: 'cyan' },
-  { href: '/growth-marketing', icon: '📈', title: 'Growth Marketing', desc: 'Estrategias de crecimiento basadas en datos para escalar tu negocio rápidamente.', badge: 'Desde $6,400/mes', color: 'violet' },
-  { href: '/leadboost-z', icon: '🤖', title: 'LeadBoost Z', desc: 'Automatización inteligente con IA para captar y nutrir leads 24/7.', badge: 'Desde $6,900/mes', color: 'pink' },
-  { href: '/social-media-marketing', icon: '📱', title: 'Social Media', desc: 'Gestión profesional de redes sociales para construir comunidad y generar ventas.', badge: 'Desde $6,400/mes', color: 'amber' },
-  { href: '/consultoria-marketing-digital', icon: '💡', title: 'Consultoría Digital', desc: 'Análisis y estrategia personalizada para maximizar tu retorno de inversión digital.', badge: 'Consulta gratis', color: 'emerald' },
-  { href: '/branding-and-launch-kit', icon: '🚀', title: 'Branding & Launch Kit', desc: 'Identidad visual completa y kit de lanzamiento para destacar desde el día uno.', badge: 'Desde $4,200 MXN', color: 'rose' },
+  { href: '/posicionamiento-web-seo', icon: '🔍', title: 'Posicionamiento SEO', desc: 'Aparece en los primeros resultados de Google y atrae tráfico orgánico de calidad.', badge: 'Desde $4,900/mes', gradient: 'from-cyan-500 to-blue-600' },
+  { href: '/growth-marketing', icon: '📈', title: 'Growth Marketing', desc: 'Estrategias de crecimiento basadas en datos para escalar tu negocio rápidamente.', badge: 'Desde $6,400/mes', gradient: 'from-violet-500 to-purple-600' },
+  { href: '/leadboost-z', icon: '🤖', title: 'LeadBoost Z', desc: 'Automatización inteligente con IA para captar y nutrir leads 24/7.', badge: 'Desde $6,900/mes', gradient: 'from-pink-500 to-rose-600' },
+  { href: '/social-media-marketing', icon: '📱', title: 'Social Media', desc: 'Gestión profesional de redes sociales para construir comunidad y generar ventas.', badge: 'Desde $6,400/mes', gradient: 'from-amber-500 to-orange-600' },
+  { href: '/consultoria-marketing-digital', icon: '💡', title: 'Consultoría Digital', desc: 'Análisis y estrategia personalizada para maximizar tu retorno de inversión digital.', badge: 'Consulta gratis', gradient: 'from-emerald-500 to-teal-600' },
+  { href: '/branding-and-launch-kit', icon: '🚀', title: 'Branding & Launch Kit', desc: 'Identidad visual completa y kit de lanzamiento para destacar desde el día uno.', badge: 'Desde $4,200 MXN', gradient: 'from-rose-500 to-pink-600' },
 ];
-
-const colorMap: Record<string, { bg: string; border: string; text: string; glow: string }> = {
-  cyan: { bg: 'rgba(6,182,212,0.08)', border: 'rgba(6,182,212,0.2)', text: '#22d3ee', glow: 'rgba(6,182,212,0.15)' },
-  violet: { bg: 'rgba(139,92,246,0.08)', border: 'rgba(139,92,246,0.2)', text: '#a78bfa', glow: 'rgba(139,92,246,0.15)' },
-  pink: { bg: 'rgba(236,72,153,0.08)', border: 'rgba(236,72,153,0.2)', text: '#f472b6', glow: 'rgba(236,72,153,0.15)' },
-  amber: { bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)', text: '#fbbf24', glow: 'rgba(245,158,11,0.15)' },
-  emerald: { bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)', text: '#34d399', glow: 'rgba(16,185,129,0.15)' },
-  rose: { bg: 'rgba(244,63,94,0.08)', border: 'rgba(244,63,94,0.2)', text: '#fb7185', glow: 'rgba(244,63,94,0.15)' },
-};
 ---
 
-<section id="servicios-principales" class="relative py-24 overflow-hidden">
-  <div class="absolute inset-0 bg-gradient-to-b from-dark-900 via-purple-950/30 to-dark-900"></div>
-  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.08),transparent_60%)]"></div>
+<section id="servicios-principales" class="relative py-24 overflow-hidden bg-gradient-to-br from-purple-950 via-dark-900 to-dark-900">
+  <div class="absolute top-0 left-1/3 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl"></div>
 
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-16" data-animate>
@@ -36,30 +27,26 @@ const colorMap: Record<string, { bg: string; border: string; text: string; glow:
     </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate>
-      {servicios.map((s) => {
-        const c = colorMap[s.color] || colorMap.violet;
-        return (
-          <a href={s.href}
-            class="group relative rounded-2xl p-7 transition-all duration-400 hover:-translate-y-2 block no-underline"
-            style={`background:${c.bg};border:1px solid ${c.border};`}>
-            <div class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-              style={`box-shadow:0 20px 40px ${c.glow}, 0 0 60px ${c.glow};`}></div>
-            <div class="relative z-10">
-              <span class="text-4xl mb-4 block">{s.icon}</span>
-              <h3 class="text-lg font-bold text-white mb-2 group-hover:text-white">{s.title}</h3>
-              <p class="text-white/50 text-sm leading-relaxed mb-4">{s.desc}</p>
-              <span class="inline-block text-xs font-semibold px-3 py-1.5 rounded-full mb-3"
-                style={`background:${c.bg};border:1px solid ${c.border};color:${c.text};`}>
-                {s.badge}
-              </span>
-              <div class="flex items-center gap-2 text-sm font-medium" style={`color:${c.text};`}>
-                <span>Ver más</span>
-                <svg class="w-4 h-4 group-hover:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-              </div>
+      {servicios.map((s) => (
+        <a href={s.href} class="group relative rounded-2xl overflow-hidden block no-underline transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+          <!-- Fondo degradado del card -->
+          <div class={`absolute inset-0 bg-gradient-to-br ${s.gradient} opacity-90`}></div>
+          <div class="absolute inset-0 bg-black/20"></div>
+
+          <div class="relative z-10 p-7">
+            <span class="text-4xl mb-4 block drop-shadow-lg">{s.icon}</span>
+            <h3 class="text-xl font-bold text-white mb-2">{s.title}</h3>
+            <p class="text-white/80 text-sm leading-relaxed mb-5">{s.desc}</p>
+            <span class="inline-block bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+              {s.badge}
+            </span>
+            <div class="flex items-center gap-2 text-white/90 text-sm font-medium group-hover:text-white transition-colors">
+              <span>Ver más</span>
+              <svg class="w-4 h-4 group-hover:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
             </div>
-          </a>
-        );
-      })}
+          </div>
+        </a>
+      ))}
     </div>
   </div>
 </section>
