@@ -5,6 +5,7 @@
 export const prerender = false;
 
 import { isAuthenticated } from '../../lib/auth';
+import '../../styles/global.css';
 
 // Si ya esta autenticado, redirigir
 if (isAuthenticated(Astro.request)) {
@@ -22,9 +23,6 @@ if (isAuthenticated(Astro.request)) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <title>Login | Admin PZ</title>
-    <style>
-      @import "tailwindcss";
-    </style>
   </head>
   <body class="bg-dark-900 min-h-screen flex items-center justify-center font-sans">
     <div class="w-full max-w-sm mx-4">
