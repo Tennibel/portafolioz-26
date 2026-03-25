@@ -11,9 +11,8 @@ import Footer from '../components/Footer.astro';
 import WhatsAppWidget from '../components/WhatsAppWidget.astro';
 import { getVisibleProjects } from '../lib/db';
 
-// Nota: para el build estático local, este page se prerenderiza.
-// Si la BD no existe o falla la consulta, usamos placeholders para evitar romper el build.
-export const prerender = true;
+// SSR: los proyectos se cargan en tiempo real desde la BD
+export const prerender = false;
 
 const PLACEHOLDER_PROJECTS = [
   {
