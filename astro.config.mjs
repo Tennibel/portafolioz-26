@@ -15,6 +15,9 @@ export default defineConfig({
   integrations: [sitemap({
     filter: (page) => !page.includes('/admin/') && !page.includes('/api/'),
   })],
+  security: {
+    checkOrigin: false,
+  },
   vite: {
     plugins: [tailwindcss()],
   },
