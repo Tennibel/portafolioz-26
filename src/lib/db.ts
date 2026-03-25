@@ -16,6 +16,7 @@ function getDb(): Database.Database {
     _db.pragma('journal_mode = WAL');
     _db.pragma('foreign_keys = ON');
     initSchema(_db);
+    seedPricingIfEmpty();
   }
   return _db;
 }
@@ -46,6 +47,20 @@ function initSchema(db: Database.Database) {
       categoria TEXT NOT NULL,
       nombre TEXT NOT NULL,
       precio INTEGER NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS pricing_config (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      categoria TEXT NOT NULL,
+      item_id TEXT NOT NULL,
+      label TEXT NOT NULL,
+      descripcion TEXT,
+      precio INTEGER DEFAULT 0,
+      base INTEGER DEFAULT 0,
+      multiplicador REAL DEFAULT 1,
+      included INTEGER DEFAULT 0,
+      orden INTEGER DEFAULT 0,
+      UNIQUE(categoria, item_id)
     );
 
     CREATE TABLE IF NOT EXISTS projects (
@@ -319,4 +334,163 @@ export function getProjectStats(): { total: number; visibles: number; destacados
   const visibles = (db.prepare('SELECT COUNT(*) as c FROM projects WHERE visible = 1').get() as { c: number }).c;
   const destacados = (db.prepare('SELECT COUNT(*) as c FROM projects WHERE featured = 1').get() as { c: number }).c;
   return { total, visibles, destacados };
+}
+
+/* ============================================
+   PRICING CONFIG
+   ============================================ */
+
+export type PricingItem = {
+  id: number;
+  categoria: string;
+  item_id: string;
+  label: string;
+  descripcion: string | null;
+  precio: number;
+  base: number;
+  multiplicador: number;
+  included: number;
+  orden: number;
+};
+
+export function getPricingByCategory(categoria: string): PricingItem[] {
+  const db = getDb();
+  return db.prepare('SELECT * FROM pricing_config WHERE categoria = ? ORDER BY orden ASC').all(categoria) as PricingItem[];
+}
+
+export function getAllPricing(): Record<string, PricingItem[]> {
+  const db = getDb();
+  const rows = db.prepare('SELECT * FROM pricing_config ORDER BY categoria, orden ASC').all() as PricingItem[];
+  const grouped: Record<string, PricingItem[]> = {};
+  for (const row of rows) {
+    if (!grouped[row.categoria]) grouped[row.categoria] = [];
+    grouped[row.categoria].push(row);
+  }
+  return grouped;
+}
+
+export function updatePricingItem(categoria: string, item_id: string, data: { precio?: number; base?: number; multiplicador?: number; label?: string; descripcion?: string }): boolean {
+  const db = getDb();
+  const fields: string[] = [];
+  const params: Record<string, unknown> = { categoria, item_id };
+
+  if (data.precio !== undefined) { fields.push('precio = @precio'); params.precio = data.precio; }
+  if (data.base !== undefined) { fields.push('base = @base'); params.base = data.base; }
+  if (data.multiplicador !== undefined) { fields.push('multiplicador = @multiplicador'); params.multiplicador = data.multiplicador; }
+  if (data.label !== undefined) { fields.push('label = @label'); params.label = data.label; }
+  if (data.descripcion !== undefined) { fields.push('descripcion = @descripcion'); params.descripcion = data.descripcion; }
+
+  if (fields.length === 0) return false;
+  const result = db.prepare(`UPDATE pricing_config SET ${fields.join(', ')} WHERE categoria = @categoria AND item_id = @item_id`).run(params);
+  return result.changes > 0;
+}
+
+export function updatePaginaExtra(precio: number): boolean {
+  const db = getDb();
+  const result = db.prepare('UPDATE pricing_config SET precio = @precio WHERE categoria = @categoria AND item_id = @item_id').run({ categoria: 'general', item_id: 'pagina_extra', precio });
+  return result.changes > 0;
+}
+
+export function getPaginaExtra(): number {
+  const db = getDb();
+  const row = db.prepare("SELECT precio FROM pricing_config WHERE categoria = 'general' AND item_id = 'pagina_extra'").get() as { precio: number } | undefined;
+  return row?.precio ?? 900;
+}
+
+export function seedPricingIfEmpty(): void {
+  const db = getDb();
+  const count = (db.prepare('SELECT COUNT(*) as c FROM pricing_config').get() as { c: number }).c;
+  if (count > 0) return;
+
+  const insert = db.prepare('INSERT INTO pricing_config (categoria, item_id, label, descripcion, precio, base, multiplicador, included, orden) VALUES (@categoria, @item_id, @label, @descripcion, @precio, @base, @multiplicador, @included, @orden)');
+
+  const tx = db.transaction(() => {
+    // General
+    insert.run({ categoria: 'general', item_id: 'pagina_extra', label: 'Pagina extra', descripcion: null, precio: 900, base: 0, multiplicador: 1, included: 0, orden: 0 });
+
+    // Hosting
+    const hosting = [
+      { item_id: 'propio', label: 'Ya tengo hosting', descripcion: 'Usaremos tu servidor actual', precio: 0, orden: 0 },
+      { item_id: '5gb', label: 'Dominio + 5 GB', descripcion: 'Ideal para landing pages', precio: 650, orden: 1 },
+      { item_id: '10gb', label: 'Dominio + 10 GB', descripcion: 'Sitios corporativos', precio: 890, orden: 2 },
+      { item_id: '15gb', label: 'Dominio + 15 GB', descripcion: 'Tiendas y sitios grandes', precio: 1290, orden: 3 },
+    ];
+    for (const h of hosting) insert.run({ ...h, categoria: 'hosting', base: 0, multiplicador: 1, included: 0 });
+
+    // Correo
+    const correo = [
+      { item_id: 'sin', label: 'Sin correos', precio: 0, orden: 0 },
+      { item_id: '2cuentas', label: '2 cuentas', precio: 220, orden: 1 },
+      { item_id: '6cuentas', label: '6 cuentas', precio: 320, orden: 2 },
+      { item_id: 'ilimitado', label: 'Ilimitado', precio: 900, orden: 3 },
+    ];
+    for (const c of correo) insert.run({ ...c, categoria: 'correo', descripcion: null, base: 0, multiplicador: 1, included: 0 });
+
+    // Tipo de sitio
+    const tipoSitio = [
+      { item_id: 'landing', label: 'Landing Page', descripcion: '1 pagina (1 seccion)', base: 3800, orden: 0 },
+      { item_id: 'basico', label: 'Web Corporativa', descripcion: '2 a 4 paginas', base: 6400, orden: 1 },
+      { item_id: 'profesional', label: 'Web SEO Performance', descripcion: '5 a 8 paginas', base: 8900, orden: 2 },
+      { item_id: 'empresarial', label: 'Headless Premium', descripcion: '9 a 12 paginas', base: 10600, orden: 3 },
+    ];
+    for (const t of tipoSitio) insert.run({ ...t, categoria: 'tipoSitio', precio: 0, multiplicador: 1, included: 0 });
+
+    // Diseno
+    const diseno = [
+      { item_id: 'cliente', label: 'Cliente provee diseno', descripcion: 'Tu nos envias los archivos de diseno', precio: 0, orden: 0 },
+      { item_id: 'desde_cero', label: 'Diseno desde cero', descripcion: 'Creamos un diseno original y unico', precio: 3200, orden: 1 },
+    ];
+    for (const d of diseno) insert.run({ ...d, categoria: 'diseno', base: 0, multiplicador: 1, included: 0 });
+
+    // Funcionalidades
+    const funcionalidades = [
+      { item_id: 'contacto', label: 'Formulario de contacto', precio: 0, included: 1, orden: 0 },
+      { item_id: 'blog', label: 'Blog integrado', precio: 1200, included: 0, orden: 1 },
+      { item_id: 'catalogo', label: 'Catalogo de productos', precio: 3800, included: 0, orden: 2 },
+      { item_id: 'entregas', label: 'Sistema de entregas', precio: 4500, included: 0, orden: 3 },
+      { item_id: 'tienda', label: 'Tienda online', precio: 7800, included: 0, orden: 4 },
+      { item_id: 'citas', label: 'Sistema de citas', precio: 3800, included: 0, orden: 5 },
+      { item_id: 'cotizador', label: 'Cotizador', precio: 1800, included: 0, orden: 6 },
+      { item_id: 'crm', label: 'CRM', precio: 2400, included: 0, orden: 7 },
+    ];
+    for (const f of funcionalidades) insert.run({ ...f, categoria: 'funcionalidades', descripcion: null, base: 0, multiplicador: 1 });
+
+    // Extras
+    const extras = [
+      { item_id: 'whatsapp', label: 'Boton WhatsApp', precio: 500, included: 0, orden: 0 },
+      { item_id: 'chatbot', label: 'Chatbot', precio: 4800, included: 0, orden: 1 },
+      { item_id: 'localizador', label: 'Localizador de tiendas', precio: 1200, included: 0, orden: 2 },
+      { item_id: 'lector_pdf', label: 'Lector PDF', precio: 500, included: 0, orden: 3 },
+      { item_id: 'seo_avanzado', label: 'SEO avanzado', precio: 1800, included: 0, orden: 4 },
+      { item_id: 'analytics', label: 'Google Analytics', precio: 0, included: 1, orden: 5 },
+      { item_id: 'ssl', label: 'Certificado SSL', precio: 0, included: 1, orden: 6 },
+    ];
+    for (const e of extras) insert.run({ ...e, categoria: 'extras', descripcion: null, base: 0, multiplicador: 1 });
+
+    // Urgencia
+    const urgencia = [
+      { item_id: 'normal', label: 'Normal', descripcion: 'Tiempo estandar, sin costo extra', multiplicador: 1, orden: 0 },
+      { item_id: 'express', label: 'Express', descripcion: 'Entrega 30% mas rapido', multiplicador: 1.3, orden: 1 },
+      { item_id: 'urgente', label: 'Urgente', descripcion: 'Entrega 50% mas rapido', multiplicador: 1.5, orden: 2 },
+    ];
+    for (const u of urgencia) insert.run({ ...u, categoria: 'urgencia', precio: 0, base: 0, included: 0 });
+
+    // Mantenimiento
+    const mantenimiento = [
+      { item_id: 'sin', label: 'Sin mantenimiento', descripcion: 'Solo la entrega del sitio', precio: 0, orden: 0 },
+      { item_id: 'basico', label: 'Basico', descripcion: 'Actualizaciones, backups y soporte basico', precio: 1200, orden: 1 },
+      { item_id: 'avanzado', label: 'Avanzado', descripcion: 'Todo lo basico + SEO mensual, contenido y reportes', precio: 2800, orden: 2 },
+    ];
+    for (const m of mantenimiento) insert.run({ ...m, categoria: 'mantenimiento', base: 0, multiplicador: 1, included: 0 });
+
+    // Idiomas
+    const idiomas = [
+      { item_id: 'uno', label: 'Un idioma', descripcion: 'Espanol', precio: 0, orden: 0 },
+      { item_id: 'bilingue', label: 'Bilingue', descripcion: 'Espanol + Ingles', precio: 2400, orden: 1 },
+      { item_id: 'trilingue', label: 'Trilingue', descripcion: 'Espanol + Ingles + otro', precio: 4200, orden: 2 },
+    ];
+    for (const i of idiomas) insert.run({ ...i, categoria: 'idiomas', base: 0, multiplicador: 1, included: 0 });
+  });
+
+  tx();
 }

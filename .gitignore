@@ -31,3 +31,6 @@ data/
 
 # Uploaded files (root level only, not src/pages/uploads/)
 /uploads/
+*.xlsx
+~$*
+ANALISIS-PRECIOS.md

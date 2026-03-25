@@ -1,12 +1,33 @@
 /**
- * email.ts - Envio de emails con Resend + templates HTML
+ * email.ts - Envio de emails con Nodemailer SMTP + templates HTML
  */
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-function getResend(): Resend | null {
-  const key = import.meta.env.RESEND_API_KEY;
-  if (!key) return null;
-  return new Resend(key);
+function getTransporter(): nodemailer.Transporter | null {
+  const host = process.env.SMTP_HOST;
+  const port = parseInt(process.env.SMTP_PORT || '465');
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!host || !user || !pass) {
+    console.log('[email] SMTP no configurado. Saltando envio de emails.');
+    return null;
+  }
+
+  return nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass },
+  });
+}
+
+function getFromAddress(): string {
+  return process.env.SMTP_FROM || process.env.SMTP_USER || 'noreply@portafolioz.com';
+}
+
+function getNotifyEmail(): string {
+  return process.env.NOTIFY_EMAIL || process.env.SMTP_USER || 'hola@portafolioz.com';
 }
 
 type EmailQuote = {
@@ -32,6 +53,7 @@ function buildItemsTable(items: EmailQuote['items']): string {
 }
 
 function adminEmailHtml(q: EmailQuote): string {
+  const siteUrl = process.env.SITE_URL || 'http://localhost:4321';
   return `
   <div style="font-family:'Poppins',Arial,sans-serif;max-width:600px;margin:0 auto;">
     <div style="background:linear-gradient(135deg,#6366f1,#a855f7,#ec4899);padding:32px;border-radius:12px 12px 0 0;">
@@ -62,7 +84,7 @@ function adminEmailHtml(q: EmailQuote): string {
       </div>
     </div>
     <div style="background:#f9fafb;padding:16px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;text-align:center;">
-      <a href="${import.meta.env.SITE_URL || 'http://localhost:4444'}/admin/cotizaciones" style="color:#6366f1;text-decoration:none;font-weight:600;">Ver en panel admin &rarr;</a>
+      <a href="${siteUrl}/admin/cotizaciones" style="color:#6366f1;text-decoration:none;font-weight:600;">Ver en panel admin &rarr;</a>
     </div>
   </div>`;
 }
@@ -92,7 +114,7 @@ function clientEmailHtml(q: EmailQuote): string {
       </div>
       <p style="color:#6b7280;font-size:14px;line-height:1.6;">*Este es un estimado. El precio final puede variar segun los detalles especificos de tu proyecto. Un asesor se pondra en contacto contigo pronto.</p>
       <div style="text-align:center;margin:24px 0;">
-        <a href="https://wa.me/525512345678?text=${encodeURIComponent(`Hola, acabo de hacer una cotizacion por ${formatMXN(q.total)} en su sitio web.`)}" style="display:inline-block;background:#25D366;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">Contactar por WhatsApp</a>
+        <a href="https://wa.me/5215647215472?text=${encodeURIComponent(`Hola, acabo de hacer una cotizacion por ${formatMXN(q.total)} en su sitio web.`)}" style="display:inline-block;background:#25D366;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">Contactar por WhatsApp</a>
       </div>
     </div>
     <div style="background:#f9fafb;padding:16px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;text-align:center;">
@@ -102,29 +124,33 @@ function clientEmailHtml(q: EmailQuote): string {
 }
 
 export async function sendQuoteEmails(quote: EmailQuote): Promise<{ success: boolean; error?: string }> {
-  const resend = getResend();
-  if (!resend) {
-    console.log('[email] Resend no configurado. Cotizacion guardada sin enviar emails.');
+  const transporter = getTransporter();
+  if (!transporter) {
+    console.log('[email] SMTP no configurado. Cotizacion guardada sin enviar emails.');
     return { success: true };
   }
 
+  const from = getFromAddress();
+  const notifyTo = getNotifyEmail();
+
   try {
     // Email al admin
-    await resend.emails.send({
-      from: 'Cotizador PZ <cotizador@portafolioz.com>',
-      to: ['hola@portafolioz.com'],
+    await transporter.sendMail({
+      from: `"Cotizador PZ" <${from}>`,
+      to: notifyTo,
       subject: `Nueva cotizacion: ${quote.nombre} - ${formatMXN(quote.total)} MXN`,
       html: adminEmailHtml(quote),
     });
 
     // Email al cliente
-    await resend.emails.send({
-      from: 'Portafolio Z <noreply@portafolioz.com>',
-      to: [quote.email],
+    await transporter.sendMail({
+      from: `"Portafolio Z" <${from}>`,
+      to: quote.email,
       subject: `Tu cotizacion de Portafolio Z - ${formatMXN(quote.total)} MXN`,
       html: clientEmailHtml(quote),
     });
 
+    console.log(`[email] Cotizacion enviada a ${quote.email} y notificacion a ${notifyTo}`);
     return { success: true };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Error desconocido';

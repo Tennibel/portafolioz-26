@@ -1,0 +1,168 @@
+---
+/**
+ * /admin/precios - Panel de configuracion de precios del cotizador
+ */
+export const prerender = false;
+
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { isAuthenticated } from '../../lib/auth';
+import { getAllPricing, getPaginaExtra } from '../../lib/db';
+
+if (!isAuthenticated(Astro.request)) {
+  return Astro.redirect('/admin/');
+}
+
+const pricing = getAllPricing();
+const paginaExtra = getPaginaExtra();
+
+const categoriaLabels: Record<string, string> = {
+  hosting: 'Hosting y Dominio',
+  correo: 'Correo Electronico',
+  tipoSitio: 'Tipo de Sitio Web',
+  diseno: 'Diseno',
+  funcionalidades: 'Funcionalidades',
+  extras: 'Extras',
+  urgencia: 'Urgencia de Entrega',
+  mantenimiento: 'Mantenimiento Mensual',
+  idiomas: 'Idiomas',
+};
+
+const categoriaOrder = ['tipoSitio', 'hosting', 'correo', 'diseno', 'funcionalidades', 'extras', 'urgencia', 'mantenimiento', 'idiomas'];
+---
+
+<AdminLayout title="Configuracion de Precios">
+  <div class="max-w-4xl mx-auto">
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-2xl font-bold text-white">Configuracion de Precios</h1>
+      <div id="save-status" class="text-sm text-white/40"></div>
+    </div>
+
+    <!-- Pagina extra -->
+    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-white">Precio por pagina extra</h3>
+          <p class="text-sm text-white/50">Se suma al precio base por cada pagina adicional</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-white/50">$</span>
+          <input type="number" id="pagina-extra" value={paginaExtra}
+            class="w-28 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-right focus:border-cyan-500 focus:outline-none"
+            data-cat="general" data-item="pagina_extra" data-field="precio" />
+          <span class="text-white/40 text-sm">MXN</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categorias -->
+    {categoriaOrder.map(cat => {
+      const items = pricing[cat] || [];
+      const isUrgencia = cat === 'urgencia';
+      const isTipoSitio = cat === 'tipoSitio';
+      return (
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
+          <h2 class="text-lg font-semibold text-white mb-4">{categoriaLabels[cat] || cat}</h2>
+          <div class="space-y-3">
+            {items.map(item => (
+              <div class="flex items-center gap-4 bg-white/5 rounded-xl p-4">
+                <div class="flex-1 min-w-0">
+                  <div class="text-white font-medium">{item.label}</div>
+                  {item.descripcion && <div class="text-sm text-white/40">{item.descripcion}</div>}
+                </div>
+                {isUrgencia ? (
+                  <div class="flex items-center gap-2">
+                    <span class="text-white/50 text-sm">x</span>
+                    <input type="number" step="0.1" min="1" value={item.multiplicador}
+                      class="w-20 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-right focus:border-cyan-500 focus:outline-none pricing-input"
+                      data-cat={cat} data-item={item.item_id} data-field="multiplicador" />
+                  </div>
+                ) : isTipoSitio ? (
+                  <div class="flex items-center gap-2">
+                    <span class="text-white/50">$</span>
+                    <input type="number" value={item.base}
+                      class="w-28 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-right focus:border-cyan-500 focus:outline-none pricing-input"
+                      data-cat={cat} data-item={item.item_id} data-field="base" />
+                    <span class="text-white/40 text-sm">MXN</span>
+                  </div>
+                ) : (
+                  <div class="flex items-center gap-2">
+                    {item.included ? (
+                      <span class="text-cyan-400 text-sm font-medium">Incluido</span>
+                    ) : (
+                      <>
+                        <span class="text-white/50">$</span>
+                        <input type="number" value={item.precio}
+                          class="w-28 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-right focus:border-cyan-500 focus:outline-none pricing-input"
+                          data-cat={cat} data-item={item.item_id} data-field="precio" />
+                        <span class="text-white/40 text-sm">MXN</span>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    })}
+
+    <div class="sticky bottom-0 bg-dark-900/90 backdrop-blur-md border-t border-white/10 -mx-4 px-4 py-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <button id="btn-save-all" class="gradient-bg text-white font-semibold px-8 py-3 rounded-lg hover:opacity-90 transition-opacity cursor-pointer w-full sm:w-auto">
+        Guardar todos los precios
+      </button>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+function initPrecios() {
+  const saveBtn = document.getElementById('btn-save-all');
+  const statusEl = document.getElementById('save-status');
+  const paginaExtraInput = document.getElementById('pagina-extra') as HTMLInputElement;
+
+  if (!saveBtn || !statusEl) return;
+
+  saveBtn.addEventListener('click', async () => {
+    saveBtn.textContent = 'Guardando...';
+    statusEl.textContent = '';
+
+    const inputs = document.querySelectorAll<HTMLInputElement>('.pricing-input, #pagina-extra');
+    const updates: { categoria: string; item_id: string; field: string; value: number }[] = [];
+
+    inputs.forEach(input => {
+      const cat = input.dataset.cat;
+      const item = input.dataset.item;
+      const field = input.dataset.field;
+      if (!cat || !item || !field) return;
+      const value = field === 'multiplicador' ? parseFloat(input.value) : parseInt(input.value);
+      if (!isNaN(value)) {
+        updates.push({ categoria: cat, item_id: item, field, value });
+      }
+    });
+
+    try {
+      const res = await fetch('/api/admin/pricing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ updates }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        statusEl.textContent = '✓ Guardado correctamente';
+        statusEl.className = 'text-sm text-green-400';
+        setTimeout(() => { statusEl.textContent = ''; statusEl.className = 'text-sm text-white/40'; }, 3000);
+      } else {
+        statusEl.textContent = data.error || 'Error al guardar';
+        statusEl.className = 'text-sm text-red-400';
+      }
+    } catch {
+      statusEl.textContent = 'Error de conexion';
+      statusEl.className = 'text-sm text-red-400';
+    }
+
+    saveBtn.textContent = 'Guardar todos los precios';
+  });
+}
+initPrecios();
+document.addEventListener('astro:page-load', initPrecios);
+</script>
