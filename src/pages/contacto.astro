@@ -185,7 +185,7 @@ const faqs = [
 
         <!-- Columna derecha: Formulario -->
         <div data-animate>
-          <form class="glass-card p-8 space-y-5">
+          <form id="contact-page-form" class="glass-card p-8 space-y-5">
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-white/60 text-sm mb-2" for="contacto-nombre">Nombre</label>
@@ -193,6 +193,7 @@ const faqs = [
                   id="contacto-nombre"
                   name="nombre"
                   type="text"
+                  required
                   autocomplete="given-name"
                   placeholder="Tu nombre"
                   class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors"
@@ -217,6 +218,7 @@ const faqs = [
                   id="contacto-email"
                   name="email"
                   type="email"
+                  required
                   autocomplete="email"
                   placeholder="tu@email.com"
                   class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors"
@@ -260,9 +262,10 @@ const faqs = [
                 class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors resize-none"
               ></textarea>
             </div>
-            <button type="submit" class="w-full gradient-bg text-white font-semibold py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-[1.02]">
+            <button type="submit" id="contact-page-submit" class="w-full gradient-bg text-white font-semibold py-4 rounded-full text-lg hover:opacity-90 transition-all hover:scale-[1.02]">
               Enviar Mensaje
             </button>
+            <p id="contact-page-status" class="hidden text-sm text-center"></p>
             <p class="text-white/30 text-xs text-center">Al enviar aceptas nuestro aviso de privacidad.</p>
           </form>
         </div>
@@ -349,7 +352,7 @@ const faqs = [
   <WhatsAppWidget />
 
 <script>
-  document.addEventListener('astro:page-load', () => {
+  function initContactoTracking() {
     document.querySelectorAll('.wa-lead').forEach((btn) => {
       btn.addEventListener('click', () => {
         const el = btn as HTMLElement;
@@ -364,6 +367,85 @@ const faqs = [
         }
       });
     });
-  });
+
+    const form = document.getElementById('contact-page-form') as HTMLFormElement | null;
+    const submitBtn = document.getElementById('contact-page-submit') as HTMLButtonElement | null;
+    const statusEl = document.getElementById('contact-page-status') as HTMLElement | null;
+    if (!form || !submitBtn || !statusEl) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nombre = (form.querySelector('[name="nombre"]') as HTMLInputElement | null)?.value?.trim() || '';
+      const apellido = (form.querySelector('[name="apellido"]') as HTMLInputElement | null)?.value?.trim() || '';
+      const email = (form.querySelector('[name="email"]') as HTMLInputElement | null)?.value?.trim() || '';
+      const telefono = (form.querySelector('[name="telefono"]') as HTMLInputElement | null)?.value?.trim() || '';
+      const tipoSitio = (form.querySelector('[name="tipo_sitio"]') as HTMLSelectElement | null)?.value || '';
+      const mensaje = (form.querySelector('[name="mensaje"]') as HTMLTextAreaElement | null)?.value?.trim() || '';
+
+      if (!nombre || !email) {
+        statusEl.classList.remove('hidden', 'text-cyan-300', 'text-emerald-400');
+        statusEl.classList.add('text-red-400');
+        statusEl.textContent = 'Nombre y email son requeridos.';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+      statusEl.classList.remove('hidden', 'text-red-400', 'text-emerald-400');
+      statusEl.classList.add('text-cyan-300');
+      statusEl.textContent = 'Enviando tu mensaje...';
+
+      const nombreCompleto = apellido ? `${nombre} ${apellido}` : nombre;
+      const proyecto = [
+        tipoSitio ? `Tipo de sitio: ${tipoSitio}` : '',
+        mensaje,
+      ].filter(Boolean).join('\n\n');
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre: nombreCompleto,
+            email,
+            telefono,
+            proyecto,
+          }),
+        });
+        const data = await res.json();
+
+        if (!data.ok) throw new Error(data.error || 'Error al enviar');
+
+        statusEl.classList.remove('text-cyan-300', 'text-red-400');
+        statusEl.classList.add('text-emerald-400');
+        statusEl.textContent = 'Mensaje enviado. Te responderemos en menos de 24 horas.';
+        form.reset();
+
+        if (typeof (window as any).pzTrackEvent === 'function') {
+          (window as any).pzTrackEvent('contact_form_submit_success', {
+            form_name: 'contact_page_form',
+            lead_channel: 'form',
+            page_path: window.location.pathname,
+          });
+          (window as any).pzTrackEvent('form_submit_success', {
+            form_name: 'contact_page_form',
+            lead_channel: 'form',
+            page_path: window.location.pathname,
+          });
+        }
+      } catch (err: any) {
+        statusEl.classList.remove('text-cyan-300', 'text-emerald-400');
+        statusEl.classList.add('text-red-400');
+        statusEl.textContent = err?.message || 'Error al enviar. Intenta nuevamente.';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar Mensaje';
+      }
+    });
+  }
+
+  initContactoTracking();
+  document.addEventListener('astro:page-load', initContactoTracking);
 </script>
 </Layout>
