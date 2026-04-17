@@ -102,11 +102,11 @@ import { PRICING } from '../lib/pricing';
     <!-- ============ PASO 3: Diseno + Idiomas + Urgencia + Mantenimiento ============ -->
     <div class="step-panel hidden" data-step="3">
       <h3 class="text-xl font-bold text-white mb-2">Tipo de diseno</h3>
-      <p class="text-white/50 text-sm mb-6">Puedes enviarnos tu diseno listo o nosotros lo creamos.</p>
+      <p class="text-white/50 text-sm mb-6">El diseno desde cero esta incluido. Si ya tienes tu diseno listo hay un costo adicional de $1,200 por adaptacion.</p>
       <div class="grid grid-cols-1 gap-4 mb-8">
         {PRICING.diseno.map((d, i) => (
-          <label class={`relative glass-card p-5 cursor-pointer hover:bg-white/15 transition-all duration-300 group ${i === 0 ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="diseno">
-            <input type="radio" name="diseno" value={d.id} class="sr-only" checked={i === 0} />
+          <label class={`relative glass-card p-5 cursor-pointer hover:bg-white/15 transition-all duration-300 group ${d.id === 'desde_cero' ? 'ring-2 ring-cyan-400' : ''}`} data-radio-card="diseno">
+            <input type="radio" name="diseno" value={d.id} class="sr-only" checked={d.id === 'desde_cero'} />
             <div class="flex justify-between items-center">
               <div>
                 <span class="font-medium text-white">{d.label}</span>
@@ -396,7 +396,7 @@ function initCotizador() {
     return {
       tipo_sitio: data.get('tipo_sitio') as string || 'landing',
       num_paginas: parseInt(data.get('num_paginas') as string) || 1,
-      diseno: data.get('diseno') as string || 'plantilla',
+      diseno: data.get('diseno') as string || 'desde_cero',
       hosting: data.get('hosting') as string || '5gb',
       correo: data.get('correo') as string || '2cuentas',
       funcionalidades: data.getAll('funcionalidades') as string[],

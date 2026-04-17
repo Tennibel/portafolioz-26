@@ -26,8 +26,8 @@ const DEFAULT_PRICING = {
   ],
   paginaExtra: 900,
   diseno: [
-    { id: 'cliente', label: 'Cliente provee diseno', desc: 'Tu nos envias los archivos de diseno', precio: 0 },
-    { id: 'desde_cero', label: 'Diseno desde cero', desc: 'Creamos un diseno original y unico', precio: 3200 },
+    { id: 'desde_cero', label: 'Diseno desde cero', desc: 'Nosotros creamos el diseno original, sin costo adicional', precio: 0 },
+    { id: 'cliente', label: 'Cliente provee diseno', desc: 'Tu nos envias los archivos de diseno listos (+$1,200 adaptacion)', precio: 1200 },
   ],
   funcionalidades: [
     { id: 'contacto', label: 'Formulario de contacto', precio: 0, included: true },
