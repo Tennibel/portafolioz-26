@@ -360,8 +360,8 @@ function initCotizador() {
 
     if (step === TOTAL_STEPS) {
       buildResumen();
-      if (typeof window.pzTrackEvent === 'function') {
-        window.pzTrackEvent('wizard_step_5_reached', {
+      if (typeof (window as any).pzTrackEvent === 'function') {
+        (window as any).pzTrackEvent('wizard_step_5_reached', {
           wizard_name: 'cotizador',
           page_path: window.location.pathname
         });
@@ -621,8 +621,8 @@ function initCotizador() {
         successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         const stEl = successEl.querySelector('#success-total');
         if (stEl) stEl.textContent = '$' + data.total.toLocaleString('es-MX');
-        if (typeof window.pzTrackEvent === 'function') {
-          window.pzTrackEvent('wizard_submit_success', {
+        if (typeof (window as any).pzTrackEvent === 'function') {
+          (window as any).pzTrackEvent('wizard_submit_success', {
             wizard_name: 'cotizador',
             lead_channel: 'wizard',
             value: data.total || 0,
