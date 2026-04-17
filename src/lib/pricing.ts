@@ -19,7 +19,7 @@ const DEFAULT_PRICING = {
     { id: 'ilimitado', label: 'Ilimitado', precio: 900 },
   ],
   tipoSitio: [
-    { id: 'landing', label: 'Landing Page', desc: '1 pagina (1 seccion)', base: 3800 },
+    { id: 'landing', label: 'Landing Page', desc: '1 pagina (incluye dominio + hosting 12 meses)', base: 3800 },
     { id: 'basico', label: 'Web Corporativa', desc: '2 a 4 paginas', base: 6400 },
     { id: 'profesional', label: 'Web SEO Performance', desc: '5 a 8 paginas', base: 8900 },
     { id: 'empresarial', label: 'Headless Premium', desc: '9 a 12 paginas', base: 10600 },
@@ -147,8 +147,13 @@ export function calculateTotal(data: Omit<QuoteData, 'total' | 'nombre' | 'email
   }
 
   // Hosting (anual)
+  if (data.tipo_sitio === 'landing') {
+    items.push({ categoria: 'hosting', nombre: 'Dominio + Hosting 12 meses (incluido en Landing)', precio: 0 });
+  }
   const h = pricing.hosting.find((x: any) => x.id === data.hosting);
-  if (h && h.precio > 0) items.push({ categoria: 'hosting', nombre: h.label, precio: h.precio });
+  if (data.tipo_sitio !== 'landing' && h && h.precio > 0) {
+    items.push({ categoria: 'hosting', nombre: h.label, precio: h.precio });
+  }
 
   // Correo (anual)
   const c = pricing.correo.find((x: any) => x.id === data.correo);

@@ -35,7 +35,7 @@ import { PRICING } from '../lib/pricing';
     <!-- ============ PASO 1: Infraestructura ============ -->
     <div class="step-panel" data-step="1">
       <h3 class="text-xl font-bold text-white mb-2">Hosting y dominio</h3>
-      <p class="text-white/50 text-sm mb-6">Si ya tienes hosting y dominio, selecciona "Ya tengo hosting" para no incluirlo en tu cotizacion.</p>
+      <p class="text-white/50 text-sm mb-6">Si eliges Landing Page, el dominio + hosting (12 meses) ya viene incluido sin costo adicional.</p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         {PRICING.hosting.map((h, i) => (
@@ -426,7 +426,12 @@ function initCotizador() {
     }
 
     const h = PRICING.hosting.find((x: any) => x.id === fd.hosting);
-    if (h && h.precio > 0) { total += h.precio; items.push({ cat: 'Hosting', label: h.label, precio: h.precio }); }
+    if (fd.tipo_sitio === 'landing') {
+      items.push({ cat: 'Hosting', label: 'Dominio + Hosting 12 meses (incluido en Landing)', precio: 0 });
+    } else if (h && h.precio > 0) {
+      total += h.precio;
+      items.push({ cat: 'Hosting', label: h.label, precio: h.precio });
+    }
 
     const c = PRICING.correo.find((x: any) => x.id === fd.correo);
     if (c && c.precio > 0) { total += c.precio; items.push({ cat: 'Correo', label: c.label, precio: c.precio }); }
