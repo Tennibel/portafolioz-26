@@ -333,7 +333,15 @@ function initCotizador() {
     btnNext.classList.toggle('hidden', step === TOTAL_STEPS);
     btnSubmit.classList.toggle('hidden', step !== TOTAL_STEPS);
 
-    if (step === TOTAL_STEPS) buildResumen();
+    if (step === TOTAL_STEPS) {
+      buildResumen();
+      if (typeof window.pzTrackEvent === 'function') {
+        window.pzTrackEvent('wizard_step_5_reached', {
+          wizard_name: 'cotizador',
+          page_path: window.location.pathname
+        });
+      }
+    }
     form.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -575,6 +583,15 @@ function initCotizador() {
         successEl.classList.remove('hidden');
         const stEl = successEl.querySelector('#success-total');
         if (stEl) stEl.textContent = '$' + data.total.toLocaleString('es-MX');
+        if (typeof window.pzTrackEvent === 'function') {
+          window.pzTrackEvent('wizard_submit_success', {
+            wizard_name: 'cotizador',
+            lead_channel: 'wizard',
+            value: data.total || 0,
+            currency: 'MXN',
+            page_path: window.location.pathname
+          });
+        }
       } else {
         throw new Error(data.error || 'Error al enviar');
       }

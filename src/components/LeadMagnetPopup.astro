@@ -120,6 +120,13 @@ function initLeadMagnetPopup() {
       if (data.ok) {
         form.classList.add('hidden');
         successEl?.classList.remove('hidden');
+        if (typeof window.pzTrackEvent === 'function') {
+          window.pzTrackEvent('form_submit_success', {
+            form_name: 'lead_magnet_form',
+            lead_channel: 'form',
+            page_path: window.location.pathname
+          });
+        }
         localStorage.setItem('lm-textos-legales-seen', '1');
         setTimeout(hidePopup, 4000);
       } else {

@@ -107,6 +107,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://portafol
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
       gtag('js', new Date());
       gtag('config', 'G-M7ZTR6TP6K');
     </script>
@@ -152,6 +153,33 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://portafol
 
       // Re-ejecutar despues de cada navegacion con View Transitions
       document.addEventListener('astro:page-load', initAnimations);
+
+      // Tracking global para eventos clave de conversion
+      if (!window.__pzGaBound) {
+        window.__pzGaBound = true;
+
+        window.pzTrackEvent = (eventName, params = {}) => {
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', eventName, params);
+          }
+        };
+
+        document.addEventListener('click', (event) => {
+          const target = event.target instanceof Element
+            ? event.target.closest('a.wa-lead, a[href*="wa.me/"], a[href*="api.whatsapp.com"]')
+            : null;
+
+          if (!target) return;
+
+          window.pzTrackEvent('whatsapp_click', {
+            lead_channel: 'whatsapp',
+            link_url: target.getAttribute('href') || '',
+            page_path: window.location.pathname,
+            plan: target.getAttribute('data-plan') || 'N/A',
+            category: target.getAttribute('data-category') || 'General'
+          });
+        }, true);
+      }
     </script>
   </body>
 </html>
