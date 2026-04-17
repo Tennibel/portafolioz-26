@@ -493,15 +493,21 @@ function initCotizador() {
     const fd = getFormData();
     const { total, totalMensual, items, itemsMensuales } = calcTotal(fd);
 
-    let html = items.map(i => `
+    let html = items.map(i => {
+      const isIncluido = i.precio === 0;
+      const priceBadge = isIncluido
+        ? `<span class="text-xs font-semibold text-emerald-400 bg-emerald-500/15 border border-emerald-400/30 rounded-full px-2 py-0.5">Incluido</span>`
+        : `<span class="text-sm font-semibold text-cyan-300">+$${i.precio.toLocaleString('es-MX')}</span>`;
+      return `
       <div class="flex justify-between items-center py-2 border-b border-white/10 last:border-0">
         <div>
           <span class="text-xs text-white/40">${i.cat}</span>
-          <span class="text-sm text-white ml-2">${i.label}</span>
+          <span class="text-sm ${isIncluido ? 'text-white/60' : 'text-white'} ml-2">${i.label}</span>
         </div>
-        <span class="text-sm font-semibold text-cyan-300">$${i.precio.toLocaleString('es-MX')}</span>
+        ${priceBadge}
       </div>
-    `).join('');
+    `;
+    }).join('');
 
     html += `
       <div class="flex justify-between items-center pt-4 mt-2 border-t border-white/20">
