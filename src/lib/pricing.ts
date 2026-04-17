@@ -65,6 +65,9 @@ const DEFAULT_PRICING = {
   ],
 };
 
+const INCLUDED_HOSTING_ID = '5gb';
+const INCLUDED_CORREO_ID = '2cuentas';
+
 function dbItemsToArray(items: PricingItem[]) {
   return items.map(i => ({
     id: i.item_id,
@@ -146,18 +149,26 @@ export function calculateTotal(data: Omit<QuoteData, 'total' | 'nombre' | 'email
     if (f && f.precio > 0) items.push({ categoria: 'funcionalidad', nombre: f.label, precio: f.precio });
   }
 
-  // Hosting (anual)
-  if (data.tipo_sitio === 'landing') {
-    items.push({ categoria: 'hosting', nombre: 'Dominio + Hosting 12 meses (incluido en Landing)', precio: 0 });
-  }
-  const h = pricing.hosting.find((x: any) => x.id === data.hosting);
-  if (data.tipo_sitio !== 'landing' && h && h.precio > 0) {
-    items.push({ categoria: 'hosting', nombre: h.label, precio: h.precio });
+  // Infraestructura incluida en todos los paquetes: Dominio + 5GB y 2 correos.
+  const includedHosting = pricing.hosting.find((x: any) => x.id === INCLUDED_HOSTING_ID);
+  const selectedHosting = pricing.hosting.find((x: any) => x.id === data.hosting);
+  items.push({ categoria: 'hosting', nombre: 'Dominio + Hosting 5GB (incluido)', precio: 0 });
+  if (selectedHosting && includedHosting) {
+    const hostingUpgrade = Math.max(0, selectedHosting.precio - includedHosting.precio);
+    if (hostingUpgrade > 0) {
+      items.push({ categoria: 'hosting', nombre: `Upgrade ${selectedHosting.label}`, precio: hostingUpgrade });
+    }
   }
 
-  // Correo (anual)
-  const c = pricing.correo.find((x: any) => x.id === data.correo);
-  if (c && c.precio > 0) items.push({ categoria: 'correo', nombre: c.label, precio: c.precio });
+  const includedCorreo = pricing.correo.find((x: any) => x.id === INCLUDED_CORREO_ID);
+  const selectedCorreo = pricing.correo.find((x: any) => x.id === data.correo);
+  items.push({ categoria: 'correo', nombre: '2 cuentas de correo corporativo (incluido)', precio: 0 });
+  if (selectedCorreo && includedCorreo) {
+    const correoUpgrade = Math.max(0, selectedCorreo.precio - includedCorreo.precio);
+    if (correoUpgrade > 0) {
+      items.push({ categoria: 'correo', nombre: `Upgrade ${selectedCorreo.label}`, precio: correoUpgrade });
+    }
+  }
 
   // Extras
   for (const eid of data.extras) {
