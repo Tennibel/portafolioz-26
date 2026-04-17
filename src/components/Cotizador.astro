@@ -255,6 +255,8 @@ import { PRICING } from '../lib/pricing';
         Enviar cotizacion
       </button>
     </div>
+
+    <p id="submit-status" class="hidden mt-4 text-sm text-center"></p>
   </form>
 
   <!-- Success state -->
@@ -311,6 +313,29 @@ function initCotizador() {
   const monthlyWrapper = form.querySelector('#monthly-display-wrapper') as HTMLElement;
   const paginasSlider = form.querySelector('#paginas-slider') as HTMLInputElement;
   const paginasDisplay = form.querySelector('#paginas-display') as HTMLElement;
+  const submitStatus = form.querySelector('#submit-status') as HTMLElement;
+
+  const pageRules: Record<string, { min: number; included: number }> = {
+    landing: { min: 1, included: 1 },
+    basico: { min: 2, included: 4 },
+    profesional: { min: 5, included: 8 },
+    empresarial: { min: 9, included: 12 },
+  };
+
+  function getPageRule(tipoSitio: string) {
+    return pageRules[tipoSitio] || pageRules.landing;
+  }
+
+  function syncPageSliderWithTipo() {
+    if (!paginasSlider) return;
+    const tipoSelected = (form.querySelector('input[name="tipo_sitio"]:checked') as HTMLInputElement)?.value || 'landing';
+    const rule = getPageRule(tipoSelected);
+    paginasSlider.min = String(rule.min);
+    if (parseInt(paginasSlider.value, 10) < rule.min) {
+      paginasSlider.value = String(rule.min);
+    }
+    if (paginasDisplay) paginasDisplay.textContent = paginasSlider.value;
+  }
 
   function goToStep(step: number) {
     currentStep = step;
@@ -357,6 +382,7 @@ function initCotizador() {
       });
       card.classList.add('ring-2', 'ring-cyan-400');
       radio.checked = true;
+      if (name === 'tipo_sitio') syncPageSliderWithTipo();
       recalc();
     });
   });
@@ -392,6 +418,7 @@ function initCotizador() {
 
   // Paginas slider
   if (paginasSlider) {
+    syncPageSliderWithTipo();
     paginasSlider.addEventListener('input', () => {
       if (paginasDisplay) paginasDisplay.textContent = paginasSlider.value;
       recalc();
@@ -401,9 +428,14 @@ function initCotizador() {
 
   function getFormData() {
     const data = new FormData(form);
+    const tipoSitio = data.get('tipo_sitio') as string || 'landing';
+    const pageRule = getPageRule(tipoSitio);
+    const paginasRaw = parseInt(data.get('num_paginas') as string) || pageRule.min;
+    const paginasNormalizadas = Math.max(pageRule.min, paginasRaw);
+
     return {
       tipo_sitio: data.get('tipo_sitio') as string || 'landing',
-      num_paginas: parseInt(data.get('num_paginas') as string) || 1,
+      num_paginas: paginasNormalizadas,
       diseno: data.get('diseno') as string || 'desde_cero',
       hosting: data.get('hosting') as string || '5gb',
       correo: data.get('correo') as string || '2cuentas',
@@ -423,7 +455,7 @@ function initCotizador() {
     const tipo = PRICING.tipoSitio.find((t: any) => t.id === fd.tipo_sitio);
     if (tipo) { total += tipo.base; items.push({ cat: 'Base', label: tipo.label, precio: tipo.base }); }
 
-    const basePag = tipo?.id === 'landing' ? 1 : tipo?.id === 'basico' ? 4 : tipo?.id === 'profesional' ? 8 : 12;
+    const basePag = getPageRule(fd.tipo_sitio).included;
     if (fd.num_paginas > basePag) {
       const extra = (fd.num_paginas - basePag) * PRICING.paginaExtra;
       total += extra;
@@ -569,6 +601,11 @@ function initCotizador() {
 
     btnSubmit.disabled = true;
     btnSubmit.textContent = 'Enviando...';
+    if (submitStatus) {
+      submitStatus.classList.remove('hidden', 'text-red-400', 'text-emerald-400');
+      submitStatus.classList.add('text-cyan-300');
+      submitStatus.textContent = 'Estamos enviando tu cotizacion...';
+    }
 
     try {
       const res = await fetch('/api/quote', {
@@ -581,6 +618,7 @@ function initCotizador() {
       if (data.ok) {
         form.classList.add('hidden');
         successEl.classList.remove('hidden');
+        successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         const stEl = successEl.querySelector('#success-total');
         if (stEl) stEl.textContent = '$' + data.total.toLocaleString('es-MX');
         if (typeof window.pzTrackEvent === 'function') {
@@ -596,8 +634,13 @@ function initCotizador() {
         throw new Error(data.error || 'Error al enviar');
       }
     } catch (err: any) {
-      form.classList.add('hidden');
+      if (submitStatus) {
+        submitStatus.classList.remove('hidden', 'text-cyan-300', 'text-emerald-400');
+        submitStatus.classList.add('text-red-400');
+        submitStatus.textContent = err.message || 'Error al enviar la cotizacion';
+      }
       errorEl.classList.remove('hidden');
+      errorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       const msgEl = errorEl.querySelector('#error-message');
       if (msgEl) msgEl.textContent = err.message || 'Error al enviar la cotizacion';
     } finally {
@@ -612,6 +655,10 @@ function initCotizador() {
     form.classList.remove('hidden');
     successEl.classList.add('hidden');
     errorEl.classList.add('hidden');
+    if (submitStatus) {
+      submitStatus.classList.add('hidden');
+      submitStatus.textContent = '';
+    }
     goToStep(1);
     recalc();
     form.querySelectorAll('.ring-2').forEach(el => el.classList.remove('ring-2', 'ring-cyan-400'));

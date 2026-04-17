@@ -4,7 +4,7 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
-import { calculateTotal, PRICING } from '../../../lib/pricing';
+import { calculateTotal, getPricing } from '../../../lib/pricing';
 import { insertQuote } from '../../../lib/db';
 import { sendQuoteEmails } from '../../../lib/email';
 import { getClientIp, rateLimit } from '../../../lib/rate-limit';
@@ -78,8 +78,10 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
+    const pricing = getPricing();
+
     // Validar que tipo_sitio existe
-    if (!PRICING.tipoSitio.find(t => t.id === tipo_sitio)) {
+    if (!pricing.tipoSitio.find(t => t.id === tipo_sitio)) {
       return new Response(JSON.stringify({ ok: false, error: 'Tipo de sitio invalido' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
@@ -95,10 +97,19 @@ export const POST: APIRoute = async ({ request }) => {
     const safeFuncionalidades = Array.isArray(funcionalidades) ? funcionalidades.slice(0, MAX_ITEMS_PER_GROUP) : [];
     const safeExtras = Array.isArray(extras) ? extras.slice(0, MAX_ITEMS_PER_GROUP) : [];
 
+    // Normalizar minimo de paginas por tipo de sitio para evitar inconsistencias en precios.
+    const minPagesByTipo: Record<string, number> = {
+      landing: 1,
+      basico: 2,
+      profesional: 5,
+      empresarial: 9,
+    };
+    const normalizedNumPaginas = Math.max(minPagesByTipo[tipo_sitio] || 1, safeNumPaginas);
+
     // Calcular total del lado del servidor (no confiar en el frontend)
     const { total, items } = calculateTotal({
       tipo_sitio,
-      num_paginas: safeNumPaginas,
+      num_paginas: normalizedNumPaginas,
       diseno,
       hosting: hosting || '5gb',
       correo: correo || '2cuentas',
@@ -116,7 +127,7 @@ export const POST: APIRoute = async ({ request }) => {
       telefono: body.telefono || undefined,
       empresa: body.empresa || undefined,
       tipo_sitio,
-      num_paginas: safeNumPaginas,
+      num_paginas: normalizedNumPaginas,
       diseno,
       hosting: hosting || '5gb',
       correo: correo || '2cuentas',
