@@ -124,17 +124,15 @@ function initContactForm() {
       if (data.ok) {
         form.classList.add('hidden');
         successEl.classList.remove('hidden');
+        const contactEventParams = {
+          form_name: 'contact_form',
+          lead_channel: 'form',
+          page_path: window.location.pathname
+        };
         if (typeof window.pzTrackEvent === 'function') {
-          window.pzTrackEvent('contact_form_submit_success', {
-            form_name: 'contact_form',
-            lead_channel: 'form',
-            page_path: window.location.pathname
-          });
-          window.pzTrackEvent('form_submit_success', {
-            form_name: 'contact_form',
-            lead_channel: 'form',
-            page_path: window.location.pathname
-          });
+          window.pzTrackEvent('contact_form_submit_success', contactEventParams);
+        } else if (typeof window.gtag === 'function') {
+          window.gtag('event', 'contact_form_submit_success', contactEventParams);
         }
       } else {
         alert(data.error || 'Error al enviar');

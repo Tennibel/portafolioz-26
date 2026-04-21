@@ -77,6 +77,31 @@ function initSchema(db: Database.Database) {
       created_at TEXT DEFAULT (datetime('now')),
       updated_at TEXT DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS microsite_posts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      domain TEXT NOT NULL,
+      title TEXT NOT NULL,
+      slug TEXT NOT NULL,
+      excerpt TEXT,
+      content TEXT NOT NULL,
+      cover_image TEXT,
+      category TEXT,
+      author TEXT DEFAULT 'Portafolio Z',
+      meta_title TEXT,
+      meta_description TEXT,
+      keywords TEXT,
+      published INTEGER DEFAULT 0,
+      featured INTEGER DEFAULT 0,
+      views INTEGER DEFAULT 0,
+      published_at TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now')),
+      UNIQUE(domain, slug)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_microsite_posts_domain ON microsite_posts(domain);
+    CREATE INDEX IF NOT EXISTS idx_microsite_posts_published ON microsite_posts(domain, published);
   `);
 }
 
@@ -334,6 +359,218 @@ export function getProjectStats(): { total: number; visibles: number; destacados
   const visibles = (db.prepare('SELECT COUNT(*) as c FROM projects WHERE visible = 1').get() as { c: number }).c;
   const destacados = (db.prepare('SELECT COUNT(*) as c FROM projects WHERE featured = 1').get() as { c: number }).c;
   return { total, visibles, destacados };
+}
+
+/* ============================================
+   MICROSITE POSTS (Blog del ecosistema)
+   ============================================ */
+
+export type MicrositePost = {
+  id: number;
+  domain: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content: string;
+  cover_image: string | null;
+  category: string | null;
+  author: string;
+  meta_title: string | null;
+  meta_description: string | null;
+  keywords: string | null;
+  published: number;
+  featured: number;
+  views: number;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type MicrositePostInput = {
+  domain: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  cover_image?: string;
+  category?: string;
+  author?: string;
+  meta_title?: string;
+  meta_description?: string;
+  keywords?: string;
+  published?: number;
+  featured?: number;
+};
+
+export function insertMicrositePost(data: MicrositePostInput): number {
+  const db = getDb();
+  const publishedAt = data.published === 1 ? new Date().toISOString() : null;
+  const result = db.prepare(`
+    INSERT INTO microsite_posts
+      (domain, title, slug, excerpt, content, cover_image, category, author,
+       meta_title, meta_description, keywords, published, featured, published_at)
+    VALUES
+      (@domain, @title, @slug, @excerpt, @content, @cover_image, @category, @author,
+       @meta_title, @meta_description, @keywords, @published, @featured, @published_at)
+  `).run({
+    domain: data.domain,
+    title: data.title,
+    slug: data.slug,
+    excerpt: data.excerpt || null,
+    content: data.content,
+    cover_image: data.cover_image || null,
+    category: data.category || null,
+    author: data.author || 'Portafolio Z',
+    meta_title: data.meta_title || null,
+    meta_description: data.meta_description || null,
+    keywords: data.keywords || null,
+    published: data.published ?? 0,
+    featured: data.featured ?? 0,
+    published_at: publishedAt,
+  });
+  return result.lastInsertRowid as number;
+}
+
+const ALLOWED_POST_COLUMNS = new Set<string>([
+  'domain', 'title', 'slug', 'excerpt', 'content', 'cover_image',
+  'category', 'author', 'meta_title', 'meta_description', 'keywords',
+  'published', 'featured',
+]);
+
+export function updateMicrositePost(id: number, data: Partial<MicrositePostInput>): boolean {
+  const db = getDb();
+  const fields: string[] = [];
+  const params: Record<string, unknown> = { id };
+
+  // Si se cambia published de 0 a 1, setear published_at
+  const existing = db.prepare('SELECT published, published_at FROM microsite_posts WHERE id = ?').get(id) as { published: number; published_at: string | null } | undefined;
+  if (!existing) return false;
+
+  for (const [key, val] of Object.entries(data)) {
+    if (val !== undefined && ALLOWED_POST_COLUMNS.has(key)) {
+      fields.push(`${key} = @${key}`);
+      params[key] = val;
+    }
+  }
+
+  // Auto-set published_at al publicar por primera vez
+  if (data.published === 1 && existing.published === 0 && !existing.published_at) {
+    fields.push(`published_at = @published_at`);
+    params.published_at = new Date().toISOString();
+  }
+
+  if (fields.length === 0) return false;
+  fields.push("updated_at = datetime('now')");
+
+  const result = db.prepare(`UPDATE microsite_posts SET ${fields.join(', ')} WHERE id = @id`).run(params);
+  return result.changes > 0;
+}
+
+export function deleteMicrositePost(id: number): boolean {
+  const db = getDb();
+  return db.prepare('DELETE FROM microsite_posts WHERE id = ?').run(id).changes > 0;
+}
+
+export function getMicrositePostById(id: number): MicrositePost | undefined {
+  const db = getDb();
+  return db.prepare('SELECT * FROM microsite_posts WHERE id = ?').get(id) as MicrositePost | undefined;
+}
+
+/** Admin: lista con filtros (incluye no publicados) */
+export function getMicrositePostsAdmin(opts?: {
+  domain?: string;
+  published?: number;
+  page?: number;
+  perPage?: number;
+}): { posts: MicrositePost[]; total: number } {
+  const db = getDb();
+  const page = opts?.page || 1;
+  const perPage = opts?.perPage || 20;
+  const offset = (page - 1) * perPage;
+
+  const where: string[] = [];
+  const params: unknown[] = [];
+
+  if (opts?.domain && opts.domain !== 'todos') {
+    where.push('domain = ?');
+    params.push(opts.domain);
+  }
+  if (opts?.published !== undefined) {
+    where.push('published = ?');
+    params.push(opts.published);
+  }
+
+  const whereSQL = where.length > 0 ? `WHERE ${where.join(' AND ')}` : '';
+
+  const total = (db.prepare(`SELECT COUNT(*) as c FROM microsite_posts ${whereSQL}`).get(...params) as { c: number }).c;
+  const posts = db
+    .prepare(`SELECT * FROM microsite_posts ${whereSQL} ORDER BY created_at DESC LIMIT ? OFFSET ?`)
+    .all(...params, perPage, offset) as MicrositePost[];
+
+  return { posts, total };
+}
+
+/** Publico: solo posts publicados de un dominio */
+export function getPublishedPostsByDomain(opts: {
+  domain: string;
+  page?: number;
+  perPage?: number;
+  category?: string;
+}): { posts: MicrositePost[]; total: number; hasMore: boolean } {
+  const db = getDb();
+  const page = opts.page || 1;
+  const perPage = opts.perPage || 10;
+  const offset = (page - 1) * perPage;
+
+  const where: string[] = ['domain = ?', 'published = 1'];
+  const params: unknown[] = [opts.domain];
+  if (opts.category) {
+    where.push('category = ?');
+    params.push(opts.category);
+  }
+  const whereSQL = `WHERE ${where.join(' AND ')}`;
+
+  const total = (db.prepare(`SELECT COUNT(*) as c FROM microsite_posts ${whereSQL}`).get(...params) as { c: number }).c;
+  const posts = db
+    .prepare(`SELECT * FROM microsite_posts ${whereSQL} ORDER BY featured DESC, published_at DESC LIMIT ? OFFSET ?`)
+    .all(...params, perPage, offset) as MicrositePost[];
+
+  return { posts, total, hasMore: offset + posts.length < total };
+}
+
+export function getPublishedPostBySlug(domain: string, slug: string): MicrositePost | undefined {
+  const db = getDb();
+  return db
+    .prepare('SELECT * FROM microsite_posts WHERE domain = ? AND slug = ? AND published = 1')
+    .get(domain, slug) as MicrositePost | undefined;
+}
+
+export function incrementPostViews(id: number): void {
+  const db = getDb();
+  db.prepare('UPDATE microsite_posts SET views = views + 1 WHERE id = ?').run(id);
+}
+
+export function getMicrositePostStats(): {
+  total: number;
+  publicados: number;
+  borradores: number;
+  porDominio: { domain: string; total: number; publicados: number }[];
+} {
+  const db = getDb();
+  const total = (db.prepare('SELECT COUNT(*) as c FROM microsite_posts').get() as { c: number }).c;
+  const publicados = (db.prepare('SELECT COUNT(*) as c FROM microsite_posts WHERE published = 1').get() as { c: number }).c;
+  const borradores = total - publicados;
+  const porDominio = db
+    .prepare(
+      `SELECT domain,
+              COUNT(*) as total,
+              SUM(CASE WHEN published = 1 THEN 1 ELSE 0 END) as publicados
+       FROM microsite_posts
+       GROUP BY domain
+       ORDER BY total DESC`
+    )
+    .all() as { domain: string; total: number; publicados: number }[];
+  return { total, publicados, borradores, porDominio };
 }
 
 /* ============================================

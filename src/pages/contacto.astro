@@ -69,7 +69,7 @@ const faqs = [
   },
   {
     q: '¿Hacen tiendas en línea?',
-    a: 'Sí, ofrecemos integración de Tienda Online por $3,800 MXN adicionales. Trabajamos con WooCommerce y Shopify según tus necesidades.',
+    a: 'Sí, ofrecemos integración de Tienda Online como servicio adicional. Trabajamos con WooCommerce y Shopify según tus necesidades.',
   },
 ];
 ---
@@ -237,18 +237,21 @@ const faqs = [
               </div>
             </div>
             <div>
-              <label class="block text-white/60 text-sm mb-2" for="contacto-tipo-sitio">¿Qué tipo de sitio necesitas?</label>
+              <label class="block text-white/60 text-sm mb-2" for="contacto-tipo-sitio">¿Qué te interesa?</label>
               <select
                 id="contacto-tipo-sitio"
                 name="tipo_sitio"
                 class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white/70 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-colors"
               >
                 <option value="" class="bg-dark-900">Selecciona una opción</option>
-                <option value="landing" class="bg-dark-900">Landing Page ($5,600)</option>
-                <option value="basico" class="bg-dark-900">Sitio Básico ($6,400)</option>
-                <option value="profesional" class="bg-dark-900">Sitio Profesional ($7,300)</option>
-                <option value="empresarial" class="bg-dark-900">Sitio Empresarial ($8,900)</option>
-                <option value="tienda" class="bg-dark-900">Tienda en Línea</option>
+                <option value="web-sales-machine" class="bg-dark-900">Web Sales Machine</option>
+                <option value="tienda-en-linea" class="bg-dark-900">Tienda en Línea</option>
+                <option value="branding-launch-kit" class="bg-dark-900">Branding & Launch Kit</option>
+                <option value="administrador-contenidos" class="bg-dark-900">Administrador de Contenidos</option>
+                <option value="growth-marketing" class="bg-dark-900">Growth Marketing</option>
+                <option value="seo" class="bg-dark-900">Posicionamiento SEO</option>
+                <option value="social-media" class="bg-dark-900">Social Media</option>
+                <option value="leadboost-z" class="bg-dark-900">LeadBoost Z</option>
                 <option value="otro" class="bg-dark-900">Otro / No estoy seguro</option>
               </select>
             </div>
@@ -422,17 +425,15 @@ const faqs = [
         statusEl.textContent = 'Mensaje enviado. Te responderemos en menos de 24 horas.';
         form.reset();
 
+        const contactEventParams = {
+          form_name: 'contact_page_form',
+          lead_channel: 'form',
+          page_path: window.location.pathname,
+        };
         if (typeof (window as any).pzTrackEvent === 'function') {
-          (window as any).pzTrackEvent('contact_form_submit_success', {
-            form_name: 'contact_page_form',
-            lead_channel: 'form',
-            page_path: window.location.pathname,
-          });
-          (window as any).pzTrackEvent('form_submit_success', {
-            form_name: 'contact_page_form',
-            lead_channel: 'form',
-            page_path: window.location.pathname,
-          });
+          (window as any).pzTrackEvent('contact_form_submit_success', contactEventParams);
+        } else if (typeof (window as any).gtag === 'function') {
+          (window as any).gtag('event', 'contact_form_submit_success', contactEventParams);
         }
       } catch (err: any) {
         statusEl.classList.remove('text-cyan-300', 'text-emerald-400');

@@ -1,0 +1,209 @@
+---
+/**
+ * /admin/micrositios-blog/[id] - Editar un post existente
+ */
+export const prerender = false;
+
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { isAuthenticated } from '../../../lib/auth';
+import { getMicrositePostById } from '../../../lib/db';
+import { MICROSITIOS, getMicrositeByDomain } from '../../../lib/micrositios';
+
+if (!isAuthenticated(Astro.request)) {
+  return Astro.redirect('/admin/');
+}
+
+const id = parseInt(Astro.params.id || '', 10);
+if (!Number.isFinite(id)) return Astro.redirect('/admin/micrositios-blog');
+
+const post = getMicrositePostById(id);
+if (!post) return Astro.redirect('/admin/micrositios-blog');
+
+const microsite = getMicrositeByDomain(post.domain);
+const publicUrl = `https://${post.domain}/blog/${post.slug}`;
+
+function formatDate(d: string | null): string {
+  if (!d) return '—';
+  return new Date(d.endsWith('Z') ? d : d + 'Z').toLocaleDateString('es-MX', {
+    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+}
+---
+
+<AdminLayout title={`Editar: ${post.title}`}>
+  <div class="flex flex-wrap items-center gap-3 mb-6">
+    <a href="/admin/micrositios-blog" class="text-white/50 hover:text-white text-sm">← Volver</a>
+    <h1 class="text-xl md:text-2xl font-bold text-white truncate">{post.title}</h1>
+    {post.published === 1 ? (
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 text-xs font-semibold">
+        <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> Publicado
+      </span>
+    ) : (
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 text-xs font-semibold">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Borrador
+      </span>
+    )}
+  </div>
+
+  <!-- Meta info -->
+  <div class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/50 mb-6">
+    <span>Dominio: <strong class="text-white/80">{microsite?.name || post.domain}</strong></span>
+    <span>Vistas: <strong class="text-white/80">{post.views}</strong></span>
+    <span>Creado: <strong class="text-white/80">{formatDate(post.created_at)}</strong></span>
+    {post.published_at && <span>Publicado: <strong class="text-white/80">{formatDate(post.published_at)}</strong></span>}
+    {post.published === 1 && (
+      <a href={publicUrl} target="_blank" rel="noopener" class="text-cyan-400 hover:text-cyan-300">
+        Ver publico ↗
+      </a>
+    )}
+  </div>
+
+  <form id="post-form" class="space-y-6 max-w-4xl" enctype="multipart/form-data">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+      <!-- IZQUIERDA -->
+      <div class="space-y-5">
+        <div>
+          <label class="block text-sm font-medium text-white/80 mb-1.5">Titulo *</label>
+          <input type="text" name="title" required maxlength="200" value={post.title} class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-white/80 mb-1.5">Slug (URL) *</label>
+          <div class="flex items-center gap-2">
+            <span class="text-white/40 text-sm">/blog/</span>
+            <input type="text" name="slug" required maxlength="200" pattern="[a-z0-9\-]+" value={post.slug} class="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400 font-mono text-sm" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-white/80 mb-1.5">Extracto</label>
+          <textarea name="excerpt" rows="2" maxlength="500" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400 resize-none">{post.excerpt || ''}</textarea>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-sm font-medium text-white/80">Contenido (Markdown) *</label>
+            <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank" rel="noopener" class="text-xs text-cyan-400 hover:text-cyan-300">Guia Markdown ↗</a>
+          </div>
+          <textarea name="content" required rows="20" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400 font-mono text-sm resize-y">{post.content}</textarea>
+        </div>
+      </div>
+
+      <!-- DERECHA -->
+      <div class="space-y-5">
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+          <h3 class="font-semibold text-white text-sm">Estado</h3>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="published" value="1" checked={post.published === 1} class="accent-cyan-400" />
+            <span class="text-sm text-white/80">Publicado (visible en el sitio)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="featured" value="1" checked={post.featured === 1} class="accent-pink-400" />
+            <span class="text-sm text-white/80">★ Destacado</span>
+          </label>
+        </div>
+
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+          <h3 class="font-semibold text-white text-sm">Dominio destino *</h3>
+          <select name="domain" required class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white">
+            {MICROSITIOS.map((m) => (
+              <option value={m.domain} selected={post.domain === m.domain}>{m.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+          <h3 class="font-semibold text-white text-sm">Imagen de portada</h3>
+          {post.cover_image && (
+            <img src={post.cover_image} alt="" class="w-full aspect-[1200/630] rounded-lg object-cover bg-white/5" />
+          )}
+          <input type="file" name="cover_image" accept="image/jpeg,image/png,image/webp" class="block w-full text-xs text-white/70 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-500/15 file:text-cyan-400 file:cursor-pointer" />
+          <p class="text-xs text-white/40">Deja vacio para mantener la actual. JPG/PNG/WEBP, 1200x630 recomendado.</p>
+        </div>
+
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+          <h3 class="font-semibold text-white text-sm">Metadata</h3>
+          <div>
+            <label class="block text-xs text-white/50 mb-1">Categoria</label>
+            <input type="text" name="category" maxlength="80" value={post.category || ''} class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white" />
+          </div>
+          <div>
+            <label class="block text-xs text-white/50 mb-1">Autor</label>
+            <input type="text" name="author" maxlength="80" value={post.author} class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white" />
+          </div>
+        </div>
+
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+          <h3 class="font-semibold text-white text-sm">SEO</h3>
+          <div>
+            <label class="block text-xs text-white/50 mb-1">Meta title</label>
+            <input type="text" name="meta_title" maxlength="160" value={post.meta_title || ''} class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white" />
+          </div>
+          <div>
+            <label class="block text-xs text-white/50 mb-1">Meta description</label>
+            <textarea name="meta_description" maxlength="300" rows="3" class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white resize-none">{post.meta_description || ''}</textarea>
+          </div>
+          <div>
+            <label class="block text-xs text-white/50 mb-1">Keywords</label>
+            <input type="text" name="keywords" maxlength="300" value={post.keywords || ''} class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-3 pt-4 border-t border-white/10">
+      <button type="submit" class="bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold px-6 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
+        Guardar cambios
+      </button>
+      <button type="button" id="btn-delete" class="text-red-400 hover:text-red-300 font-medium px-4 py-2.5 text-sm">
+        Eliminar post
+      </button>
+      <a href="/admin/micrositios-blog" class="text-white/60 hover:text-white px-4 py-2.5 text-sm">
+        Volver sin guardar
+      </a>
+    </div>
+
+    <p id="form-msg" class="hidden text-sm pt-2"></p>
+  </form>
+
+  <script define:vars={{ postId: post.id }}>
+    const form = document.getElementById('post-form');
+    const msg = document.getElementById('form-msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = 'text-sm pt-2 text-white/50';
+      msg.textContent = 'Guardando...';
+      const data = new FormData(form);
+      // Si el checkbox de published no esta marcado, FormData no lo manda.
+      // Forzamos 0 para que el backend actualice.
+      if (!data.has('published')) data.set('published', '0');
+      if (!data.has('featured')) data.set('featured', '0');
+
+      const res = await fetch(`/api/admin/micrositios-blog/${postId}`, {
+        method: 'PUT',
+        body: data,
+      });
+      const json = await res.json();
+      if (json.ok) {
+        msg.className = 'text-sm pt-2 text-green-400';
+        msg.textContent = 'Guardado ✓';
+        setTimeout(() => location.reload(), 600);
+      } else {
+        msg.className = 'text-sm pt-2 text-red-400';
+        msg.textContent = json.error || 'Error al guardar';
+      }
+    });
+
+    document.getElementById('btn-delete').addEventListener('click', async () => {
+      if (!confirm('¿Eliminar este post definitivamente? Esta accion no se puede deshacer.')) return;
+      const res = await fetch(`/api/admin/micrositios-blog/${postId}`, { method: 'DELETE' });
+      const json = await res.json();
+      if (json.ok) {
+        window.location.href = '/admin/micrositios-blog';
+      } else {
+        alert(json.error || 'Error al eliminar');
+      }
+    });
+  </script>
+</AdminLayout>

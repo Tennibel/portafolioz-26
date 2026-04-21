@@ -585,9 +585,14 @@ function initCotizador() {
     if (currentStep > 1) goToStep(currentStep - 1);
   });
 
-  // Submit
+  // Submit (con guard anti-duplicado)
+  let isSubmitting = false;
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // Guard: si ya hay un submit en curso (doble click, doble Enter), ignora.
+    if (isSubmitting) return;
+
     const fd = getFormData();
     const nombre = (form.querySelector('[name="nombre"]') as HTMLInputElement)?.value;
     const email = (form.querySelector('[name="email"]') as HTMLInputElement)?.value;
@@ -599,6 +604,7 @@ function initCotizador() {
       return;
     }
 
+    isSubmitting = true;
     btnSubmit.disabled = true;
     btnSubmit.textContent = 'Enviando...';
     if (submitStatus) {
@@ -630,9 +636,12 @@ function initCotizador() {
             page_path: window.location.pathname
           });
         }
-      } else {
-        throw new Error(data.error || 'Error al enviar');
+        // Éxito: dejamos el botón deshabilitado para siempre hasta que el usuario
+        // haga click en "Nueva cotización" (que recarga el flujo y resetea isSubmitting).
+        return;
       }
+
+      throw new Error(data.error || 'Error al enviar');
     } catch (err: any) {
       if (submitStatus) {
         submitStatus.classList.remove('hidden', 'text-cyan-300', 'text-emerald-400');
@@ -643,7 +652,8 @@ function initCotizador() {
       errorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       const msgEl = errorEl.querySelector('#error-message');
       if (msgEl) msgEl.textContent = err.message || 'Error al enviar la cotizacion';
-    } finally {
+      // Error: permitimos reintentar
+      isSubmitting = false;
       btnSubmit.disabled = false;
       btnSubmit.textContent = 'Enviar cotizacion';
     }
@@ -655,6 +665,10 @@ function initCotizador() {
     form.classList.remove('hidden');
     successEl.classList.add('hidden');
     errorEl.classList.add('hidden');
+    // Resetear flag + botón para permitir otro submit
+    isSubmitting = false;
+    btnSubmit.disabled = false;
+    btnSubmit.textContent = 'Enviar cotizacion';
     if (submitStatus) {
       submitStatus.classList.add('hidden');
       submitStatus.textContent = '';

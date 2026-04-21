@@ -1,0 +1,217 @@
+---
+/**
+ * /admin/micrositios-blog/nuevo - Crear un post nuevo
+ */
+export const prerender = false;
+
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { isAuthenticated } from '../../../lib/auth';
+import { MICROSITIOS } from '../../../lib/micrositios';
+
+if (!isAuthenticated(Astro.request)) {
+  return Astro.redirect('/admin/');
+}
+
+const preselectedDomain = Astro.url.searchParams.get('domain') || '';
+---
+
+<AdminLayout title="Nuevo Post">
+  <div class="flex items-center gap-3 mb-8">
+    <a href="/admin/micrositios-blog" class="text-white/50 hover:text-white text-sm">← Volver</a>
+    <h1 class="text-2xl font-bold text-white">Nuevo Post</h1>
+  </div>
+
+  <form id="post-form" class="space-y-6 max-w-4xl" enctype="multipart/form-data">
+    <!-- Grid 2 columnas -->
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+      <!-- IZQUIERDA: Contenido principal -->
+      <div class="space-y-5">
+        <div>
+          <label class="block text-sm font-medium text-white/80 mb-1.5">Titulo *</label>
+          <input
+            type="text"
+            name="title"
+            required
+            maxlength="200"
+            placeholder="Ejemplo: Como crear una pagina web en 2026"
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400"
+            id="title-input"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-white/80 mb-1.5">Slug (URL) *</label>
+          <div class="flex items-center gap-2">
+            <span class="text-white/40 text-sm">/blog/</span>
+            <input
+              type="text"
+              name="slug"
+              required
+              maxlength="200"
+              pattern="[a-z0-9\-]+"
+              placeholder="como-crear-una-pagina-web-2026"
+              class="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 font-mono text-sm"
+              id="slug-input"
+            />
+          </div>
+          <p class="text-xs text-white/40 mt-1">Solo minusculas, numeros y guiones</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-white/80 mb-1.5">Extracto (para listado)</label>
+          <textarea
+            name="excerpt"
+            rows="2"
+            maxlength="500"
+            placeholder="Resumen corto que aparece en el listado del blog. Max 500 caracteres."
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 resize-none"
+          ></textarea>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-sm font-medium text-white/80">Contenido (Markdown) *</label>
+            <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank" rel="noopener" class="text-xs text-cyan-400 hover:text-cyan-300">Guia Markdown ↗</a>
+          </div>
+          <textarea
+            name="content"
+            required
+            rows="18"
+            placeholder={`# Titulo del post\n\nPrimer parrafo del post...\n\n## Subtitulo\n\nTexto con **negritas** y [enlaces](https://ejemplo.com).\n\n- Lista item 1\n- Lista item 2\n\n![Imagen](url-imagen.jpg)`}
+            class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 font-mono text-sm resize-y"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- DERECHA: Sidebar de configuracion -->
+      <div class="space-y-5">
+        <!-- Estado + destacado -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+          <h3 class="font-semibold text-white text-sm">Estado</h3>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="published" value="1" class="accent-cyan-400" />
+            <span class="text-sm text-white/80">Publicado (visible en el sitio)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="featured" value="1" class="accent-pink-400" />
+            <span class="text-sm text-white/80">★ Destacado (sube en el listado)</span>
+          </label>
+        </div>
+
+        <!-- Dominio -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+          <h3 class="font-semibold text-white text-sm">Dominio destino *</h3>
+          <select
+            name="domain"
+            required
+            class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-2 text-sm text-white"
+          >
+            <option value="">Selecciona dominio...</option>
+            {MICROSITIOS.map((m) => (
+              <option value={m.domain} selected={preselectedDomain === m.domain}>
+                {m.name}
+              </option>
+            ))}
+          </select>
+          <p class="text-xs text-white/40">El post solo aparecera en el sitio del dominio seleccionado.</p>
+        </div>
+
+        <!-- Imagen portada -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+          <h3 class="font-semibold text-white text-sm">Imagen de portada</h3>
+          <input
+            type="file"
+            name="cover_image"
+            accept="image/jpeg,image/png,image/webp"
+            class="block w-full text-xs text-white/70 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-500/15 file:text-cyan-400 file:cursor-pointer"
+          />
+          <p class="text-xs text-white/40">JPG / PNG / WEBP. Recomendado: 1200x630.</p>
+        </div>
+
+        <!-- Metadata -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+          <h3 class="font-semibold text-white text-sm">Metadata</h3>
+          <div>
+            <label class="block text-xs text-white/50 mb-1">Categoria</label>
+            <input type="text" name="category" maxlength="80" placeholder="Ej: Diseno Web, SEO" class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white placeholder-white/30" />
+          </div>
+          <div>
+            <label class="block text-xs text-white/50 mb-1">Autor</label>
+            <input type="text" name="author" maxlength="80" value="Portafolio Z" class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white" />
+          </div>
+        </div>
+
+        <!-- SEO -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3">
+          <h3 class="font-semibold text-white text-sm">SEO (opcional)</h3>
+          <div>
+            <label class="block text-xs text-white/50 mb-1">Meta title</label>
+            <input type="text" name="meta_title" maxlength="160" placeholder="Si vacio, usa el titulo" class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white placeholder-white/30" />
+          </div>
+          <div>
+            <label class="block text-xs text-white/50 mb-1">Meta description</label>
+            <textarea name="meta_description" maxlength="300" rows="3" placeholder="Si vacio, usa el extracto" class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white placeholder-white/30 resize-none"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs text-white/50 mb-1">Keywords</label>
+            <input type="text" name="keywords" maxlength="300" placeholder="separadas,por,comas" class="w-full bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white placeholder-white/30" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-3 pt-4 border-t border-white/10">
+      <button type="submit" class="bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold px-6 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
+        Crear Post
+      </button>
+      <a href="/admin/micrositios-blog" class="text-white/60 hover:text-white px-4 py-2.5 text-sm">
+        Cancelar
+      </a>
+    </div>
+
+    <p id="form-msg" class="hidden text-sm pt-2"></p>
+  </form>
+
+  <script>
+    // Auto-generar slug desde el titulo
+    const titleInput = document.getElementById('title-input') as HTMLInputElement;
+    const slugInput = document.getElementById('slug-input') as HTMLInputElement;
+    let slugEdited = false;
+
+    slugInput?.addEventListener('input', () => { slugEdited = true; });
+
+    titleInput?.addEventListener('input', () => {
+      if (slugEdited) return;
+      const slug = titleInput.value
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 80);
+      slugInput.value = slug;
+    });
+
+    // Submit
+    const form = document.getElementById('post-form') as HTMLFormElement;
+    const msg = document.getElementById('form-msg')!;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = 'text-sm pt-2 text-white/50';
+      msg.textContent = 'Guardando...';
+      const data = new FormData(form);
+      const res = await fetch('/api/admin/micrositios-blog', {
+        method: 'POST',
+        body: data,
+      });
+      const json = await res.json();
+      if (json.ok) {
+        window.location.href = `/admin/micrositios-blog/${json.id}`;
+      } else {
+        msg.className = 'text-sm pt-2 text-red-400';
+        msg.textContent = json.error || 'Error al guardar';
+      }
+    });
+  </script>
+</AdminLayout>
